@@ -14,9 +14,10 @@ class vector
 		Allocator allocator;
 		size_type sizeOfVec;
 		size_type capacityOfVec;
+		size_type idxLast;
 	public :
 		//Default contructor
-		vector( void ) : arr(NULL), sizeOfVec(0), capacityOfVec(0) {}
+		vector( void ) : arr(NULL), sizeOfVec(0), capacityOfVec(0), idxLast(0) {}
 
 		//Destructor
 		~vector( void )
@@ -47,6 +48,14 @@ class vector
 
 		//Front member function
 		T &front( void ) { return arr[0]; }
+
+		//Empty member function
+		bool empty( void ) const
+		{
+			if (arr == NULL || (arr != NULL && sizeOfVec == 0))
+				return true;
+			return false;
+		}
 };
 
 
