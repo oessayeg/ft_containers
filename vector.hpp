@@ -52,25 +52,52 @@ class vector
 			return arr[idx];
 		}
 
-		//Data member function
-		T *data( void ) { return arr; }
-		T const *data( void ) const { return arr; } //Const
-		
 		//Front member function
 		T &front( void ) { return arr[0]; }
 
 		//Back member function
 		T &back( void ) { return arr[idxLast - 1]; }
 
+		//Data member function
+		T *data( void ) { return arr; }
+		T const *data( void ) const { return arr; } //Const
+		
+		//-------------Capacity-------------
 		//Size member function
 		size_type size( void ) const { return vectorSize; }
-
-		//Capacity member function
-		size_type capacity( void ) const { return vectorCapacity; }
 
 		//Max size to allocate
 		size_type max_size( void ) const { return allocator.max_size(); }
 
+		//Capacity member function
+		size_type capacity( void ) const { return vectorCapacity; }
+
+		//Empty member function
+		bool empty( void ) const
+		{
+			if (arr == NULL || (arr != NULL && vectorSize == 0))
+				return true;
+			return false;
+		}
+
+		//Reserve member function
+		void reserve( size_type n )
+		{
+			T *tmp;
+
+			if (n <= vectorCapacity)
+				return ;
+			tmp = arr;
+			arr = allocator.allocate(n);
+			for (size_type i = 0; i < vectorSize; i++)
+			{
+				allocator.construct(&arr[i], tmp[i]);
+				allocator.destroy(tmp);
+			}
+			allocator.deallocate(tmp, vectorSize);
+			vectorCapacity = n;
+		}
+		
 		//Push_back
 		void push_back( const T &value )
 		{
@@ -95,14 +122,6 @@ class vector
 			allocator.construct(&arr[idxLast], value);
 			idxLast++;
 			vectorSize++;
-		}
-
-		//Empty member function
-		bool empty( void ) const
-		{
-			if (arr == NULL || (arr != NULL && vectorSize == 0))
-				return true;
-			return false;
 		}
 
 		//Get allocator (copy)

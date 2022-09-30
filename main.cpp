@@ -1,44 +1,46 @@
 #include <vector>
 #include "vector.hpp"
 
-//parameterized constructor, clear member function, get_allocator, push_back, back member function
-//data member function
+//added reserve function
 
 int main( void )
 {
 	{
+		std::cout << "--------STD--------" << std::endl;
 		std::vector<int> test;
 
+
 		test.reserve(3);
-
 		std::cout << "Size = " << test.size() << std::endl;
 		std::cout << "Capacity = " << test.capacity() << std::endl;
-		std::cout << test[0] << std::endl;
-		std::cout << test[1] << std::endl;
-		std::cout << test[2] << std::endl;
-		test.push_back(10);
-		test.push_back(20);
-		test.push_back(30);
-		test.push_back(40);
+		test.push_back(1);
+		test.push_back(2);
+		test.push_back(3);
+		test.push_back(4);
+		test.reserve(10);
+		std::cout << "Nb : " << test[0] << std::endl;
+		std::cout << "Nb : " << test[1] << std::endl;
+		std::cout << "Nb : " << test[2] << std::endl;
+		std::cout << "Nb : " << test[3] << std::endl;
 		std::cout << "Size = " << test.size() << std::endl;
 		std::cout << "Capacity = " << test.capacity() << std::endl;
-		// i = test.data();
-		// i1 = test.data();
-		// std::cout << "--------STD--------" << std::endl;
-		// std::cout << "Size = " << test.size() << std::endl;
-		// std::cout << "Capacity = " << test.capacity() << std::endl;
-		// std::cout << *i << std::endl;
-		// std::cout << *i1 << std::endl;
-
 	}
 	{
+		std::cout << "--------FT--------" << std::endl;
 		ft::vector<int> test;
 
-		test.push_back(10);
-		test.push_back(20);
-		test.push_back(30);
-		test.push_back(40);
-		std::cout << "--------FT--------" << std::endl;
+		test.reserve(3);
+		std::cout << "Size = " << test.size() << std::endl;
+		std::cout << "Capacity = " << test.capacity() << std::endl;
+		test.push_back(1);
+		test.push_back(2);
+		test.push_back(3);
+		test.push_back(4);
+		test.reserve(10);
+		std::cout << "Nb : " << test[0] << std::endl;
+		std::cout << "Nb : " << test[1] << std::endl;
+		std::cout << "Nb : " << test[2] << std::endl;
+		std::cout << "Nb : " << test[3] << std::endl;
 		std::cout << "Size = " << test.size() << std::endl;
 		std::cout << "Capacity = " << test.capacity() << std::endl;
 	}
