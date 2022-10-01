@@ -37,7 +37,7 @@ class vector
 				return;
 			for (size_type i = 0; i < vectorSize; i++)
 				allocator.destroy(&arr[i]);
-			allocator.deallocate(arr, vectorSize);
+			allocator.deallocate(arr, vectorCapacity);
 		}
 		
 		//-------------ELEMENT ACCESS-------------
@@ -85,16 +85,15 @@ class vector
 		{
 			T *tmp;
 
+			if (n > max_size())
+				throw std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size");
 			if (n <= vectorCapacity)
 				return ;
 			tmp = arr;
 			arr = allocator.allocate(n);
 			for (size_type i = 0; i < vectorSize; i++)
-			{
-				allocator.construct(&arr[i], tmp[i]);
-				allocator.destroy(tmp);
-			}
-			allocator.deallocate(tmp, vectorSize);
+				arr[i] = tmp[i];
+			allocator.deallocate(tmp, vectorCapacity);
 			vectorCapacity = n;
 		}
 		
@@ -112,16 +111,35 @@ class vector
 
 				arr = allocator.allocate(vectorCapacity * 2);
 				for (size_type i = 0; i < vectorSize; i++)
-				{
-					allocator.construct(&arr[i], tmp[i]);
-					allocator.destroy(&tmp[i]);
-				}
-				allocator.deallocate(tmp, vectorSize);
+					arr[i] = tmp[i];
+				allocator.deallocate(tmp, vectorCapacity);
 				vectorCapacity *= 2;
 			}
 			allocator.construct(&arr[idxLast], value);
 			idxLast++;
 			vectorSize++;
+		}
+
+		//Shrink_to_fit
+		void shrink_to_fit( void )
+		{
+			T *tmp;
+
+			if (vectorCapacity > vectorSize)
+			{
+				tmp = arr;
+				arr = allocator.allocate(vectorSize);
+				for (size_type i = 0; i < vectorSize; i++)
+					arr[i] = tmp[i];
+				allocator.deallocate(tmp, vectorCapacity);
+				vectorCapacity = vectorSize;
+			}
+		}
+		//Pop_back
+		void pop_back( void )
+		{
+			allocator.destroy(&arr[vectorSize - 1]);
+			vectorSize--;
 		}
 
 		//Get allocator (copy)
