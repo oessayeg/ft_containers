@@ -33,42 +33,31 @@ class vector
 		//Destructor
 		~vector( void )
 		{
-			if (!arr)
-				return;
-			for (size_type i = 0; i < vectorSize; i++)
-				allocator.destroy(&arr[i]);
-			allocator.deallocate(arr, vectorCapacity);
-		}
-		
-		//-------------ELEMENT ACCESS-------------
-		//Subscript operator
-		T &operator[]( size_type idx ) { return arr[idx]; }
-
-		//At member function
-		T &at( size_type idx )
-		{
-			if (idx > vectorSize || (idx == 0 && vectorSize == 0))
-				throw std::out_of_range("vector");
-			return arr[idx];
+			if (arr != NULL)
+			{
+				for (size_type i = 0; i < vectorSize; i++)
+					allocator.destroy(&arr[i]);
+				allocator.deallocate(arr, vectorCapacity);
+			}
 		}
 
-		//Front member function
-		T &front( void ) { return arr[0]; }
-
-		//Back member function
-		T &back( void ) { return arr[idxLast - 1]; }
-
-		//Data member function
-		T *data( void ) { return arr; }
-		T const *data( void ) const { return arr; } //Const
-		
-		//-------------Capacity-------------
+		//-------------CAPACITY-------------
 		//Size member function
 		size_type size( void ) const { return vectorSize; }
 
 		//Max size to allocate
 		size_type max_size( void ) const { return allocator.max_size(); }
 
+		// Resize member function
+		void resize( size_type n, T val = T() )
+		{
+			if (n < vectorSize)
+				while(n < vectorSize)
+					pop_back();
+			else if (n > vectorSize)
+				while (vectorSize < n)
+					push_back(val);
+		}
 		//Capacity member function
 		size_type capacity( void ) const { return vectorCapacity; }
 
@@ -97,6 +86,45 @@ class vector
 			vectorCapacity = n;
 		}
 		
+		//Shrink_to_fit
+		void shrink_to_fit( void )
+		{
+			T *tmp;
+
+			if (vectorCapacity > vectorSize)
+			{
+				tmp = arr;
+				arr = allocator.allocate(vectorSize);
+				for (size_type i = 0; i < vectorSize; i++)
+					arr[i] = tmp[i];
+				allocator.deallocate(tmp, vectorCapacity);
+				vectorCapacity = vectorSize;
+			}
+		}
+
+
+		//-------------ELEMENT ACCESS-------------
+		//Subscript operator
+		T &operator[]( size_type idx ) { return arr[idx]; }
+
+		//At member function
+		T &at( size_type idx )
+		{
+			if (idx > vectorSize || (idx == 0 && vectorSize == 0))
+				throw std::out_of_range("vector");
+			return arr[idx];
+		}
+
+		//Front member function
+		T &front( void ) { return arr[0]; }
+
+		//Back member function
+		T &back( void ) { return arr[idxLast - 1]; }
+
+		//Data member function
+		T *data( void ) { return arr; }
+		T const *data( void ) const { return arr; } //Const
+		
 		//Push_back
 		void push_back( const T &value )
 		{
@@ -120,21 +148,6 @@ class vector
 			vectorSize++;
 		}
 
-		//Shrink_to_fit
-		void shrink_to_fit( void )
-		{
-			T *tmp;
-
-			if (vectorCapacity > vectorSize)
-			{
-				tmp = arr;
-				arr = allocator.allocate(vectorSize);
-				for (size_type i = 0; i < vectorSize; i++)
-					arr[i] = tmp[i];
-				allocator.deallocate(tmp, vectorCapacity);
-				vectorCapacity = vectorSize;
-			}
-		}
 		//Pop_back
 		void pop_back( void )
 		{
