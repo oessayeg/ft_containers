@@ -14,20 +14,77 @@ class vector
 		Allocator allocator;
 		size_type vectorSize;
 		size_type vectorCapacity;
-		size_type idxLast;
 	public :
 		//Default contructor
-		vector( void ) : arr(NULL), vectorSize(0), vectorCapacity(0), idxLast(0) {}
+		vector( void ) : arr(NULL), vectorSize(0), vectorCapacity(0) {}
+
+		//Copy contructor
+		vector( vector const &rhs )
+		{
+			arr = NULL;
+			vectorSize = 0;
+			vectorCapacity = 0;
+			*this = rhs;
+		}
+
+		//Copy assignment operator
+		vector &operator=( vector const &rhs )
+		{
+			if (vectorCapacity == 0 && rhs.capacity() == 0)
+				return *this;
+			else if (rhs.capacity() == 0 && vectorCapacity > 0 && vectorSize > 0)
+				clear();
+			else if (vectorCapacity == 0 && rhs.capacity() > 0 && rhs.size() > 0)
+			{
+				arr = allocator.allocate(rhs.size());
+				for (size_type i = 0; i < rhs.size(); i++)
+					arr[i] = rhs.data()[i];
+				vectorCapacity = rhs.size();
+				vectorSize = rhs.size();
+			}
+			else if (vectorSize > 0 && rhs.size() > 0)
+			{
+				if (vectorSize >= rhs.size())
+				{
+					while (vectorSize > rhs.size())
+						pop_back();
+					for (size_type i = 0; i < rhs.size(); i++)
+						arr[i] = rhs.data()[i];
+				}
+				else if (vectorSize < rhs.size() && vectorCapacity >= rhs.capacity())
+				{
+					for (size_type i = 0; i < rhs.size(); i++)
+						arr[i] = rhs.data()[i];
+					vectorSize = rhs.size();
+				}
+				else if (vectorSize < rhs.size() && vectorCapacity < rhs.capacity())
+				{
+					T *tmp;
+
+					tmp = arr;
+					arr = allocator.allocate(rhs.size());
+					for (size_type i = 0; i < rhs.size(); i++)
+					{
+						if (i < vectorSize)
+							allocator.destroy(&tmp[i]);
+						arr[i] = rhs.data()[i];
+					}
+					allocator.deallocate(tmp, vectorCapacity);
+					vectorSize = rhs.size();
+					vectorCapacity = rhs.size();
+				}
+			}
+			return *this;
+		}
 
 		//Parameterized constructor
-		vector( size_type n )
+		vector( size_type n, T value = T() )
 		{
 			arr = allocator.allocate(n);
 			vectorSize = n;
 			vectorCapacity = n;
-			idxLast = n;
 			for (size_type i = 0; i < n; i++)
-				allocator.construct(&arr[i], 0);
+				allocator.construct(&arr[i], value);
 		}
 
 		//Destructor
@@ -119,7 +176,7 @@ class vector
 		T &front( void ) { return arr[0]; }
 
 		//Back member function
-		T &back( void ) { return arr[idxLast - 1]; }
+		T &back( void ) { return arr[vectorSize - 1]; }
 
 		//Data member function
 		T *data( void ) { return arr; }
@@ -133,7 +190,7 @@ class vector
 				arr = allocator.allocate(1);
 				vectorCapacity = 1;
 			}
-			else if (idxLast == vectorCapacity)
+			else if (vectorSize == vectorCapacity)
 			{
 				T *tmp = arr;
 
@@ -143,8 +200,7 @@ class vector
 				allocator.deallocate(tmp, vectorCapacity);
 				vectorCapacity *= 2;
 			}
-			allocator.construct(&arr[idxLast], value);
-			idxLast++;
+			arr[vectorSize] = value;
 			vectorSize++;
 		}
 
@@ -155,6 +211,7 @@ class vector
 			vectorSize--;
 		}
 
+		//-------------ALLOCATOR-------------
 		//Get allocator (copy)
 		Allocator get_allocator( void ) const { return Allocator(allocator); }
 
@@ -164,7 +221,6 @@ class vector
 			for (size_type i = 0; i < vectorSize; i++)
 				allocator.destroy(&arr[i]);
 			vectorSize = 0;
-			idxLast = 0;
 		}
 };
 
