@@ -115,6 +115,7 @@ class vector
 				while (vectorSize < n)
 					push_back(val);
 		}
+
 		//Capacity member function
 		size_type capacity( void ) const { return vectorCapacity; }
 
@@ -182,6 +183,7 @@ class vector
 		T *data( void ) { return arr; }
 		T const *data( void ) const { return arr; } //Const
 		
+		//-------------MODIFIERS-------------
 		//Push_back
 		void push_back( const T &value )
 		{
@@ -211,10 +213,6 @@ class vector
 			vectorSize--;
 		}
 
-		//-------------ALLOCATOR-------------
-		//Get allocator (copy)
-		Allocator get_allocator( void ) const { return Allocator(allocator); }
-
 		//Clear member function
 		void clear( void )
 		{
@@ -222,6 +220,123 @@ class vector
 				allocator.destroy(&arr[i]);
 			vectorSize = 0;
 		}
+
+		//-------------ALLOCATOR-------------
+		//Get allocator (copy)
+		Allocator get_allocator( void ) const { return Allocator(allocator); }
 };
+
+		//-------------RELATIONAL OPERATORS-------------
+		template< class T, class Allocator >
+		bool operator==( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs )
+		{
+			if (lhs.size() == rhs.size())
+			{
+				for (unsigned long i = 0; i < lhs.size(); i++)
+					if (lhs.data()[i] != rhs.data()[i])
+						return false;
+				return true;
+			}
+			return false;
+		}
+
+		template< class T, class Allocator >
+		bool operator!=( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs )
+		{
+			return !(lhs == rhs);
+		}
+
+		template< class T, class Allocator >
+		bool operator<( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
+		{
+			unsigned long i = 0;
+
+			if (lhs.size() == 0 && rhs.size() > 0)
+				return true;
+			else if (rhs.size() == 0 && lhs.size() > 0)
+				return false;
+			while (i < lhs.size() && i < rhs.size())
+			{
+				if (lhs.data()[i] < rhs.data()[i])
+					return true;
+				else if (lhs.data()[i] == rhs.data()[i])
+					i++;
+				else
+					return false;
+			}
+			if (lhs.size() < rhs.size())
+				return true;
+			return false;
+		}
+
+		template< class T, class Allocator >
+		bool operator<=( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
+		{
+			unsigned long i = 0;
+
+			if (lhs.size() == 0 && rhs.size() > 0)
+				return true;
+			else if (rhs.size() == 0 && lhs.size() > 0)
+				return false;
+			while (i < lhs.size() && i < rhs.size())
+			{
+				if (lhs.data()[i] < rhs.data()[i])
+					return true;
+				else if (lhs.data()[i] == rhs.data()[i])
+					i++;
+				else
+					return false;
+			}
+			if (lhs.size() <= rhs.size())
+				return true;
+			return false;
+		}
+
+		template< class T, class Allocator >
+		bool operator>( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
+		{
+			unsigned long i = 0;
+
+			if (lhs.size() == 0 && rhs.size() > 0)
+				return false;
+			else if (rhs.size() == 0 && lhs.size() > 0)
+				return true;
+			while (i < lhs.size() && i < rhs.size())
+			{
+				if (lhs.data()[i] > rhs.data()[i])
+					return true;
+				else if (lhs.data()[i] == rhs.data()[i])
+					i++;
+				else
+					return false;
+			}
+			if (lhs.size() > rhs.size())
+				return true;
+			return false;
+		}
+
+		template< class T, class Allocator >
+		bool operator>=( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
+		{
+			unsigned long i = 0;
+
+			if (lhs.size() == 0 && rhs.size() > 0)
+				return false;
+			else if (rhs.size() == 0 && lhs.size() > 0)
+				return true;
+			while (i < lhs.size() && i < rhs.size())
+			{
+				if (lhs.data()[i] > rhs.data()[i])
+					return true;
+				else if (lhs.data()[i] == rhs.data()[i])
+					i++;
+				else
+					return false;
+			}
+			if (lhs.size() >= rhs.size())
+				return true;
+			return false;
+		}
+
 
 }

@@ -67,6 +67,7 @@
         "map": "cpp",
         "numeric": "cpp",
         "random": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "__functional_03": "cpp"
     }
 }

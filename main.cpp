@@ -1,8 +1,7 @@
 #include <vector>
 #include "vector.hpp"
 
-//Added second parameter for the parameterized constructor
-//Copy constructor and copy assignment operator
+//Objective : Relational operators
 
 template<typename T>
 void print( T vec )
@@ -15,44 +14,30 @@ void print( T vec )
 int main( void )
 {
 	{
-		std::cout << "--------STD--------" << std::endl;
-		std::vector<int> test2;
-		std::vector<int> test1;
+		std::vector<int> foo;
+		std::vector<int> bar; 
 
-		test1.push_back(1);
-		test1.push_back(2);
-		
-		test2.push_back(10);
-		test2.push_back(20);
-		test2.push_back(30);
-		test2.push_back(40);
-		test2.push_back(50);
-		std::cout << "Test2 Size = " << test2.size() << std::endl;
-		std::cout << "Test2 Capacity = " << test2.capacity() << std::endl;
-		test1 = test2;
-		std::cout << "Test1 Size = " << test1.size() << std::endl;
-		std::cout << "Test1 Capacity = " << test1.capacity() << std::endl;
-		print(test1);
+		foo.push_back(1);
+		foo.push_back(2);
+		foo.push_back(3);
+
+		bar.push_back(1);
+		bar.push_back(2);
+		bar.push_back(4);
+		std::cout << (foo <= bar) << std::endl;
 	}
 	{
-		std::cout << "--------STD--------" << std::endl;
-		ft::vector<int> test1;
-		ft::vector<int> test2;
+		ft::vector<int> foo;
+		ft::vector<int> bar; 
 
-		test1.push_back(1);
-		test1.push_back(2);
-		
-		test2.push_back(10);
-		test2.push_back(20);
-		test2.push_back(30);
-		test2.push_back(40);
-		test2.push_back(50);
-		std::cout << "Test2 Size = " << test2.size() << std::endl;
-		std::cout << "Test2 Capacity = " << test2.capacity() << std::endl;
-		test1 = test2;
-		std::cout << "Test1 Size = " << test1.size() << std::endl;
-		std::cout << "Test1 Capacity = " << test1.capacity() << std::endl;
-		print(test1);
+		foo.push_back(1);
+		foo.push_back(2);
+		foo.push_back(3);
+
+		bar.push_back(1);
+		bar.push_back(2);
+		bar.push_back(4);
+		std::cout << (foo <= bar) << std::endl;
 	}
     return 0;
 }
