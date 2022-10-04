@@ -1,7 +1,7 @@
 #include <vector>
 #include "vector.hpp"
 
-//Objective : Relational operators
+//Added swap member function
 
 template<typename T>
 void print( T vec )
@@ -16,28 +16,56 @@ int main( void )
 	{
 		std::vector<int> foo;
 		std::vector<int> bar; 
-
-		foo.push_back(1);
-		foo.push_back(2);
-		foo.push_back(3);
-
+	
 		bar.push_back(1);
 		bar.push_back(2);
+		bar.push_back(3);
 		bar.push_back(4);
-		std::cout << (foo <= bar) << std::endl;
+
+		std::cout << "Foo size = " << foo.size() << std::endl;
+		std::cout << "Foo capaciy = " << foo.capacity() << std::endl;
+		std::cout << "Foo : ";
+		print(foo);
+		std::cout << "Bar size = " << bar.size() << std::endl;
+		std::cout << "Bar capaciy = " << bar.capacity() << std::endl;
+		foo.swap(bar);
+
+		std::cout << std::endl << "-----------AFTER-----------"  << std::endl << std::endl;
+
+		std::cout << "Foo size = " << foo.size() << std::endl;
+		std::cout << "Foo capaciy = " << foo.capacity() << std::endl;
+		std::cout << "Foo : ";
+		print(foo);
+		std::cout << "Bar size = " << bar.size() << std::endl;
+		std::cout << "Bar capaciy = " << bar.capacity() << std::endl;
 	}
+	
 	{
-		ft::vector<int> foo;
-		ft::vector<int> bar; 
-
-		foo.push_back(1);
-		foo.push_back(2);
-		foo.push_back(3);
-
+		std::cout << std::endl << "--------FT--------" << std::endl << std::endl;
+		std::vector<int> foo;
+		std::vector<int> bar; 
+	
 		bar.push_back(1);
 		bar.push_back(2);
+		bar.push_back(3);
 		bar.push_back(4);
-		std::cout << (foo <= bar) << std::endl;
-	}
+
+		std::cout << "Foo size = " << foo.size() << std::endl;
+		std::cout << "Foo capaciy = " << foo.capacity() << std::endl;
+		std::cout << "Foo : ";
+		print(foo);
+		std::cout << "Bar size = " << bar.size() << std::endl;
+		std::cout << "Bar capaciy = " << bar.capacity() << std::endl;
+		foo.swap(bar);
+
+		std::cout << std::endl << "-----------AFTER-----------"  << std::endl << std::endl;
+
+		std::cout << "Foo size = " << foo.size() << std::endl;
+		std::cout << "Foo capaciy = " << foo.capacity() << std::endl;
+		std::cout << "Foo : ";
+		print(foo);
+		std::cout << "Bar size = " << bar.size() << std::endl;
+		std::cout << "Bar capaciy = " << bar.capacity() << std::endl;
+}
     return 0;
 }

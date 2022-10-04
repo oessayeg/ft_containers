@@ -3,8 +3,6 @@
 
 namespace ft{
 
-//Still need copy constructor and copy assignement operator overload
-
 template<class T, class Allocator = std::allocator<T> >
 class vector
 {
@@ -30,6 +28,8 @@ class vector
 		//Copy assignment operator
 		vector &operator=( vector const &rhs )
 		{
+			if (this == &rhs)
+				return *this;
 			if (vectorCapacity == 0 && rhs.capacity() == 0)
 				return *this;
 			else if (rhs.capacity() == 0 && vectorCapacity > 0 && vectorSize > 0)
@@ -213,6 +213,23 @@ class vector
 			vectorSize--;
 		}
 
+		//Swap member function
+		void swap( vector &x )
+		{
+			vector< T, Allocator > test;
+			size_type c;
+
+			test = x;
+			c = x.capacity();
+			x = *this;
+			x.shrink_to_fit();
+			x.reserve(capacity());
+			*this = test;
+
+			shrink_to_fit();
+			reserve(c);
+		}
+
 		//Clear member function
 		void clear( void )
 		{
@@ -337,6 +354,4 @@ class vector
 				return true;
 			return false;
 		}
-
-
 }
