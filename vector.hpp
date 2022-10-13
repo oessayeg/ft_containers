@@ -1,17 +1,26 @@
 #include <iostream>
 #include <exception>
+#include "iterator.hpp"
 
 namespace ft{
 
 template<class T, class Allocator = std::allocator<T> >
 class vector
 {
-	private :
+	public :
 		typedef unsigned long size_type;
-		T *arr;
+		typedef T value_type;
+		typedef T* pointer;
+		typedef T& reference;
+		typedef const T* const_pointer;
+		typedef typename ft::vectorIterator< vector<T> > iterator;
+
+	private :
+		pointer arr;
 		Allocator allocator;
 		size_type vectorSize;
 		size_type vectorCapacity;
+
 	public :
 		//Default contructor
 		vector( void ) : arr(NULL), vectorSize(0), vectorCapacity(0) {}
@@ -130,7 +139,7 @@ class vector
 		//Reserve member function
 		void reserve( size_type n )
 		{
-			T *tmp;
+			pointer tmp;
 
 			if (n > max_size())
 				throw std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size");
@@ -163,10 +172,10 @@ class vector
 
 		//-------------ELEMENT ACCESS-------------
 		//Subscript operator
-		T &operator[]( size_type idx ) { return arr[idx]; }
+		reference operator[]( size_type idx ) { return arr[idx]; }
 
 		//At member function
-		T &at( size_type idx )
+		value_type &at( size_type idx )
 		{
 			if (idx > vectorSize || (idx == 0 && vectorSize == 0))
 				throw std::out_of_range("vector");
@@ -174,14 +183,14 @@ class vector
 		}
 
 		//Front member function
-		T &front( void ) { return arr[0]; }
+		reference front( void ) { return arr[0]; }
 
 		//Back member function
-		T &back( void ) { return arr[vectorSize - 1]; }
+		reference back( void ) { return arr[vectorSize - 1]; }
 
 		//Data member function
-		T *data( void ) { return arr; }
-		T const *data( void ) const { return arr; } //Const
+		pointer data( void ) { return arr; }
+		const_pointer *data( void ) const { return arr; } //Const
 		
 		//-------------MODIFIERS-------------
 		//Push_back
@@ -241,6 +250,13 @@ class vector
 		//-------------ALLOCATOR-------------
 		//Get allocator (copy)
 		Allocator get_allocator( void ) const { return Allocator(allocator); }
+
+		//iterator
+		iterator begin()
+		{
+			return iterator(arr);
+		}
+		//iterator
 };
 
 		//-------------RELATIONAL OPERATORS-------------
@@ -354,4 +370,5 @@ class vector
 				return true;
 			return false;
 		}
+		
 }
