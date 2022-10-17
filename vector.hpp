@@ -1,374 +1,186 @@
+#ifndef VECTOR_HPP
+# define VECTOR_HPP
+
 #include <iostream>
-#include <exception>
-#include "iterator.hpp"
+#include <memory>
 
-namespace ft{
+// To implement :
 
-template<class T, class Allocator = std::allocator<T> >
-class vector
+//Constructors(4), Destructor, Assignment operator
+
+// --ITERATORS--
+// _begin
+// _end
+// _rbegin
+// _rend
+
+// --CAPACITY--
+// _size : done
+// _max_size : done
+// _resize : done
+// _capacity : done
+// _empty : done
+// _reserve : done
+
+// --ELEMENT ACCESS--
+// _[] : done
+// _at : done
+// _front : done
+// _back : done
+// _data : done
+
+// --MODIFIERS--
+// _assign : not yet
+// _push_back : done
+// _pop_back : done
+// _insert : not yet
+// _erase : not yet
+// _swap : not yet
+// _clear : done
+
+// --ALLOCATOR--
+// _get_allocator : done
+
+// --NON MEMBER FUNCTION OVERLOAD--
+// _relational operators
+// _swap
+
+namespace ft
 {
-	public :
-		typedef unsigned long size_type;
-		typedef T value_type;
-		typedef T* pointer;
-		typedef T& reference;
-		typedef const T* const_pointer;
-		typedef typename ft::vectorIterator< vector<T> > iterator;
+    template< class T, class allocator = std::allocator< T > >
+    class vector
+    {
+        public :
+            typedef T value_type;
+            typedef value_type* pointer;
+            typedef value_type& reference;
+            typedef const value_type* const_pointer;
+            typedef const value_type& const_reference;
+            typedef allocator allocator_type;
+            typedef unsigned long size_type;
 
-	private :
-		pointer arr;
-		Allocator allocator;
-		size_type vectorSize;
-		size_type vectorCapacity;
+        private :
+            value_type *arr;
+            size_type vecSize;
+            size_type vecCapacity;
+            allocator_type m_allocator;
 
-	public :
-		//Default contructor
-		vector( void ) : arr(NULL), vectorSize(0), vectorCapacity(0) {}
+        public :
+            vector( void ) : arr(NULL), vecSize(0), vecCapacity(0) {}
+            
+            //-------------CAPACITY-------------
+            //Size of vector (member function)
+            size_type size( void ) const { return vecSize; }
 
-		//Copy contructor
-		vector( vector const &rhs )
-		{
-			arr = NULL;
-			vectorSize = 0;
-			vectorCapacity = 0;
-			*this = rhs;
-		}
+            //Max_size member function (max size to allocate)
+            size_type max_size( void ) const { return m_allocator.max_size(); }
 
-		//Copy assignment operator
-		vector &operator=( vector const &rhs )
-		{
-			if (this == &rhs)
-				return *this;
-			if (vectorCapacity == 0 && rhs.capacity() == 0)
-				return *this;
-			else if (rhs.capacity() == 0 && vectorCapacity > 0 && vectorSize > 0)
-				clear();
-			else if (vectorCapacity == 0 && rhs.capacity() > 0 && rhs.size() > 0)
-			{
-				arr = allocator.allocate(rhs.size());
-				for (size_type i = 0; i < rhs.size(); i++)
-					arr[i] = rhs.data()[i];
-				vectorCapacity = rhs.size();
-				vectorSize = rhs.size();
-			}
-			else if (vectorSize > 0 && rhs.size() > 0)
-			{
-				if (vectorSize >= rhs.size())
-				{
-					while (vectorSize > rhs.size())
-						pop_back();
-					for (size_type i = 0; i < rhs.size(); i++)
-						arr[i] = rhs.data()[i];
-				}
-				else if (vectorSize < rhs.size() && vectorCapacity >= rhs.capacity())
-				{
-					for (size_type i = 0; i < rhs.size(); i++)
-						arr[i] = rhs.data()[i];
-					vectorSize = rhs.size();
-				}
-				else if (vectorSize < rhs.size() && vectorCapacity < rhs.capacity())
-				{
-					T *tmp;
+            //Resize member function
+            void resize( size_type n, value_type val = value_type() )
+            {
+                if (n < vecSize)
+                    while (vecSize != n)
+                        pop_back();
+                else if (n > vecSize)
+                    while (vecSize != n)
+                        push_back(val);
+            }
 
-					tmp = arr;
-					arr = allocator.allocate(rhs.size());
-					for (size_type i = 0; i < rhs.size(); i++)
-					{
-						if (i < vectorSize)
-							allocator.destroy(&tmp[i]);
-						arr[i] = rhs.data()[i];
-					}
-					allocator.deallocate(tmp, vectorCapacity);
-					vectorSize = rhs.size();
-					vectorCapacity = rhs.size();
-				}
-			}
-			return *this;
-		}
+            //Capacity member function (blocks allocated)
+            size_type capacity( void ) const { return vecCapacity; }
 
-		//Parameterized constructor
-		vector( size_type n, T value = T() )
-		{
-			arr = allocator.allocate(n);
-			vectorSize = n;
-			vectorCapacity = n;
-			for (size_type i = 0; i < n; i++)
-				allocator.construct(&arr[i], value);
-		}
+            //Empty member function
+            bool empty( void ) const { return vecSize == 0; }
 
-		//Destructor
-		~vector( void )
-		{
-			if (arr != NULL)
-			{
-				for (size_type i = 0; i < vectorSize; i++)
-					allocator.destroy(&arr[i]);
-				allocator.deallocate(arr, vectorCapacity);
-			}
-		}
+            //Reserve member function
+            void reserve( size_type n )
+            {
+                if (n > max_size())
+                    throw(std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size"));
+                else if (n > vecCapacity)
+                {
+                    pointer tmp = arr;
 
-		//-------------CAPACITY-------------
-		//Size member function
-		size_type size( void ) const { return vectorSize; }
+                    arr = m_allocator.allocate(n);
+                    for (size_type i = 0; i < vecSize; i++)
+                        arr[i] = tmp[i];
+                    vecCapacity = n;
+                }
+            }
 
-		//Max size to allocate
-		size_type max_size( void ) const { return allocator.max_size(); }
+            //-------------ELEMENT ACCESS-------------
+            //Subscript operator
+            reference operator[]( size_type idx ) { return arr[idx]; }
+            const_reference operator[]( size_type idx ) const { return arr[idx]; }
 
-		// Resize member function
-		void resize( size_type n, T val = T() )
-		{
-			if (n < vectorSize)
-				while(n < vectorSize)
-					pop_back();
-			else if (n > vectorSize)
-				while (vectorSize < n)
-					push_back(val);
-		}
+            //At member function
+            reference at( size_type idx )
+            {
+                if ( idx >= vecSize)
+                    throw std::out_of_range("vector");
+                return arr[idx];
+            }
+            const_reference at( size_type idx ) const
+            {
+                if ( arr == NULL || idx >= vecSize )
+                    throw std::out_of_range("vector");
+                return arr[idx];
+            }
 
-		//Capacity member function
-		size_type capacity( void ) const { return vectorCapacity; }
+            //Front member function
+            reference front( void ) { return arr[0]; }
+            const_reference front( void ) const { return arr[0]; }
 
-		//Empty member function
-		bool empty( void ) const
-		{
-			if (arr == NULL || (arr != NULL && vectorSize == 0))
-				return true;
-			return false;
-		}
+            //Back member function
+            reference back( void ) { return arr[vecSize - 1]; }
+            const_reference back( void ) const { return arr[vecSize - 1]; }
 
-		//Reserve member function
-		void reserve( size_type n )
-		{
-			pointer tmp;
-
-			if (n > max_size())
-				throw std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size");
-			if (n <= vectorCapacity)
-				return ;
-			tmp = arr;
-			arr = allocator.allocate(n);
-			for (size_type i = 0; i < vectorSize; i++)
-				arr[i] = tmp[i];
-			allocator.deallocate(tmp, vectorCapacity);
-			vectorCapacity = n;
-		}
-		
-		//Shrink_to_fit
-		void shrink_to_fit( void )
-		{
-			T *tmp;
-
-			if (vectorCapacity > vectorSize)
-			{
-				tmp = arr;
-				arr = allocator.allocate(vectorSize);
-				for (size_type i = 0; i < vectorSize; i++)
-					arr[i] = tmp[i];
-				allocator.deallocate(tmp, vectorCapacity);
-				vectorCapacity = vectorSize;
-			}
-		}
+            //Data member function
+            pointer data( void ) throw() { return arr; }
+            const_pointer data( void ) const throw() { return arr; }
 
 
-		//-------------ELEMENT ACCESS-------------
-		//Subscript operator
-		reference operator[]( size_type idx ) { return arr[idx]; }
+            //-------------MODIFIERS-------------
+            //Push_back member function
+            void push_back( const_reference val )
+            {
+                if (vecCapacity == 0)
+                {
+                    arr = m_allocator.allocate(1);
+                    vecCapacity = 1;
+                }
+                else if (vecSize == vecCapacity)
+                {
+                    pointer tmp = arr;
 
-		//At member function
-		value_type &at( size_type idx )
-		{
-			if (idx > vectorSize || (idx == 0 && vectorSize == 0))
-				throw std::out_of_range("vector");
-			return arr[idx];
-		}
+                    arr = m_allocator.allocate(vecCapacity * 2);
+                    for (size_type i = 0; i < vecSize; i++)
+                        arr[i] = tmp[i];
+                    m_allocator.deallocate(tmp, vecCapacity);
+                    vecCapacity *= 2;
+                }
+                arr[vecSize] = val;
+                vecSize++;
+            }
 
-		//Front member function
-		reference front( void ) { return arr[0]; }
+            //Pop_back member function    
+            void pop_back( void )
+            {
+                m_allocator.destroy( &arr[vecSize - 1] );
+                vecSize--;
+            }
 
-		//Back member function
-		reference back( void ) { return arr[vectorSize - 1]; }
+            //Clear member function    
+            void clear( void )
+            {
+                while (vecSize > 0)
+                    pop_back();
+            }
 
-		//Data member function
-		pointer data( void ) { return arr; }
-		const_pointer *data( void ) const { return arr; } //Const
-		
-		//-------------MODIFIERS-------------
-		//Push_back
-		void push_back( const T &value )
-		{
-			if (vectorCapacity == 0)
-			{
-				arr = allocator.allocate(1);
-				vectorCapacity = 1;
-			}
-			else if (vectorSize == vectorCapacity)
-			{
-				T *tmp = arr;
-
-				arr = allocator.allocate(vectorCapacity * 2);
-				for (size_type i = 0; i < vectorSize; i++)
-					arr[i] = tmp[i];
-				allocator.deallocate(tmp, vectorCapacity);
-				vectorCapacity *= 2;
-			}
-			arr[vectorSize] = value;
-			vectorSize++;
-		}
-
-		//Pop_back
-		void pop_back( void )
-		{
-			allocator.destroy(&arr[vectorSize - 1]);
-			vectorSize--;
-		}
-
-		//Swap member function
-		void swap( vector &x )
-		{
-			vector< T, Allocator > test;
-			size_type c;
-
-			test = x;
-			c = x.capacity();
-			x = *this;
-			x.shrink_to_fit();
-			x.reserve(capacity());
-			*this = test;
-
-			shrink_to_fit();
-			reserve(c);
-		}
-
-		//Clear member function
-		void clear( void )
-		{
-			for (size_type i = 0; i < vectorSize; i++)
-				allocator.destroy(&arr[i]);
-			vectorSize = 0;
-		}
-
-		//-------------ALLOCATOR-------------
-		//Get allocator (copy)
-		Allocator get_allocator( void ) const { return Allocator(allocator); }
-
-		//iterator
-		iterator begin()
-		{
-			return iterator(arr);
-		}
-		//iterator
-};
-
-		//-------------RELATIONAL OPERATORS-------------
-		template< class T, class Allocator >
-		bool operator==( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs )
-		{
-			if (lhs.size() == rhs.size())
-			{
-				for (unsigned long i = 0; i < lhs.size(); i++)
-					if (lhs.data()[i] != rhs.data()[i])
-						return false;
-				return true;
-			}
-			return false;
-		}
-
-		template< class T, class Allocator >
-		bool operator!=( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs )
-		{
-			return !(lhs == rhs);
-		}
-
-		template< class T, class Allocator >
-		bool operator<( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
-		{
-			unsigned long i = 0;
-
-			if (lhs.size() == 0 && rhs.size() > 0)
-				return true;
-			else if (rhs.size() == 0 && lhs.size() > 0)
-				return false;
-			while (i < lhs.size() && i < rhs.size())
-			{
-				if (lhs.data()[i] < rhs.data()[i])
-					return true;
-				else if (lhs.data()[i] == rhs.data()[i])
-					i++;
-				else
-					return false;
-			}
-			if (lhs.size() < rhs.size())
-				return true;
-			return false;
-		}
-
-		template< class T, class Allocator >
-		bool operator<=( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
-		{
-			unsigned long i = 0;
-
-			if (lhs.size() == 0 && rhs.size() > 0)
-				return true;
-			else if (rhs.size() == 0 && lhs.size() > 0)
-				return false;
-			while (i < lhs.size() && i < rhs.size())
-			{
-				if (lhs.data()[i] < rhs.data()[i])
-					return true;
-				else if (lhs.data()[i] == rhs.data()[i])
-					i++;
-				else
-					return false;
-			}
-			if (lhs.size() <= rhs.size())
-				return true;
-			return false;
-		}
-
-		template< class T, class Allocator >
-		bool operator>( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
-		{
-			unsigned long i = 0;
-
-			if (lhs.size() == 0 && rhs.size() > 0)
-				return false;
-			else if (rhs.size() == 0 && lhs.size() > 0)
-				return true;
-			while (i < lhs.size() && i < rhs.size())
-			{
-				if (lhs.data()[i] > rhs.data()[i])
-					return true;
-				else if (lhs.data()[i] == rhs.data()[i])
-					i++;
-				else
-					return false;
-			}
-			if (lhs.size() > rhs.size())
-				return true;
-			return false;
-		}
-
-		template< class T, class Allocator >
-		bool operator>=( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
-		{
-			unsigned long i = 0;
-
-			if (lhs.size() == 0 && rhs.size() > 0)
-				return false;
-			else if (rhs.size() == 0 && lhs.size() > 0)
-				return true;
-			while (i < lhs.size() && i < rhs.size())
-			{
-				if (lhs.data()[i] > rhs.data()[i])
-					return true;
-				else if (lhs.data()[i] == rhs.data()[i])
-					i++;
-				else
-					return false;
-			}
-			if (lhs.size() >= rhs.size())
-				return true;
-			return false;
-		}
-		
+            //-------------ALLOCATOR-------------
+            allocator_type get_allocator( void ) const { return m_allocator; }
+            
+    };
 }
+
+#endif
