@@ -15,6 +15,7 @@ int main( void )
 {
 	{
 		std::vector<int> test;
+		std::vector<int>::iterator b;
 
 		test.push_back(0);
 		test.push_back(1);
@@ -22,15 +23,19 @@ int main( void )
 		test.push_back(3);
 		test.push_back(4);
 		test.push_back(5);
-		std::cout << "Size = " << test.size() << ", Capacity = " << test.capacity() << std::endl;	
-		test.resize(10);
-		std::cout << "Size = " << test.size() << ", Capacity = " << test.capacity() << std::endl;	
+
+		b = test.end();
 		print(test);
+
+		--b;
+		std::cout << *b-- << std::endl;
+		--b;
+		std::cout << *b-- << std::endl;
 	}
-
+	std::cout << "---------FT---------" << std::endl;
 	{
-		std::cout << "-----------------------" << std::endl;
 		ft::vector<int> test;
+		ft::vector<int>::iterator b;
 
 		test.push_back(0);
 		test.push_back(1);
@@ -38,10 +43,14 @@ int main( void )
 		test.push_back(3);
 		test.push_back(4);
 		test.push_back(5);
-		std::cout << "Size = " << test.size() << ", Capacity = " << test.capacity() << std::endl;	
-		test.resize(10);
-		std::cout << "Size = " << test.size() << ", Capacity = " << test.capacity() << std::endl;	
+
+		b = test.end();
 		print(test);
+		
+		b--;
+		std::cout << *b-- << std::endl;
+		b--;
+		std::cout << *b-- << std::endl;
 	}
 	return 0;
 }

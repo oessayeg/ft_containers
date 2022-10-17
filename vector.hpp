@@ -1,9 +1,6 @@
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-#include <iostream>
-#include <memory>
-
 // To implement :
 
 //Constructors(4), Destructor, Assignment operator
@@ -45,6 +42,10 @@
 // _relational operators
 // _swap
 
+#include <iostream>
+#include <memory>
+#include "iterator.hpp"
+
 namespace ft
 {
     template< class T, class allocator = std::allocator< T > >
@@ -58,6 +59,7 @@ namespace ft
             typedef const value_type& const_reference;
             typedef allocator allocator_type;
             typedef unsigned long size_type;
+			typedef vectorIterator< vector< T > > iterator;
 
         private :
             value_type *arr;
@@ -68,6 +70,12 @@ namespace ft
         public :
             vector( void ) : arr(NULL), vecSize(0), vecCapacity(0) {}
             
+            //-------------ITERATORS-------------
+			iterator begin( void ) { return iterator(arr); }
+			const iterator begin( void ) const { return iterator(arr); }
+			iterator end( void ) { return iterator(arr + vecSize); }
+			const iterator end( void ) const { return iterator(arr + vecSize); }
+
             //-------------CAPACITY-------------
             //Size of vector (member function)
             size_type size( void ) const { return vecSize; }

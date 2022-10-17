@@ -69,6 +69,7 @@
         "random": "cpp",
         "set": "cpp",
         "__functional_03": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "__cxx_version": "cpp"
     }
 }
