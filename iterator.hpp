@@ -10,6 +10,7 @@ namespace ft
             typedef typename vector::value_type value_type;
             typedef typename vector::pointer pointer;
             typedef typename vector::reference reference;
+            typedef ptrdiff_t difference_type;
             typedef unsigned long size_type;
 
         private :
@@ -60,10 +61,21 @@ namespace ft
                 return tmp;
             }
 
+            //Arithmetic operators
+            vectorIterator operator+( int n ) { return vectorIterator(data + n); }
+            vectorIterator operator-( int n ) { return vectorIterator(data - n); }
+            difference_type operator-( vectorIterator &rhs ) { return data - rhs.getData(); }
+
             //Subscript operator
             value_type operator[]( size_type idx ) { return *(data + idx); }
-
     };
+            //+ operator
+            template < class T >
+            vectorIterator< T > operator+( int n, vectorIterator<T> &rhs )
+            {
+                return vectorIterator<T>(rhs.getData() + n);
+            }
+
 }
 
 #endif

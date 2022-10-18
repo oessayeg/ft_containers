@@ -15,42 +15,42 @@ int main( void )
 {
 	{
 		std::vector<int> test;
-		std::vector<int>::iterator b;
+		std::vector<int>::iterator b, e;
 
 		test.push_back(0);
 		test.push_back(1);
 		test.push_back(2);
 		test.push_back(3);
-		test.push_back(4);
-		test.push_back(5);
 
-		b = test.end();
-		print(test);
+		b = test.begin();
+		e = test.end();
 
-		--b;
-		std::cout << *b-- << std::endl;
-		--b;
-		std::cout << *b-- << std::endl;
+		std::cout << b - e << std::endl;
+		// --b;
+		// std::cout << *b-- << std::endl;
+		// --b;
+		// std::cout << *b-- << std::endl;
 	}
-	std::cout << "---------FT---------" << std::endl;
+	// std::cout << "---------FT---------" << std::endl;
 	{
 		ft::vector<int> test;
-		ft::vector<int>::iterator b;
+		ft::vector<int>::iterator b, e;
 
 		test.push_back(0);
 		test.push_back(1);
 		test.push_back(2);
 		test.push_back(3);
-		test.push_back(4);
-		test.push_back(5);
 
-		b = test.end();
-		print(test);
-		
-		b--;
-		std::cout << *b-- << std::endl;
-		b--;
-		std::cout << *b-- << std::endl;
+		b = test.begin();
+		e = test.end();
+
+		std::cout << b - e << std::endl;
+		// std::cout << *++b << std::endl;
+		// b--;
+		// std::cout << *b-- << std::endl;
+		// b--;
+		// std::cout << *b-- << std::endl;
 	}
+
 	return 0;
 }

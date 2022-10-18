@@ -53,13 +53,14 @@ namespace ft
     {
         public :
             typedef T value_type;
-            typedef value_type* pointer;
-            typedef value_type& reference;
-            typedef const value_type* const_pointer;
-            typedef const value_type& const_reference;
             typedef allocator allocator_type;
-            typedef unsigned long size_type;
+            typedef value_type& reference;
+            typedef const value_type& const_reference;
+            typedef value_type* pointer;
+            typedef const value_type* const_pointer;
 			typedef vectorIterator< vector< T > > iterator;
+			typedef const vectorIterator< vector< T > > const_iterator;
+            typedef unsigned long size_type;
 
         private :
             value_type *arr;
