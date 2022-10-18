@@ -4,7 +4,7 @@
 //resize, reserve, shrink_to_fit
 
 template<typename T>
-void print( T vec )
+void print( T &vec )
 {
 	for (unsigned int i = 0; i < vec.size(); i++)
 		std::cout << vec[i] << " ";
@@ -21,35 +21,21 @@ int main( void )
 		test.push_back(1);
 		test.push_back(2);
 		test.push_back(3);
-
-		b = test.begin();
-		e = test.end();
-
-		std::cout << b - e << std::endl;
-		// --b;
-		// std::cout << *b-- << std::endl;
-		// --b;
-		// std::cout << *b-- << std::endl;
+		test.push_back(4);
+        // std::vector<int> anotherTest(test.begin(), test.end());
 	}
-	// std::cout << "---------FT---------" << std::endl;
-	{
-		ft::vector<int> test;
+	std::cout << "---------FT---------" << std::endl;
+	{	
+        ft::vector<int> test;
 		ft::vector<int>::iterator b, e;
 
 		test.push_back(0);
 		test.push_back(1);
 		test.push_back(2);
 		test.push_back(3);
-
-		b = test.begin();
-		e = test.end();
-
-		std::cout << b - e << std::endl;
-		// std::cout << *++b << std::endl;
-		// b--;
-		// std::cout << *b-- << std::endl;
-		// b--;
-		// std::cout << *b-- << std::endl;
+		test.push_back(4);
+        // std::vector<int> anotherTest(test.begin(), test.end());       
+        // std::sort(test.begin(), test.end());
 	}
 
 	return 0;

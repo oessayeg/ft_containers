@@ -68,8 +68,27 @@ namespace ft
 
             //Subscript operator
             value_type operator[]( size_type idx ) { return *(data + idx); }
+
+            //Comparison operator
+            bool operator<( vectorIterator &rhs ) { return data < rhs.getData(); }
+            bool operator>( vectorIterator &rhs ) { return data > rhs.getData(); }
+            bool operator<=( vectorIterator &rhs ) { return data <= rhs.getData(); }
+            bool operator>=( vectorIterator &rhs ) { return data >= rhs.getData(); }
+
+            //Compound assignment operator
+            vectorIterator &operator+=( int n )
+            {
+                data += n;
+                return *this;
+            }
+
+            vectorIterator &operator-=( int n )
+            {
+                data -= n;
+                return *this;
+            }
     };
-            //+ operator
+            //'+' Operator
             template < class T >
             vectorIterator< T > operator+( int n, vectorIterator<T> &rhs )
             {

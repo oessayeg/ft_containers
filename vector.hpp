@@ -3,13 +3,15 @@
 
 // To implement :
 
-//Constructors(4), Destructor, Assignment operator
+//Constructors(4)
+//Destructor : done
+//Copy assignment operator
 
 // --ITERATORS--
-// _begin
-// _end
-// _rbegin
-// _rend
+// _begin : done
+// _end : done
+// _rbegin : done
+// _rend : done
 
 // --CAPACITY--
 // _size : done
@@ -69,8 +71,27 @@ namespace ft
             allocator_type m_allocator;
 
         public :
-            vector( void ) : arr(NULL), vecSize(0), vecCapacity(0) {}
-            
+            explicit vector( const allocator_type& alloc = allocator_type() ) : arr(NULL), vecSize(0), vecCapacity(0), m_allocator(alloc) {}
+            explicit vector( size_type n, const value_type &val = value_type(), const allocator_type& alloc = allocator_type())
+            {
+                arr = NULL;
+                vecSize = 0;
+                vecCapacity = 0;
+                m_allocator = alloc;
+                reserve(n);
+                while (vecSize != n)
+                    push_back(val);
+            }
+         
+            ~vector ( void )
+            {
+                if (arr)
+                {
+                    for (size_type i = 0; i < vecSize; i++)
+                        m_allocator.destroy(&arr[i]);
+                    m_allocator.deallocate(arr, vecCapacity);
+                }
+            }
             //-------------ITERATORS-------------
 			iterator begin( void ) { return iterator(arr); }
 			const iterator begin( void ) const { return iterator(arr); }
