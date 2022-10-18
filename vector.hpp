@@ -62,6 +62,7 @@ namespace ft
             typedef const value_type* const_pointer;
 			typedef vectorIterator< vector< T > > iterator;
 			typedef const vectorIterator< vector< T > > const_iterator;
+            typedef ptrdiff_t difference_type;
             typedef unsigned long size_type;
 
         private :
@@ -82,7 +83,23 @@ namespace ft
                 while (vecSize != n)
                     push_back(val);
             }
-         
+            template< class iterator >
+            vector( iterator begin, iterator end, const allocator_type& alloc = allocator_type())
+            {
+                difference_type distance = end - begin;
+
+                arr = NULL;
+                vecSize = 0;
+                vecCapacity = 0;
+                m_allocator = alloc;
+                reserve(distance);
+                for (difference_type i = 0; i < distance; i++)
+                {
+                    m_allocator.construct(&arr[i], *begin);
+                    vecSize++;
+                    begin++;
+                }
+            }
             ~vector ( void )
             {
                 if (arr)

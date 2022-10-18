@@ -64,7 +64,10 @@ namespace ft
             //Arithmetic operators
             vectorIterator operator+( int n ) { return vectorIterator(data + n); }
             vectorIterator operator-( int n ) { return vectorIterator(data - n); }
-            difference_type operator-( vectorIterator &rhs ) { return data - rhs.getData(); }
+            difference_type operator-( const vectorIterator &rhs ) { return data - rhs.getData(); }
+
+            //test
+            //test
 
             //Subscript operator
             value_type operator[]( size_type idx ) { return *(data + idx); }
@@ -94,7 +97,6 @@ namespace ft
             {
                 return vectorIterator<T>(rhs.getData() + n);
             }
-
 }
 
 #endif
