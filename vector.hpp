@@ -3,7 +3,7 @@
 
 // To implement :
 
-//Constructors(4)
+//Constructors(4) : done
 //Destructor : done
 //Copy assignment operator
 
@@ -72,6 +72,7 @@ namespace ft
             allocator_type m_allocator;
 
         public :
+            //-------------CONSTRUCTORS-------------
             explicit vector( const allocator_type& alloc = allocator_type() ) : arr(NULL), vecSize(0), vecCapacity(0), m_allocator(alloc) {}
             explicit vector( size_type n, const value_type &val = value_type(), const allocator_type& alloc = allocator_type())
             {
@@ -99,6 +100,35 @@ namespace ft
                     vecSize++;
                     begin++;
                 }
+            }
+            vector ( const vector &rhs )
+            {
+                arr = NULL;
+                vecSize = 0;
+                vecCapacity = 0;
+                m_allocator = allocator_type();
+                *this = rhs;
+            }
+            vector &operator=( const vector &rhs )
+            {
+                if (this == &rhs || (arr == NULL && rhs.data() == NULL))
+                    return *this;
+                if (arr == NULL && rhs.data())
+                {
+                    reserve(rhs.size());
+                    for (size_type i = 0; i < rhs.size(); i++)
+                        push_back(rhs[i]);
+                }
+                else if (arr && rhs.data() == NULL)
+                {
+                    while (vecSize != 0)
+                        pop_back();
+                    m_allocator.deallocate(arr, vecCapacity);
+                    vecCapacity = 0;
+                    arr = NULL;
+                }
+                //another condition to add (if they are both !empty)
+                return *this;
             }
             ~vector ( void )
             {

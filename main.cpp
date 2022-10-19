@@ -14,8 +14,25 @@ void print( T &vec )
 int main( void )
 {
 	{
-		// std::vector<int> test;
-		// std::vector<int>::iterator b, e;
+		std::vector<int> test;
+
+		test.push_back(0);
+		test.push_back(1);
+		test.push_back(2);
+		test.push_back(3);
+		test.push_back(4);
+		std::vector<int> t(10);
+
+
+		std::cout << "Size of test = " << test.size() << ", capacity of test = " << test.capacity() << std::endl;
+
+		t = test;
+		print(t);
+		std::cout << "Size of t = " << t.size() << ", capacity of t = " << t.capacity() << std::endl;
+	}
+	std::cout << "---------FT---------" << std::endl;
+	{
+		// ft::vector<int> test;
 
 		// test.push_back(0);
 		// test.push_back(1);
@@ -23,25 +40,10 @@ int main( void )
 		// test.push_back(3);
 		// test.push_back(4);
 
-		// std::vector<int> t(test.begin(), test.end());
 		// std::cout << "Size of test = " << test.size() << ", capacity of test = " << test.capacity() << std::endl;
-		// print(t);
-		// std::cout << "Size of t = " << t.size() << ", capacity of t = " << t.capacity() << std::endl;
-	}
-	std::cout << "---------FT---------" << std::endl;
-	{
-		ft::vector<int> test;
-		ft::vector<int>::iterator b, e;
+		// ft::vector<int> t(10);
 
-		test.push_back(0);
-		test.push_back(1);
-		test.push_back(2);
-		test.push_back(3);
-		test.push_back(4);
-
-		std::cout << test.end() - test.begin() << std::endl;
-		// ft::vector<int> t(test.begin(), test.end());
-		// std::cout << "Size of test = " << test.size() << ", capacity of test = " << test.capacity() << std::endl;
+		// t = test;
 		// print(t);
 		// std::cout << "Size of t = " << t.size() << ", capacity of t = " << t.capacity() << std::endl;
 	}

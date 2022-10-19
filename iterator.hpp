@@ -66,9 +66,6 @@ namespace ft
             vectorIterator operator-( int n ) { return vectorIterator(data - n); }
             difference_type operator-( const vectorIterator &rhs ) { return data - rhs.getData(); }
 
-            //test
-            //test
-
             //Subscript operator
             value_type operator[]( size_type idx ) { return *(data + idx); }
 
