@@ -5,7 +5,7 @@
 
 //Constructors(4) : done
 //Destructor : done
-//Copy assignment operator
+//Copy assignment operator : done
 
 // --ITERATORS--
 // _begin : done
@@ -29,12 +29,12 @@
 // _data : done
 
 // --MODIFIERS--
-// _assign : not yet
+// _assign : done
 // _push_back : done
 // _pop_back : done
 // _insert : not yet
-// _erase : not yet
-// _swap : not yet
+// _erase : done
+// _swap : done
 // _clear : done
 
 // --ALLOCATOR--
@@ -42,7 +42,7 @@
 
 // --NON MEMBER FUNCTION OVERLOAD--
 // _relational operators
-// _swap
+// _swap : done
 
 #include <iostream>
 #include <memory>
@@ -60,8 +60,8 @@ namespace ft
             typedef const value_type& const_reference;
             typedef value_type* pointer;
             typedef const value_type* const_pointer;
-			typedef vectorIterator< vector< T > > iterator;
-			typedef const vectorIterator< vector< T > > const_iterator;
+			typedef vectorIterator< T > iterator;
+			typedef const vectorIterator< T > const_iterator;
             typedef ptrdiff_t difference_type;
             typedef unsigned long size_type;
 
@@ -127,7 +127,14 @@ namespace ft
                     vecCapacity = 0;
                     arr = NULL;
                 }
-                //another condition to add (if they are both !empty)
+                else
+                {
+                    while (vecSize != 0)
+                        pop_back();
+                    reserve(rhs.size());
+                    for (size_type i = 0; i < rhs.size(); i++)
+                        push_back(rhs[i]);
+                }
                 return *this;
             }
             ~vector ( void )
@@ -181,6 +188,7 @@ namespace ft
                     arr = m_allocator.allocate(n);
                     for (size_type i = 0; i < vecSize; i++)
                         arr[i] = tmp[i];
+                    m_allocator.deallocate(tmp, vecCapacity);
                     vecCapacity = n;
                 }
             }
@@ -218,6 +226,49 @@ namespace ft
 
 
             //-------------MODIFIERS-------------
+            //Assign member function
+            void assign ( size_type n, const value_type &val )
+            {
+                if (n <= vecCapacity)
+                {
+                    for (size_type i = 0; i < vecSize; i++)
+                    {
+                        m_allocator.destroy(&arr[i]);
+                        if (i < n)
+                            m_allocator.construct(&arr[i], val);
+                    }
+                    vecSize = n;
+                }
+                else
+                {
+					resize(0);
+                    m_allocator.deallocate(arr, vecCapacity);
+                    arr = m_allocator.allocate(n);
+                    vecCapacity = n;
+                    vecSize = n;
+                    for (size_type i = 0; i < vecSize; i++)
+                        m_allocator.construct(&arr[i], val);
+                }
+            }
+			template <class InputIterator>
+			void assign(InputIterator first, InputIterator last)
+			{
+				size_type i = 0;
+
+				if (last - first < 0)
+					throw std::length_error("vector");
+				while (vecSize != 0)
+					pop_back();
+				reserve(last - first);
+				while (first != last)
+				{
+					m_allocator.construct(&arr[i], *first);
+					vecSize++;
+					first++;
+					i++;
+				}
+			}
+
             //Push_back member function
             void push_back( const_reference val )
             {
@@ -247,6 +298,144 @@ namespace ft
                 vecSize--;
             }
 
+			Insert member function
+			iterator insert( iterator position, const value_type &val )
+			{
+				iterator e = end();
+				if (vecSize < vecCapacity)
+				{
+					while (e != position)
+					{
+						*e = *(e - 1);
+						e--;
+					}
+					*position = val;
+					vecSize += 1;
+				}
+				else
+				{
+					difference_type diff = position - begin();
+					reserve(vecCapacity * 2);
+					return insert(begin() + diff, val);
+				}
+				return position;
+			}
+
+			void insert( iterator position, size_type n, const value_type &val )
+			{
+				if (n + vecSize <= vecCapacity)
+				{
+					vector<value_type> tmp;
+					iterator tmpIter;
+
+					tmp.reserve(end() - position);
+					for (tmpIter = position; tmpIter < end(); tmpIter++)
+						tmp.push_back(*tmpIter);
+					vecSize = (position - begin());
+					for (size_type i = 0; i < n; i++)
+					{
+						*position = val;
+						vecSize += 1;
+						position++;
+					}
+					for (iterator b = tmp.begin(); b != tmp.end(); b++)
+					{
+						*position = *b;
+						vecSize += 1;
+						position++;
+					}
+				}
+				else
+				{
+					difference_type diff = position - begin();
+					if (vecCapacity * 2 >= n + vecSize)
+						reserve(vecCapacity * 2);
+					else
+						reserve(vecSize + n);
+					insert(begin() + diff, n, val);
+				}
+			}
+
+			// template <class InputIterator>
+			// void insert( iterator position, InputIterator first, InputIterator last )
+			// {
+			// 	if ((last - first) + vecSize <= vecCapacity)
+			// 	{
+			// 		vector<value_type> tmp;
+
+			// 		tmp.reserve(end() - position);
+			// 		for (iterator b = position; b < end(); b++)
+			// 			tmp.push_back(*b);
+			// 		vecSize = position - begin();
+			// 		std::cout << vecSize << std::endl;
+			// 		while (first != last)
+			// 		{
+			// 			*position = *first;
+			// 			first++;
+			// 			position++;
+			// 			vecSize += 1;
+			// 		}
+			// 		for (iterator b = tmp.begin(); b < tmp.end(); b++)
+			// 			push_back(*b);
+			// 	}
+			// }
+
+			//Erase member function
+			iterator erase( iterator position )
+			{
+				size_type i;
+
+				m_allocator.destroy(&(*position));
+				for (i = 1; i < vecSize; i++)
+					arr[i - 1] = arr[i];
+				m_allocator.destroy(&arr[i]);
+				vecSize -= 1;
+				return position + 1;
+			}
+			iterator erase ( iterator first, iterator last )
+			{
+				iterator firstTmp = first;
+				size_type toRemoveFromSize = 0;
+
+				while (firstTmp != last)
+				{
+					m_allocator.destroy(&(*firstTmp));
+					firstTmp++;
+					toRemoveFromSize += 1;
+				}
+				std::cout << std::endl;
+				firstTmp = first;
+				while (last != end())
+				{
+					*firstTmp = *last;
+					last++;
+					firstTmp++;
+				}
+				vecSize -= toRemoveFromSize;
+				return first;
+			}
+
+			//Swap member function
+			void swap( vector &x )
+			{
+				vector<T> tmp;
+				vector<T> emptyVec;
+
+				tmp.reserve(vecCapacity);
+				for (size_type i = 0; i < vecSize; i++)
+					tmp.push_back(arr[i]);
+				*this = emptyVec;
+				
+				reserve(x.capacity());
+				for (size_type i = 0; i < x.size(); i++)
+					push_back(x[i]);
+				
+				x = emptyVec;
+				x.reserve(tmp.capacity());
+				for (size_type i = 0; i < tmp.size(); i++)
+					x.push_back(tmp[i]);
+			}
+
             //Clear member function    
             void clear( void )
             {
@@ -258,6 +447,9 @@ namespace ft
             allocator_type get_allocator( void ) const { return m_allocator; }
             
     };
+            //-------------Non member functions-------------
+			template < class T, class allocator >
+			void swap( vector< T, allocator >& x, vector< T, allocator >& y ) { x.swap(y); }
 }
 
 #endif

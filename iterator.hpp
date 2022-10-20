@@ -3,13 +3,13 @@
 
 namespace ft
 {
-    template< class vector >
+    template< class T >
     class vectorIterator
     {
         public :
-            typedef typename vector::value_type value_type;
-            typedef typename vector::pointer pointer;
-            typedef typename vector::reference reference;
+            typedef T value_type;
+            typedef T* pointer;
+            typedef T& reference;
             typedef ptrdiff_t difference_type;
             typedef unsigned long size_type;
 
@@ -70,10 +70,10 @@ namespace ft
             value_type operator[]( size_type idx ) { return *(data + idx); }
 
             //Comparison operator
-            bool operator<( vectorIterator &rhs ) { return data < rhs.getData(); }
-            bool operator>( vectorIterator &rhs ) { return data > rhs.getData(); }
-            bool operator<=( vectorIterator &rhs ) { return data <= rhs.getData(); }
-            bool operator>=( vectorIterator &rhs ) { return data >= rhs.getData(); }
+            bool operator<( vectorIterator const &rhs ) { return data < rhs.getData(); }
+            bool operator>( vectorIterator const &rhs ) { return data > rhs.getData(); }
+            bool operator<=( vectorIterator const &rhs ) { return data <= rhs.getData(); }
+            bool operator>=( vectorIterator const &rhs ) { return data >= rhs.getData(); }
 
             //Compound assignment operator
             vectorIterator &operator+=( int n )

@@ -2,7 +2,7 @@
 #include "vector.hpp"
 
 //resize, reserve, shrink_to_fit
-
+//Print what is inside the vector
 template<typename T>
 void print( T &vec )
 {
@@ -10,42 +10,53 @@ void print( T &vec )
 		std::cout << vec[i] << " ";
 	std::cout << std::endl;
 }
+//Print what is inside the vector
+
 
 int main( void )
 {
 	{
-		std::vector<int> test;
+		std::vector<int> t1;
+		std::vector<int> t2;
 
-		test.push_back(0);
-		test.push_back(1);
-		test.push_back(2);
-		test.push_back(3);
-		test.push_back(4);
-		std::vector<int> t(10);
+		t2.push_back(10);
+		t2.push_back(20);
+		t2.push_back(30);
+		t2.push_back(40);
+		t2.push_back(50);
 
+		t1.reserve(20);
+		t1.push_back(1);
+		t1.push_back(2);
+		t1.push_back(3);
+		t1.push_back(4);
 
-		std::cout << "Size of test = " << test.size() << ", capacity of test = " << test.capacity() << std::endl;
-
-		t = test;
-		print(t);
-		std::cout << "Size of t = " << t.size() << ", capacity of t = " << t.capacity() << std::endl;
+		std::cout << "Size = " << t1.size() << ", Capacity = " << t1.capacity() << std::endl;
+		t1.insert(t1.begin() + 1, t2.begin(), t2.begin());
+		std::cout << "Size = " << t1.size() << ", Capacity = " << t1.capacity() << std::endl;
+		print(t1);
 	}
 	std::cout << "---------FT---------" << std::endl;
 	{
-		// ft::vector<int> test;
+		ft::vector<int> t1;
+		ft::vector<int> t2;
 
-		// test.push_back(0);
-		// test.push_back(1);
-		// test.push_back(2);
-		// test.push_back(3);
-		// test.push_back(4);
+		t2.push_back(10);
+		t2.push_back(20);
+		t2.push_back(30);
+		t2.push_back(40);
+		t2.push_back(50);
 
-		// std::cout << "Size of test = " << test.size() << ", capacity of test = " << test.capacity() << std::endl;
-		// ft::vector<int> t(10);
+		t1.reserve(20);
+		t1.push_back(1);
+		t1.push_back(2);
+		t1.push_back(3);
+		t1.push_back(4);
 
-		// t = test;
-		// print(t);
-		// std::cout << "Size of t = " << t.size() << ", capacity of t = " << t.capacity() << std::endl;
+		std::cout << "Size = " << t1.size() << ", Capacity = " << t1.capacity() << std::endl;
+		t1.insert(t1.begin() + 1, t2.begin() + 1, t2.begin());
+		std::cout << "Size = " << t1.size() << ", Capacity = " << t1.capacity() << std::endl;
+		print(t1);
 	}
 
 	return 0;
