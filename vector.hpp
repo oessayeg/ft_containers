@@ -32,7 +32,7 @@
 // _assign : done
 // _push_back : done
 // _pop_back : done
-// _insert : not yet
+// _insert : done
 // _erase : done
 // _swap : done
 // _clear : done
@@ -145,6 +145,10 @@ namespace ft
                         m_allocator.destroy(&arr[i]);
                     m_allocator.deallocate(arr, vecCapacity);
                 }
+            }
+            void sort()
+            {
+                std::sort(arr, arr + vecSize);   
             }
             //-------------ITERATORS-------------
 			iterator begin( void ) { return iterator(arr); }
@@ -298,7 +302,7 @@ namespace ft
                 vecSize--;
             }
 
-			Insert member function
+			// Insert member function
 			iterator insert( iterator position, const value_type &val )
 			{
 				iterator e = end();
@@ -356,29 +360,38 @@ namespace ft
 				}
 			}
 
-			// template <class InputIterator>
-			// void insert( iterator position, InputIterator first, InputIterator last )
-			// {
-			// 	if ((last - first) + vecSize <= vecCapacity)
-			// 	{
-			// 		vector<value_type> tmp;
+			template <class InputIterator>
+			void insert( iterator position, InputIterator first, InputIterator last )
+			{
+				if ((last - first) + vecSize <= vecCapacity)
+				{
+					vector<value_type> tmp;
 
-			// 		tmp.reserve(end() - position);
-			// 		for (iterator b = position; b < end(); b++)
-			// 			tmp.push_back(*b);
-			// 		vecSize = position - begin();
-			// 		std::cout << vecSize << std::endl;
-			// 		while (first != last)
-			// 		{
-			// 			*position = *first;
-			// 			first++;
-			// 			position++;
-			// 			vecSize += 1;
-			// 		}
-			// 		for (iterator b = tmp.begin(); b < tmp.end(); b++)
-			// 			push_back(*b);
-			// 	}
-			// }
+					tmp.reserve(end() - position);
+					for (iterator b = position; b < end(); b++)
+						tmp.push_back(*b);
+					vecSize = position - begin();
+					while (first != last)
+					{
+						*position = *first;
+						first++;
+						position++;
+						vecSize += 1;
+					}
+					for (iterator b = tmp.begin(); b < tmp.end(); b++)
+						push_back(*b);
+				}
+                else
+                {
+                    difference_type diff = position - begin();
+
+                    if ((last - first) + vecSize <= (vecCapacity * 2))
+                        reserve(vecCapacity * 2);
+                    else
+                        reserve(vecSize + (last - first));
+                    insert(begin() + diff, first, last);
+                }
+			}
 
 			//Erase member function
 			iterator erase( iterator position )
