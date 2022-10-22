@@ -19,7 +19,7 @@ namespace ft
             pointer data;
 
         public :
-            // Constructors, copy assignment operator, destructor
+            // Constructors, Copy assignment operator, Destructor
             vectorIterator( void ) : data(NULL) {};
             vectorIterator( pointer p ) : data(p) {}
             vectorIterator( vectorIterator const &rhs ) : data(NULL) { *this = rhs; }
@@ -40,10 +40,10 @@ namespace ft
             pointer operator->( void ) { return data; }
 
             //test
-            bool operator==( const vectorIterator &rhs )
-            {
-                return data == rhs.getData();
-            }
+            // bool operator==( const vectorIterator &rhs )
+            // {
+            //     return data == rhs.getData();
+            // }
             //test
 
             //Increment
@@ -78,12 +78,6 @@ namespace ft
             //Subscript operator
             value_type operator[]( size_type idx ) { return *(data + idx); }
 
-            //Comparison operator
-            // bool operator<( vectorIterator const &rhs ) { return data < rhs.getData(); }
-            // bool operator>( vectorIterator const &rhs ) { return data > rhs.getData(); }
-            // bool operator<=( vectorIterator const &rhs ) { return data <= rhs.getData(); }
-            // bool operator>=( vectorIterator const &rhs ) { return data >= rhs.getData(); }
-
             //Compound assignment operator
             // vectorIterator &operator+=( int n )
             // {
@@ -96,13 +90,18 @@ namespace ft
             //     data -= n;
             //     return *this;
             // }
+
+            // bool operator<( const vectorIterator &rhs )
+            // {
+            //     return data < rhs.getData();
+            // }
     };
             // //'+' Operator
-            // template < class T >
-            // vectorIterator< T > operator+( int n, vectorIterator<T> &rhs )
-            // {
-            //     return vectorIterator<T>(rhs.getData() + n);
-            // }
+            template < class T >
+            vectorIterator< T > operator+( int n, vectorIterator<T> &rhs )
+            {
+                return vectorIterator<T>(rhs.getData() + n);
+            }
 
             //'==' Operator
             template < class T >
@@ -135,6 +134,31 @@ namespace ft
             vectorIterator< T > operator-( vectorIterator< T > const &lhs, vectorIterator< T > const &rhs )
             {
                 return vectorIterator< T >(lhs.getData() - rhs.getData());
+            }
+
+            //Comparison operators
+            template < class T >
+            bool operator<( vectorIterator< T > const &lhs, vectorIterator< T > const &rhs )
+            {
+                return lhs.getData() < rhs.getData();
+            }
+
+            template < class T >
+            bool operator>( vectorIterator< T > const &lhs, vectorIterator< T > const &rhs )
+            {
+                return lhs.getData() > rhs.getData();
+            }
+
+            template < class T >
+            bool operator<=( vectorIterator< T > const &lhs, vectorIterator< T > const &rhs )
+            {
+                return lhs.getData() <= rhs.getData();
+            }
+
+            template < class T >
+            bool operator>=( vectorIterator< T > const &lhs, vectorIterator< T > const &rhs )
+            {
+                return lhs.getData() >= rhs.getData();
             }
 }
 

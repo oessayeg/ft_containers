@@ -15,26 +15,28 @@ int main( void )
 {
 	{
 		std::vector<int> t1;
-		std::vector<int>::iterator b;
+		std::vector<std::string> t2;
 
-		t1.reserve(5);
-		t1.push_back(1);
-		t1.push_back(2);
-		b = t1.end() - t1.begin();
-		std::cout << *b << std::endl;
+		t2.push_back("hello");
+		// std::vector<int>::iterator b;
+		// int arr[10] = {1, 2, 3, 4};
+
+		// std::cout << (t2.begin() < t1.begin()) << std::endl;
+		// std::cout << *b << std::endl;
 	}
 
 	std::cout << "---------FT---------" << std::endl;
 	
 	{
 		ft::vector<int> t1;
-		ft::vector<int>::iterator b;
-		
-		t1.reserve(5);
-		t1.push_back(1);
-		t1.push_back(2);
-		b = t1.end() - t1.begin();
-		std::cout << *b << std::endl;
+		ft::vector<std::string> t2;
+
+		t2.push_back("hello");
+		std::vector<int>::iterator b;
+		// int arr[10] = {1, 2, 3, 4};
+
+		std::cout << (t2.begin() < t1.begin()) << std::endl;
+		// std::cout << *b << std::endl;
 	}
 	return 0;
 }
