@@ -153,6 +153,7 @@ namespace ft
             {
                 std::sort(arr, arr + vecSize);   
             }
+
             //-------------ITERATORS-------------
 			iterator begin( void ) { return iterator(arr); }
 			const_iterator begin( void ) const { return const_iterator(arr); }
@@ -169,12 +170,20 @@ namespace ft
             //Resize member function
             void resize( size_type n, value_type val = value_type() )
             {
-                if (n < vecSize)
+				if (n == vecSize)
+					return ;
+                else if (n < vecSize)
                     while (vecSize != n)
                         pop_back();
-                else if (n > vecSize)
+                else if (n > vecSize && n <= vecCapacity * 2)
                     while (vecSize != n)
                         push_back(val);
+				else
+				{
+					reserve(n);
+					while (vecSize != n)
+						push_back(val);
+				}
             }
 
             //Capacity member function (blocks allocated)
@@ -186,25 +195,25 @@ namespace ft
             //Reserve member function
             void reserve( size_type n )
             {
-                if ( n > max_size() )
+                if (n > max_size())
                     throw(std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size"));
-				else if ( vecSize == 0 && n > vecCapacity )
+				else if (vecSize == 0 && n > vecCapacity)
 				{
 					if (vecCapacity == 0)
 						arr = m_allocator.allocate(n);
-					else if ( vecCapacity > 0 )
+					else if (vecCapacity > 0)
 					{
 						m_allocator.deallocate(arr, vecCapacity);
 						arr = m_allocator.allocate(n);
 					}
 					vecCapacity = n;
 				}
-                else if ( n > vecCapacity && vecSize > 0 )
+                else if (n > vecCapacity && vecSize > 0)
                 {
                     pointer tmp = arr;
 
                     arr = m_allocator.allocate(n);
-                    for ( size_type i = 0; i < vecSize; i++ )
+                    for (size_type i = 0; i < vecSize; i++)
 					{
 						m_allocator.construct(&arr[i], tmp[i]);
 						m_allocator.destroy(&tmp[i]);
@@ -249,25 +258,33 @@ namespace ft
             //Assign member function
             void assign ( size_type n, const value_type &val )
             {
-                if (n <= vecCapacity)
+				if (n == 0)
+					while (vecSize != 0)
+						pop_back();
+                else if (n <= vecCapacity)
                 {
-                    for (size_type i = 0; i < vecSize; i++)
+					std::cout << "Here 1 " << std::endl;
+                    for (size_type i = 0; i < vecCapacity; i++)
                     {
-                        m_allocator.destroy(&arr[i]);
+						if (i < vecSize)
+                        	m_allocator.destroy(&arr[i]);
                         if (i < n)
                             m_allocator.construct(&arr[i], val);
+						if (i == n)
+							break;
                     }
                     vecSize = n;
                 }
                 else
                 {
+					std::cout << "Here 2 " << std::endl;
 					resize(0);
-                    m_allocator.deallocate(arr, vecCapacity);
-                    arr = m_allocator.allocate(n);
-                    vecCapacity = n;
-                    vecSize = n;
-                    for (size_type i = 0; i < vecSize; i++)
-                        m_allocator.construct(&arr[i], val);
+					reserve(n);
+					while (vecSize != n)
+						push_back(val);
+                    // vecSize = n;
+                    // for (size_type i = 0; i < vecSize; i++)
+                    //     m_allocator.construct(&arr[i], val);
                 }
             }
 			template <class InputIterator>
