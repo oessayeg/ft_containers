@@ -46,7 +46,9 @@
 
 #include <iostream>
 #include <memory>
+#include <limits>
 #include "iterator.hpp"
+#include "utils.hpp"
 
 namespace ft
 {
@@ -61,7 +63,7 @@ namespace ft
             typedef value_type* pointer;
             typedef const value_type* const_pointer;
 			typedef vectorIterator< T > iterator;
-			typedef const vectorIterator< T > const_iterator;
+			typedef vectorIterator< const T > const_iterator;
             typedef ptrdiff_t difference_type;
             typedef unsigned long size_type;
 
@@ -82,10 +84,11 @@ namespace ft
                 m_allocator = alloc;
                 reserve(n);
                 while (vecSize != n)
-                    push_back(val);
+					push_back(val);
             }
             template< class iterator >
-            vector( iterator begin, iterator end, const allocator_type& alloc = allocator_type())
+            vector( iterator begin, iterator end, const allocator_type& alloc = allocator_type(),
+			typename ft::enable_if< !std::is_integral< iterator >::value >::type* = 0 )
             {
                 difference_type distance = end - begin;
 
@@ -152,9 +155,9 @@ namespace ft
             }
             //-------------ITERATORS-------------
 			iterator begin( void ) { return iterator(arr); }
-			const iterator begin( void ) const { return iterator(arr); }
+			const_iterator begin( void ) const { return const_iterator(arr); }
 			iterator end( void ) { return iterator(arr + vecSize); }
-			const iterator end( void ) const { return iterator(arr + vecSize); }
+			const_iterator end( void ) const { return const_iterator(arr + vecSize); }
 
             //-------------CAPACITY-------------
             //Size of vector (member function)
@@ -183,15 +186,29 @@ namespace ft
             //Reserve member function
             void reserve( size_type n )
             {
-                if (n > max_size())
+                if ( n > max_size() )
                     throw(std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size"));
-                else if (n > vecCapacity)
+				else if ( vecSize == 0 && n > vecCapacity )
+				{
+					if (vecCapacity == 0)
+						arr = m_allocator.allocate(n);
+					else if ( vecCapacity > 0 )
+					{
+						m_allocator.deallocate(arr, vecCapacity);
+						arr = m_allocator.allocate(n);
+					}
+					vecCapacity = n;
+				}
+                else if ( n > vecCapacity && vecSize > 0 )
                 {
                     pointer tmp = arr;
 
                     arr = m_allocator.allocate(n);
-                    for (size_type i = 0; i < vecSize; i++)
-                        arr[i] = tmp[i];
+                    for ( size_type i = 0; i < vecSize; i++ )
+					{
+						m_allocator.construct(&arr[i], tmp[i]);
+						m_allocator.destroy(&tmp[i]);
+					}
                     m_allocator.deallocate(tmp, vecCapacity);
                     vecCapacity = n;
                 }
@@ -205,7 +222,7 @@ namespace ft
             //At member function
             reference at( size_type idx )
             {
-                if ( idx >= vecSize)
+                if ( idx >= vecSize )
                     throw std::out_of_range("vector");
                 return arr[idx];
             }
@@ -227,7 +244,6 @@ namespace ft
             //Data member function
             pointer data( void ) throw() { return arr; }
             const_pointer data( void ) const throw() { return arr; }
-
 
             //-------------MODIFIERS-------------
             //Assign member function
@@ -255,7 +271,8 @@ namespace ft
                 }
             }
 			template <class InputIterator>
-			void assign(InputIterator first, InputIterator last)
+			void assign(InputIterator first, InputIterator last,
+			typename ft::enable_if< !std::is_integral<InputIterator>::value >::type * = 0 )
 			{
 				size_type i = 0;
 
@@ -287,11 +304,14 @@ namespace ft
 
                     arr = m_allocator.allocate(vecCapacity * 2);
                     for (size_type i = 0; i < vecSize; i++)
-                        arr[i] = tmp[i];
+					{
+						m_allocator.construct(&arr[i], tmp[i]);
+						m_allocator.destroy(&tmp[i]);
+					}
                     m_allocator.deallocate(tmp, vecCapacity);
                     vecCapacity *= 2;
                 }
-                arr[vecSize] = val;
+				m_allocator.construct(&arr[vecSize], val);
                 vecSize++;
             }
 
@@ -361,7 +381,8 @@ namespace ft
 			}
 
 			template <class InputIterator>
-			void insert( iterator position, InputIterator first, InputIterator last )
+			void insert( iterator position, InputIterator first, InputIterator last,
+			typename ft::enable_if< !std::is_integral<InputIterator>::value >::type * = 0 )
 			{
 				if ((last - first) + vecSize <= vecCapacity)
 				{
@@ -465,12 +486,12 @@ namespace ft
 			void swap( vector< T, allocator >& x, vector< T, allocator >& y ) { x.swap(y); }
 
             		//-------------RELATIONAL OPERATORS-------------
-		// template< class T, class Allocator >
-		bool operator==( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs )
+		template< class T, class allocator >
+		bool operator==( vector< T, allocator > const &lhs, vector< T, allocator > const &rhs )
 		{
 			if (lhs.size() == rhs.size())
 			{
-				for (unsigned long i = 0; i < lhs.size(); i++)
+				for (size_t i = 0; i < lhs.size(); i++)
 					if (lhs.data()[i] != rhs.data()[i])
 						return false;
 				return true;
@@ -478,16 +499,16 @@ namespace ft
 			return false;
 		}
 
-		template< class T, class Allocator >
-		bool operator!=( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs )
+		template< class T, class allocator >
+		bool operator!=( vector< T, allocator > const &lhs, vector< T, allocator > const &rhs )
 		{
 			return !(lhs == rhs);
 		}
 
-		template< class T, class Allocator >
-		bool operator<( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
+		template< class T, class allocator >
+		bool operator<( vector< T, allocator > const &lhs, vector< T, allocator > const &rhs)
 		{
-			unsigned long i = 0;
+			size_t i = 0;
 
 			if (lhs.size() == 0 && rhs.size() > 0)
 				return true;
@@ -507,33 +528,16 @@ namespace ft
 			return false;
 		}
 
-		template< class T, class Allocator >
-		bool operator<=( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
+		template< class T, class allocator >
+		bool operator<=( vector< T, allocator > const &lhs, vector< T, allocator > const &rhs)
 		{
-			unsigned long i = 0;
-
-			if (lhs.size() == 0 && rhs.size() > 0)
-				return true;
-			else if (rhs.size() == 0 && lhs.size() > 0)
-				return false;
-			while (i < lhs.size() && i < rhs.size())
-			{
-				if (lhs.data()[i] < rhs.data()[i])
-					return true;
-				else if (lhs.data()[i] == rhs.data()[i])
-					i++;
-				else
-					return false;
-			}
-			if (lhs.size() <= rhs.size())
-				return true;
-			return false;
+			return !(lhs > rhs);
 		}
 
-		template< class T, class Allocator >
-		bool operator>( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
+		template< class T, class allocator >
+		bool operator>( vector< T, allocator > const &lhs, vector< T, allocator > const &rhs)
 		{
-			unsigned long i = 0;
+			size_t i = 0;
 
 			if (lhs.size() == 0 && rhs.size() > 0)
 				return false;
@@ -553,27 +557,10 @@ namespace ft
 			return false;
 		}
 
-		template< class T, class Allocator >
-		bool operator>=( vector< T, Allocator > const &lhs, vector< T, Allocator > const &rhs)
+		template< class T, class allocator >
+		bool operator>=( vector< T, allocator > const &lhs, vector< T, allocator > const &rhs)
 		{
-			unsigned long i = 0;
-
-			if (lhs.size() == 0 && rhs.size() > 0)
-				return false;
-			else if (rhs.size() == 0 && lhs.size() > 0)
-				return true;
-			while (i < lhs.size() && i < rhs.size())
-			{
-				if (lhs.data()[i] > rhs.data()[i])
-					return true;
-				else if (lhs.data()[i] == rhs.data()[i])
-					i++;
-				else
-					return false;
-			}
-			if (lhs.size() >= rhs.size())
-				return true;
-			return false;
+			return !(lhs < rhs);
 		}
 }
 

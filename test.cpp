@@ -1,41 +1,38 @@
 #include <iostream>
+#include <set>
+#include "utils.hpp"
 
-class INT
+
+template < class T >
+T test( T a, T b )
 {
-	public :
-		int nbr;
-		INT( int n ) : nbr(n) {}
-		~INT( void ) {};
-		INT &operator=( INT &rhs )
-		{
-			if (this != &rhs)
-				nbr = rhs.nbr;
-			return *this;
-		}
-		// INT operator+( INT const &rhs )
-		// {
-		// 	nbr += rhs.nbr; 
-		// 	return *this;
-		// }
-		int getNbr( void ) const { return nbr; }
+	return a + b;
+}
+
+template <>
+int test< int >( int a, int b )
+{
+	return a * b;
+}
+
+class B
+{
+	void print( void ) { std::cout << "Hello from B" << std::endl; }
 };
-INT operator+( INT const &lhs, INT const &rhs )
+
+class D1
 {
-	INT ret = lhs;
-	ret.nbr += rhs.nbr;
-	return ret;
+	void print( void ) { std::cout << "Hello from D1" << std::endl; }
 }
 
-std::ostream &operator<<( std::ostream &o, INT const &rhs )
+class D2
 {
-	o << rhs.getNbr();
-	return o;
-}
+	void print( void ) { std::cout << "Hello from D2" << std::endl; };
+};
 
 int main( void )
 {
-	INT test(40);
-
-	std::cout << 10 + test << std::endl;
+	std::cout << test(2.33f, 2.132f) << std::endl;
+	std::cout << test(5, 2) << std::endl;
 	return 0;
 }

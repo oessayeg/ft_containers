@@ -71,6 +71,7 @@
         "__functional_03": "cpp",
         "list": "cpp",
         "__cxx_version": "cpp",
-        "memory_resource": "cpp"
+        "memory_resource": "cpp",
+        "queue": "cpp"
     }
 }

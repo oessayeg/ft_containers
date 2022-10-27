@@ -1,18 +1,19 @@
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
 
+#include "iterator_traits.hpp"
+
 namespace ft
 {
     template< class T >
     class vectorIterator
     {
         public :
-            typedef T value_type;
-            typedef T* pointer;
-            typedef T& reference;
-            typedef const T& const_reference;
-            typedef const T* const_pointer;
-            typedef ptrdiff_t difference_type;
+            typedef typename ft::iterator_traits< T * >::iterator_category iterator_category;
+            typedef typename ft::iterator_traits< T * >::value_type value_type;
+            typedef typename ft::iterator_traits< T * >::difference_type difference_type;
+            typedef typename ft::iterator_traits< T * >::pointer pointer;
+            typedef typename ft::iterator_traits< T * >::reference reference;
             typedef unsigned long size_type;
 
         private :
@@ -20,10 +21,10 @@ namespace ft
 
         public :
             // Constructors, Copy assignment operator, Destructor
-            vectorIterator( void ) : data(NULL) {};
-            vectorIterator( pointer p ) : data(p) {}
-            vectorIterator( vectorIterator const &rhs ) : data(NULL) { *this = rhs; }
-            vectorIterator &operator=( vectorIterator const &rhs )
+            // vectorIterator( void ) : data(NULL) {};
+            vectorIterator( pointer p = NULL ) : data(p) {}
+            vectorIterator( const vectorIterator< T > &rhs ) : data(NULL) { *this = rhs; }
+            vectorIterator< T > &operator=( const vectorIterator< T > &rhs )
             {
                 if (this != &rhs)
                     data = rhs.getData();
@@ -31,20 +32,16 @@ namespace ft
             }
             ~vectorIterator( void ) { }
 
+            //Equivalence comparison
+            bool operator==( const vectorIterator &rhs ) { return data == rhs.getData(); }
+            bool operator!=( const vectorIterator &rhs ) { return data != rhs.getData(); }
+
             //Get data ptr
             pointer getData( void ) const { return data; }
 
-            //Dereference
+            //Dereference (add const return)
             reference operator*( void ) { return *data; }
-            const_reference operator*( void ) const { return *data; }
             pointer operator->( void ) { return data; }
-
-            //test
-            // bool operator==( const vectorIterator &rhs )
-            // {
-            //     return data == rhs.getData();
-            // }
-            //test
 
             //Increment
             pointer operator++( void )
@@ -76,90 +73,38 @@ namespace ft
             }
 
             //Subscript operator
-            value_type operator[]( size_type idx ) { return *(data + idx); }
+            reference operator[]( difference_type idx ) { return *(data + idx); }
+
+            //Arithmetic operators
+            pointer operator+( const int rhs ) { return data + rhs; }
+            pointer operator-( const int rhs ) { return data - rhs; }
+            difference_type operator-( const vectorIterator &rhs ) { return data - rhs.getData(); }
+
+            //Relational operators
+            bool operator<( const vectorIterator &rhs ) { return data < rhs.getData(); }
+            bool operator>( const vectorIterator &rhs ) { return data > rhs.getData(); }
+            bool operator<=( const vectorIterator &rhs ) { return data <= rhs.getData(); }
+            bool operator>=( const vectorIterator &rhs ) { return data >= rhs.getData(); }
 
             //Compound assignment operator
-            // vectorIterator &operator+=( int n )
-            // {
-            //     data += n;
-            //     return *this;
-            // }
+            vectorIterator operator+=( const int &rhs )
+            {
+                data += rhs;
+                return *this;
+            }
 
-            // vectorIterator &operator-=( int n )
-            // {
-            //     data -= n;
-            //     return *this;
-            // }
-
-            // bool operator<( const vectorIterator &rhs )
-            // {
-            //     return data < rhs.getData();
-            // }
+            vectorIterator operator-=( const int &rhs )
+            {
+                data -= rhs;
+                return *this;
+            }
     };
-            // //'+' Operator
-            template < class T >
-            vectorIterator< T > operator+( int n, vectorIterator<T> &rhs )
-            {
-                return vectorIterator<T>(rhs.getData() + n);
-            }
 
-            //'==' Operator
-            template < class T >
-            bool operator==( const vectorIterator<T> &lhs, const vectorIterator<T> &rhs )
-            {
-                return lhs.getData() == rhs.getData();
-            }
-
-            //'!=' Operator
-            template < class T >
-            bool operator!=( const vectorIterator<T> &lhs, const vectorIterator<T> &rhs )
-            {
-                return lhs.getData() != rhs.getData();
-            }
-
-            //'+' Operator
-            template < class T >
-            vectorIterator< T > operator+( int lhs, vectorIterator< T > const & rhs )
-            {
-                return vectorIterator< T >(rhs.getData() + lhs);
-            }
-
-            template < class T >
-            vectorIterator< T > operator+( vectorIterator< T > const & lhs, int rhs )
-            {
-                return vectorIterator< T >(lhs.getData() + rhs);
-            }
-
-            template < class T >
-            vectorIterator< T > operator-( vectorIterator< T > const &lhs, vectorIterator< T > const &rhs )
-            {
-                return vectorIterator< T >(lhs.getData() - rhs.getData());
-            }
-
-            //Comparison operators
-            template < class T >
-            bool operator<( vectorIterator< T > const &lhs, vectorIterator< T > const &rhs )
-            {
-                return lhs.getData() < rhs.getData();
-            }
-
-            template < class T >
-            bool operator>( vectorIterator< T > const &lhs, vectorIterator< T > const &rhs )
-            {
-                return lhs.getData() > rhs.getData();
-            }
-
-            template < class T >
-            bool operator<=( vectorIterator< T > const &lhs, vectorIterator< T > const &rhs )
-            {
-                return lhs.getData() <= rhs.getData();
-            }
-
-            template < class T >
-            bool operator>=( vectorIterator< T > const &lhs, vectorIterator< T > const &rhs )
-            {
-                return lhs.getData() >= rhs.getData();
-            }
+        template < class T >
+        typename vectorIterator< T >::pointer operator+( int const lhs, vectorIterator< T > const &rhs )
+        {
+            return rhs.getData() + lhs;
+        }
 }
 
 #endif
