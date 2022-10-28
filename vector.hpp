@@ -353,7 +353,6 @@ namespace ft
 					{
 						m_allocator.construct(&(*e), *(e - 1));
 						m_allocator.destroy(&(*(e - 1)));
-						// *e = *(e - 1);
 						e--;
 					}
 					*position = val;
@@ -368,7 +367,7 @@ namespace ft
 				}
 				return position;
 			}
-
+			
 			void insert( iterator position, size_type n, const value_type &val )
 			{
 				if (n + vecSize <= vecCapacity)
@@ -378,20 +377,15 @@ namespace ft
 
 					tmp.reserve(end() - position);
 					for (tmpIter = position; tmpIter < end(); tmpIter++)
+					{
 						tmp.push_back(*tmpIter);
+						m_allocator.destroy(&(*tmpIter));
+					}
 					vecSize = (position - begin());
 					for (size_type i = 0; i < n; i++)
-					{
-						*position = val;
-						vecSize += 1;
-						position++;
-					}
+						push_back(val);
 					for (iterator b = tmp.begin(); b != tmp.end(); b++)
-					{
-						*position = *b;
-						vecSize += 1;
-						position++;
-					}
+						push_back(*b);
 				}
 				else
 				{
