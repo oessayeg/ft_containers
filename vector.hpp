@@ -262,29 +262,24 @@ namespace ft
 					while (vecSize != 0)
 						pop_back();
                 else if (n <= vecCapacity)
-                {
-					std::cout << "Here 1 " << std::endl;
+            	{
                     for (size_type i = 0; i < vecCapacity; i++)
                     {
 						if (i < vecSize)
                         	m_allocator.destroy(&arr[i]);
                         if (i < n)
                             m_allocator.construct(&arr[i], val);
-						if (i == n)
+						if (i >= n && i >= vecSize)
 							break;
                     }
                     vecSize = n;
                 }
                 else
                 {
-					std::cout << "Here 2 " << std::endl;
 					resize(0);
 					reserve(n);
 					while (vecSize != n)
 						push_back(val);
-                    // vecSize = n;
-                    // for (size_type i = 0; i < vecSize; i++)
-                    //     m_allocator.construct(&arr[i], val);
                 }
             }
 			template <class InputIterator>
@@ -342,15 +337,27 @@ namespace ft
 			// Insert member function
 			iterator insert( iterator position, const value_type &val )
 			{
+				if (arr == NULL)
+				{
+					if (position == begin() && position == end())
+					{
+						reserve(1);
+						push_back(val);
+					}
+					return begin();
+				}
 				iterator e = end();
 				if (vecSize < vecCapacity)
 				{
 					while (e != position)
 					{
-						*e = *(e - 1);
+						m_allocator.construct(&(*e), *(e - 1));
+						m_allocator.destroy(&(*(e - 1)));
+						// *e = *(e - 1);
 						e--;
 					}
 					*position = val;
+					m_allocator.construct(&(*position), val);
 					vecSize += 1;
 				}
 				else
