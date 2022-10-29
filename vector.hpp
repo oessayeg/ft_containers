@@ -149,10 +149,6 @@ namespace ft
                     m_allocator.deallocate(arr, vecCapacity);
                 }
             }
-            void sort()
-            {
-                std::sort(arr, arr + vecSize);   
-            }
 
             //-------------ITERATORS-------------
 			iterator begin( void ) { return iterator(arr); }
@@ -435,15 +431,15 @@ namespace ft
 			//Erase member function
 			iterator erase( iterator position )
 			{
-				size_type i;
+				iterator ret = position;
 
-				m_allocator.destroy(&(*position));
-				for (i = 1; i < vecSize; i++)
-					arr[i - 1] = arr[i];
-				m_allocator.destroy(&arr[i]);
-				vecSize -= 1;
-				return position + 1;
+				++position;
+				for (; position != end(); position++)
+					*(position - 1) = *position;
+				pop_back();
+				return ret;
 			}
+
 			iterator erase ( iterator first, iterator last )
 			{
 				iterator firstTmp = first;
