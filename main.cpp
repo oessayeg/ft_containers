@@ -1,14 +1,8 @@
 #include <vector>
 #include "vector.hpp"
 #include <algorithm>
-
-//OK : Resize, reserve
-
-//KO : Assign
-
-//Print what is inside the vector
-
-//assign range, erase
+#include <iterator>
+#include <iostream>
 
 template<typename T>
 void print( T &vec )
@@ -18,46 +12,34 @@ void print( T &vec )
 	std::cout << std::endl;
 }
 
-class test
-{
-	public :
-		int x;
-		test() { x = 0; }
-		void change ( void )
-		{
-			std::cout << "Hello\n";
-		}
-		~test( void ) {}
-};
-
 int main( void )
 {
-	{
-		std::vector<int> v;
+	// {
 
-		v.push_back(1);
-		v.push_back(2);
-		v.push_back(3);
-		v.push_back(4);
-		v.push_back(5);
-		v.assign(32, -10);
+	// 	std::vector<int> test;
+	// 	std::vector<int>::iterator b;
 
-		std::cout << "Size = " << v.size() << ", Capacity = " << v.capacity() << std::endl;
-		print(v);
-	}
+	// 	test.push_back(1);
+	// 	test.push_back(2);
+	// 	b = test.begin();
+	// 	++b = test.end();
+	// 	std::cout << *(b) << std::endl;
+	// }
 
-	std::cout << "---------FT---------" << std::endl;
+	// std::cout << "---------FT---------" << std::endl;
 	
 	{
-        std::vector<char> v(10);
+		ft::vector<int> test;
+		ft::vector<int>::iterator b;
 
-        v.assign(0, 'c');
-        print(v);
-        // v.assign(64, 'A');
+		test.push_back(1);
+		test.push_back(2);
+		test.push_back(3);
+		test.push_back(4);
+		test.push_back(5);
 
-        // v.assign(32, 'A');
+		// b = test.erase(test.begin() + 1);
 
+		std::cout << *b << std::endl;
 	}
-
-	return 0;
 }

@@ -1,49 +1,6 @@
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-// To implement :
-
-//Constructors(4) : done
-//Destructor : done
-//Copy assignment operator : done
-
-// --ITERATORS--
-// _begin : done
-// _end : done
-// _rbegin : done
-// _rend : done
-
-// --CAPACITY--
-// _size : done
-// _max_size : done
-// _resize : done
-// _capacity : done
-// _empty : done
-// _reserve : done
-
-// --ELEMENT ACCESS--
-// _[] : done
-// _at : done
-// _front : done
-// _back : done
-// _data : done
-
-// --MODIFIERS--
-// _assign : done
-// _push_back : done
-// _pop_back : done
-// _insert : done
-// _erase : done
-// _swap : done
-// _clear : done
-
-// --ALLOCATOR--
-// _get_allocator : done
-
-// --NON MEMBER FUNCTION OVERLOAD--
-// _relational operators : done
-// _swap : done
-
 #include <iostream>
 #include <memory>
 #include <limits>
@@ -65,7 +22,7 @@ namespace ft
 			typedef vectorIterator< T > iterator;
 			typedef vectorIterator< const T > const_iterator;
             typedef ptrdiff_t difference_type;
-            typedef unsigned long size_type;
+            typedef size_t size_type;
 
         private :
             value_type *arr;
@@ -495,9 +452,9 @@ namespace ft
             allocator_type get_allocator( void ) const { return m_allocator; }
             
     };
-            //-------------Non member functions-------------
-			template < class T, class allocator >
-			void swap( vector< T, allocator >& x, vector< T, allocator >& y ) { x.swap(y); }
+ 			       //-------------Non member functions-------------
+		template < class T, class allocator >
+		void swap( vector< T, allocator >& x, vector< T, allocator >& y ) { x.swap(y); }
 
             		//-------------RELATIONAL OPERATORS-------------
 		template< class T, class allocator >
