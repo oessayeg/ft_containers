@@ -25,36 +25,32 @@ class test
 int main( void )
 {
 	{
-		// std::vector<int> t;
-		// std::vector<int>::iterator non_const_iter1, non_const_iter2;
-		// std::vector<int>::const_iterator const_iter, to_assign;
+		std::vector<int> t(10);
+		std::vector<int>::iterator iter1 = t.begin();
+		std::vector<int>::const_iterator cIter(iter1);
 
-		// t.push_back(1);
-		// t.push_back(2);
-		// t.push_back(3);
-		// t.push_back(4);
 
-		// to_assign = t.begin();
-		// non_const_iter1 = 2 + to_assign;
-
-		// std::cout << *non_const_iter1 << std::endl;
+		// std::cout << *(1 + const_iter) << std::endl;
 	}
 
 	std::cout << "---------FT---------" << std::endl;
 	{
-		ft::vector<int> t;
-		ft::vector<int>::const_iterator iter1;
+		ft::vector<int> t(10);
+		ft::vector<int>::const_iterator const_iter = t.begin();
+		ft::vector<int>::iterator iter = t.end();
 
-		t.push_back(1);
-		t.push_back(2);
-		t.push_back(3);
-		t.push_back(4);
+		std::cout << (const_iter == iter) << std::endl;
+		std::cout << (const_iter != iter) << std::endl;
+		std::cout << (const_iter > iter) << std::endl;
+		std::cout << (const_iter >= iter) << std::endl;
+		std::cout << (const_iter < iter) << std::endl;
+		std::cout << (const_iter <= iter) << std::endl;
 
-		iter1 = t.end();
-
-
-		// std::cout << *++iter1 << std::endl;
-		// std::cout << *(1 + iter1) << std::endl;
-
+		std::cout << (iter == const_iter) << std::endl;
+		std::cout << (iter != const_iter) << std::endl;
+		std::cout << (iter > const_iter) << std::endl;
+		std::cout << (iter >= const_iter) << std::endl;
+		std::cout << (iter < const_iter) << std::endl;
+		std::cout << (iter <= const_iter) << std::endl;
 	}
 }

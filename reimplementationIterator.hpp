@@ -3,7 +3,6 @@
 
 #include "utils.hpp"
 
-// n + a with a = iterator and b = iterator
 namespace ft
 {
     template < class Iterator >
@@ -35,6 +34,16 @@ namespace ft
             }
 
             ~vectorIterator() {}
+
+            // Equivalence comparison operator
+            bool operator==( const vectorIterator &rhs ) { return m_ptr == rhs.getPtr(); }
+            bool operator!=( const vectorIterator &rhs ) { return m_ptr != rhs.getPtr(); }
+
+            // Inequality relational operators 
+            bool operator<( const vectorIterator &rhs ) { return m_ptr < rhs.getPtr(); }
+            bool operator>( const vectorIterator &rhs ) { return m_ptr > rhs.getPtr(); }
+            bool operator<=( const vectorIterator &rhs ) { return m_ptr <= rhs.getPtr(); }
+            bool operator>=( const vectorIterator &rhs ) { return m_ptr >= rhs.getPtr(); }
 
             // Dereferencing operators
             reference operator*( void ) { return *m_ptr; }
@@ -69,7 +78,7 @@ namespace ft
             // Arithmetic operators '+' and '-'
             vectorIterator operator+( difference_type n ){ return vectorIterator(m_ptr + n); }
             vectorIterator operator-( difference_type n ){ return vectorIterator(m_ptr - n); }
-            difference_type operator-( const vectorIterator rhs ){ return m_ptr - rhs.getPtr(); }
+            difference_type operator-( const vectorIterator &rhs ){ return m_ptr - rhs.getPtr(); }
             
             // Compound assignment operator
             vectorIterator operator+=( difference_type n )
@@ -87,14 +96,14 @@ namespace ft
             reference operator[]( difference_type idx ) { return *(m_ptr + idx); }
 
             // Base pointer getter
-            pointer getPtr( void ) const { return m_ptr; }
+            value_type* getPtr( void ) const { return m_ptr; }
+            
     };
-    
-    template < class I >
-    vectorIterator< I > operator+( typename vectorIterator< I >::difference_type n, const vectorIterator< I > rhs )
-    {
-        return vectorIterator< I >(rhs.getPtr() + n) ;
-    }
+        template < class I >
+        vectorIterator< I > operator+( typename vectorIterator< I >::difference_type n, vectorIterator< I > &rhs )
+        {
+            return vectorIterator< I >(rhs.getPtr() + n);
+        }
 }
 
 #endif
