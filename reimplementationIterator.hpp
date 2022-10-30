@@ -1,5 +1,9 @@
-// #include "iterator_traits.hpp"
+#ifndef REIMPLEMENTATIONITERATOR_HPP
+# define REIMPLEMENTATIONITERATOR_HPP
 
+#include "utils.hpp"
+
+// n + a with a = iterator and b = iterator
 namespace ft
 {
     template < class Iterator >
@@ -14,18 +18,27 @@ namespace ft
             typedef size_t size_type;
 
         private :
-            pointer m_ptr;
+            value_type* m_ptr;
         
         public :
             // Constructors, Destructor, assignment operator overload
-            vectorIterator( pointer p = NULL ) : m_ptr(p) {}
-            vectorIterator( const vectorIterator &rhs ) : m_ptr(rhs.getPtr()) {}
-            vectorIterator &operator=( const vectorIterator &rhs )
+            vectorIterator( value_type* p = NULL ) : m_ptr(p) {}
+
+            template < class Iter >
+            vectorIterator( const vectorIterator< Iter >  &rhs ) : m_ptr(rhs.getPtr()) {}
+
+            template < class Iter >
+            vectorIterator &operator=( const vectorIterator< Iter > &rhs )
             {
                 m_ptr = rhs.getPtr();
                 return *this;
             }
+
             ~vectorIterator() {}
+
+            // Dereferencing operators
+            reference operator*( void ) { return *m_ptr; }
+            pointer operator->( void ) { return m_ptr; }
 
             // Incrementation/Decrementation operators
             vectorIterator operator++( void )
@@ -53,12 +66,35 @@ namespace ft
                 return tmp;
             }
 
-            // Dereference operators
-            reference operator*( void ) { return *m_ptr; }
-            pointer operator->( void ) { return m_ptr; }
+            // Arithmetic operators '+' and '-'
+            vectorIterator operator+( difference_type n ){ return vectorIterator(m_ptr + n); }
+            vectorIterator operator-( difference_type n ){ return vectorIterator(m_ptr - n); }
+            difference_type operator-( const vectorIterator rhs ){ return m_ptr - rhs.getPtr(); }
+            
+            // Compound assignment operator
+            vectorIterator operator+=( difference_type n )
+            {
+                m_ptr += n;
+                return m_ptr;
+            }
+            vectorIterator operator-=( difference_type n )
+            {
+                m_ptr -= n;
+                return m_ptr;
+            }
 
+            // Subscript operator (offset dereference)
+            reference operator[]( difference_type idx ) { return *(m_ptr + idx); }
 
-            // Pointer getter
-            pointer getPtr( void ) { return m_ptr; }
+            // Base pointer getter
+            pointer getPtr( void ) const { return m_ptr; }
     };
+    
+    template < class I >
+    vectorIterator< I > operator+( typename vectorIterator< I >::difference_type n, const vectorIterator< I > rhs )
+    {
+        return vectorIterator< I >(rhs.getPtr() + n) ;
+    }
 }
+
+#endif

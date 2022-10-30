@@ -4,8 +4,9 @@
 #include <iostream>
 #include <memory>
 #include <limits>
-#include "iterator.hpp"
+#include "reimplementationIterator.hpp"
 #include "utils.hpp"
+// #include "iterator.hpp"
 
 namespace ft
 {
@@ -19,8 +20,8 @@ namespace ft
             typedef const value_type& const_reference;
             typedef value_type* pointer;
             typedef const value_type* const_pointer;
-			typedef vectorIterator< T > iterator;
-			typedef vectorIterator< const T > const_iterator;
+			typedef vectorIterator< T* > iterator;
+			typedef vectorIterator< const T* > const_iterator;
             typedef ptrdiff_t difference_type;
             typedef size_t size_type;
 

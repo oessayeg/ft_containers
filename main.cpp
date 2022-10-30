@@ -12,34 +12,49 @@ void print( T &vec )
 	std::cout << std::endl;
 }
 
+#include <cmath>
+
+class test
+{
+	public :
+		test() {};
+		void print() { std::cout << "Hello from print" << std::endl; };
+		~test() {};
+};
+
 int main( void )
 {
-	// {
-
-	// 	std::vector<int> test;
-	// 	std::vector<int>::iterator b;
-
-	// 	test.push_back(1);
-	// 	test.push_back(2);
-	// 	b = test.begin();
-	// 	++b = test.end();
-	// 	std::cout << *(b) << std::endl;
-	// }
-
-	// std::cout << "---------FT---------" << std::endl;
-	
 	{
-		ft::vector<int> test;
-		ft::vector<int>::iterator b;
+		// std::vector<int> t;
+		// std::vector<int>::iterator non_const_iter1, non_const_iter2;
+		// std::vector<int>::const_iterator const_iter, to_assign;
 
-		test.push_back(1);
-		test.push_back(2);
-		test.push_back(3);
-		test.push_back(4);
-		test.push_back(5);
+		// t.push_back(1);
+		// t.push_back(2);
+		// t.push_back(3);
+		// t.push_back(4);
 
-		// b = test.erase(test.begin() + 1);
+		// to_assign = t.begin();
+		// non_const_iter1 = 2 + to_assign;
 
-		std::cout << *b << std::endl;
+		// std::cout << *non_const_iter1 << std::endl;
+	}
+
+	std::cout << "---------FT---------" << std::endl;
+	{
+		ft::vector<int> t;
+		ft::vector<int>::const_iterator iter1;
+
+		t.push_back(1);
+		t.push_back(2);
+		t.push_back(3);
+		t.push_back(4);
+
+		iter1 = t.end();
+
+
+		// std::cout << *++iter1 << std::endl;
+		// std::cout << *(1 + iter1) << std::endl;
+
 	}
 }
