@@ -4,6 +4,10 @@
 #include <iterator>
 #include <iostream>
 
+//Performance check for 'ctor_range', 'insert_range'
+//Check assign_range, insert_range
+//Erase mixed
+
 template<typename T>
 void print( T &vec )
 {
@@ -12,45 +16,30 @@ void print( T &vec )
 	std::cout << std::endl;
 }
 
-#include <cmath>
-
-class test
-{
-	public :
-		test() {};
-		void print() { std::cout << "Hello from print" << std::endl; };
-		~test() {};
-};
-
+#include <iterator>
 int main( void )
 {
 	{
-		std::vector<int> t(10);
-		std::vector<int>::iterator iter1 = t.begin();
-		std::vector<int>::const_iterator cIter(iter1);
+		std::vector<int> test1(64);
 
-
-		// std::cout << *(1 + const_iter) << std::endl;
+		print(test1);
+		test1.erase(test1.begin(), test1.begin());
+		test1.erase(test1.end(), test1.end());
+		test1.erase(test1.begin());
+		test1.erase(test1.end() - 1);
+		print(test1);
 	}
 
 	std::cout << "---------FT---------" << std::endl;
+
 	{
-		ft::vector<int> t(10);
-		ft::vector<int>::const_iterator const_iter = t.begin();
-		ft::vector<int>::iterator iter = t.end();
+		ft::vector<int> test1(64);
 
-		std::cout << (const_iter == iter) << std::endl;
-		std::cout << (const_iter != iter) << std::endl;
-		std::cout << (const_iter > iter) << std::endl;
-		std::cout << (const_iter >= iter) << std::endl;
-		std::cout << (const_iter < iter) << std::endl;
-		std::cout << (const_iter <= iter) << std::endl;
-
-		std::cout << (iter == const_iter) << std::endl;
-		std::cout << (iter != const_iter) << std::endl;
-		std::cout << (iter > const_iter) << std::endl;
-		std::cout << (iter >= const_iter) << std::endl;
-		std::cout << (iter < const_iter) << std::endl;
-		std::cout << (iter <= const_iter) << std::endl;
+		print(test1);
+		test1.erase(test1.begin(), test1.begin());
+		test1.erase(test1.end(), test1.end());
+		test1.erase(test1.begin());
+		test1.erase(test1.end() - 1);
+		print(test1);
 	}
 }

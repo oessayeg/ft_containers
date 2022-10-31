@@ -3,6 +3,7 @@
 
 #include "utils.hpp"
 
+// n + a with a = iterator and b = iterator
 namespace ft
 {
     template < class Iterator >
