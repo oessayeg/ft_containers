@@ -49,15 +49,13 @@ namespace ft
             vector( iterator begin, iterator end, const allocator_type& alloc = allocator_type(),
 			typename ft::enable_if< !std::is_integral< iterator >::value >::type* = 0 )
             {
-                difference_type distance = 0;
-				iterator tmp = begin;
-
+                difference_type distance;
+				
+				distance = ft::iterDistance(begin, end);
                 arr = NULL;
                 vecSize = 0;
                 vecCapacity = 0;
                 m_allocator = alloc;
-				for (; tmp != end; tmp++)
-					distance++;
                 reserve(distance);
                 for (difference_type i = 0; i < distance; i++)
                 {
@@ -244,25 +242,9 @@ namespace ft
 			void assign(InputIterator first, InputIterator last,
 			typename ft::enable_if< !std::is_integral<InputIterator>::value >::type * = 0 )
 			{
-				difference_type distance = 0;
-				InputIterator tmp;
-				size_type i = 0;
-
-				// if (last - first < 0)
-				// 	throw std::length_error("vector");
-				while (vecSize != 0)
-					pop_back();
-				for (tmp = first; tmp != last; tmp++)
-					distance++;
-				reserve(distance);
-				// reserve(last - first);
-				while (first != last)
-				{
-					m_allocator.construct(&arr[i], *first);
-					vecSize++;
-					first++;
-					i++;
-				}
+				clear();
+				for (; first != last; first++)
+					push_back(*first);
 			}
 
             //Push_back member function
@@ -300,6 +282,9 @@ namespace ft
 			// Insert member function
 			iterator insert( iterator position, const value_type &val )
 			{
+				iterator e;
+
+				e = end();
 				if (arr == NULL)
 				{
 					if (position == begin() && position == end())
@@ -309,7 +294,6 @@ namespace ft
 					}
 					return begin();
 				}
-				iterator e = end();
 				if (vecSize < vecCapacity)
 				{
 					while (e != position)
@@ -365,26 +349,21 @@ namespace ft
 			void insert( iterator position, InputIterator first, InputIterator last,
 			typename ft::enable_if< !std::is_integral<InputIterator>::value >::type * = 0 )
 			{
-				InputIterator t1 = first;
-				difference_type distance = 0;
+				difference_type distance = ft::iterDistance(first, last);
 
-				for (; t1 != last; t1++)
-					distance++;
 				if (distance + vecSize <= vecCapacity)
 				{
 					vector<value_type> tmp;
 
 					tmp.reserve(end() - position);
-					for (iterator b = position; b < end(); b++)
-						tmp.push_back(*b);
-					vecSize = position - begin();
-					while (first != last)
+					for (iterator b = position; b != end(); b++)
 					{
-						*position = *first;
-						first++;
-						position++;
-						vecSize += 1;
+						tmp.push_back(*b);
+						m_allocator.destroy(&(*b));
 					}
+					vecSize = position - begin();
+					for (; first != last; first++)
+						push_back(*first);
 					for (iterator b = tmp.begin(); b < tmp.end(); b++)
 						push_back(*b);
 				}
@@ -414,7 +393,6 @@ namespace ft
 					*(position - 1) = *position;
 				}
 				pop_back();
-
 				return ret;
 			}
 

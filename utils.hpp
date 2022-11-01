@@ -43,4 +43,13 @@ namespace ft
         typedef std::random_access_iterator_tag iterator_category;
     };
 
+    template < class iterator >
+    typename iterator_traits< iterator >::difference_type iterDistance( iterator a, iterator b )
+    {
+        typename iterator_traits< iterator >::difference_type distance = 0;
+
+        for (; a != b; a++)
+            distance++;
+        return distance;
+    }
 }
