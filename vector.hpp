@@ -349,34 +349,36 @@ namespace ft
 			void insert( iterator position, InputIterator first, InputIterator last,
 			typename ft::enable_if< !std::is_integral<InputIterator>::value >::type * = 0 )
 			{
-				difference_type distance = ft::iterDistance(first, last);
+				difference_type distance = 0;
+				vector<value_type> tmp;
+				vector<value_type> lastValVector;
 
-				if (distance + vecSize <= vecCapacity)
+				for (; first != last; first++)
 				{
-					vector<value_type> tmp;
-
-					tmp.reserve(end() - position);
-					for (iterator b = position; b != end(); b++)
-					{
-						tmp.push_back(*b);
-						m_allocator.destroy(&(*b));
-					}
-					vecSize = position - begin();
-					for (; first != last; first++)
-						push_back(*first);
-					for (iterator b = tmp.begin(); b < tmp.end(); b++)
-						push_back(*b);
+					distance++;
+					tmp.push_back(*first);
 				}
-                else
-                {
-                    difference_type diff = position - begin();
+				if (distance + vecSize > vecCapacity)
+				{
+					difference_type diff = position - begin();
 
-                    if (distance + vecSize <= (vecCapacity * 2))
-                        reserve(vecCapacity * 2);
-                    else
-                        reserve(vecSize + distance);
-                    insert(begin() + diff, first, last);
-                }
+					if (distance + vecSize <= vecCapacity * 2)
+						reserve(vecCapacity * 2);
+					else
+						reserve(vecSize + distance);
+					position = begin() + diff;
+				}
+				lastValVector.reserve(end() - position);
+				for (iterator b = position; b != end(); b++)
+				{
+					lastValVector.push_back(*b);
+					m_allocator.destroy(&(*b));
+				}
+				vecSize = position - begin();
+				for (iterator b = tmp.begin(); b != tmp.end(); b++)
+					push_back(*b);
+				for (iterator b = lastValVector.begin(); b != lastValVector.end(); b++)
+					push_back(*b);
 			}
 
 			//Erase member function
@@ -384,61 +386,41 @@ namespace ft
 			{
 				iterator ret = position;
 
-				// m_allocator.destroy(&(*position));
+				m_allocator.destroy(&(*position));
 				++position;
 				for (; position != end(); position++)
 				{
-					// m_allocator.construct(&(*(position - 1)), *position);
-					// m_allocator.destroy(&(*position));
-					*(position - 1) = *position;
+					m_allocator.construct(&(*(position - 1)), *position);
+					m_allocator.destroy(&(*position));
 				}
-				pop_back();
+				vecSize -= 1;
 				return ret;
 			}
 
 			iterator erase ( iterator first, iterator last )
 			{
-				iterator firstTmp = first;
-				size_type toRemoveFromSize = 0;
-				// difference_type idx ;
+				iterator tmp = first;
+				difference_type toRemove = last - first;
 
-				while (firstTmp != last)
+				if (first == last)
+					return first;
+				for (; tmp != last; tmp++)
+					m_allocator.destroy(&(*tmp));
+				tmp = first;
+				for (; last != end(); last++)
 				{
-					m_allocator.destroy(&(*firstTmp));
-					firstTmp++;
-					toRemoveFromSize += 1;
+					m_allocator.construct(&(*tmp), *last);
+					m_allocator.destroy(&(*last));
+					tmp++;
 				}
-				firstTmp = first;
-				while (last != end())
-				{
-					*firstTmp = *last;
-					last++;
-					firstTmp++;
-				}
-				vecSize -= toRemoveFromSize;
-				
+				vecSize -= toRemove;
 				return first;
 			}
 
 			//Swap member function
 			void swap( vector &x )
 			{
-				vector<T> tmp;
-				vector<T> emptyVec;
-
-				tmp.reserve(vecCapacity);
-				for (size_type i = 0; i < vecSize; i++)
-					tmp.push_back(arr[i]);
-				*this = emptyVec;
-				
-				reserve(x.capacity());
-				for (size_type i = 0; i < x.size(); i++)
-					push_back(x[i]);
-				
-				x = emptyVec;
-				x.reserve(tmp.capacity());
-				for (size_type i = 0; i < tmp.size(); i++)
-					x.push_back(tmp[i]);
+				std::swap(*this, x);
 			}
 
             //Clear member function    

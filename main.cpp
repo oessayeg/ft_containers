@@ -4,11 +4,8 @@
 #include <iterator>
 #include <iostream>
 #include <iterator>
-#include <typeinfo>
-#include <sstream>
 
-//fixed today : assign range
-//to fix : erase, erase_mixed, erase_range, insert_mixed, insert_range
+//fixed today : erase, erase_range, swap
 
 template < class vector >
 void checkIter( vector vect )
@@ -18,31 +15,39 @@ void checkIter( vector vect )
 	std::cout << std::endl;
 }
 
-template < class T, class U >
-struct is_same
-{
-	static const bool value = false;
-};
-
-template<class T>
-struct is_same<T, T>
-{
-	static const bool value = true;
-};
-
 int main( void )
 {
 	{
-	    std::istringstream str("1 2 3 4 5 6 7 8 9 0 A B C D E F");
-        std::istreambuf_iterator<char> it(str), end;
-		std::vector<char> v;
+		std::vector<int> v1(10);
+		std::vector<int> v2(20);
+		std::vector<int>::iterator it;
 
-		std::cout << (is_same<std::input_iterator_tag, ft::iterator_traits< std::istreambuf_iterator<char> >::iterator_category >::value) << std::endl;
+		std::cout << "Before" << std::endl;
+		std::cout << "Size of v1 = " << v1.size() << ", Capacity of v1 = " << v1.capacity() << std::endl;
+		std::cout << "Size of v2 = " << v2.size() << ", Capacity of v2 = " << v2.capacity() << std::endl;
+
+		v1.swap(v2);
+
+		std::cout << "After" << std::endl;
+		std::cout << "Size of v1 = " << v1.size() << ", Capacity of v1 = " << v1.capacity() << std::endl;
+		std::cout << "Size of v2 = " << v2.size() << ", Capacity of v2 = " << v2.capacity() << std::endl;	
 	}
 
 	std::cout << "---------FT---------" << std::endl;
 
 	{
+		std::vector<int> v1(10);
+		std::vector<int> v2(20);
+		std::vector<int>::iterator it;
 
+		std::cout << "Before" << std::endl;
+		std::cout << "Size of v1 = " << v1.size() << ", Capacity of v1 = " << v1.capacity() << std::endl;
+		std::cout << "Size of v2 = " << v2.size() << ", Capacity of v2 = " << v2.capacity() << std::endl;
+
+		v1.swap(v2);
+
+		std::cout << "After" << std::endl;
+		std::cout << "Size of v1 = " << v1.size() << ", Capacity of v1 = " << v1.capacity() << std::endl;
+		std::cout << "Size of v2 = " << v2.size() << ", Capacity of v2 = " << v2.capacity() << std::endl;	
 	}
 }
