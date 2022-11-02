@@ -19,12 +19,23 @@ int main( void )
 {
 	std::cout << "---------STD---------" << std::endl;
 	{
-		ft::vector<int> v(10);
+		ft::vector<int> v1;
+		ft::vector<int> v2;
 
-		ft::vector<int>::const_iterator b1 = v.begin();
-		ft::vector<int>::iterator b2 = v.begin();
+		v1.push_back(10);
+		v1.push_back(20);
+		v1.push_back(30);
+		v1.push_back(40);
+		v1.push_back(50);
 
-		std::cout << (b2 == b1) << std::endl;
+		v2.push_back(10);
+		v2.push_back(20);
+		v2.push_back(30);
+		v2.push_back(40);
+		v2.push_back(50);
+
+		std::cout << ft::lexicographical_compare(v1.begin(), v1.end(), v2.begin(), v2.end()) << std::endl;
+		std::cout << (v1 <= v2) << std::endl;
 	}
 
 	std::cout << "---------FT---------" << std::endl;

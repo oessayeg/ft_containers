@@ -84,7 +84,7 @@ namespace ft
             vectorIterator operator+( difference_type n ){ return vectorIterator(m_ptr + n); }
             vectorIterator operator-( difference_type n ){ return vectorIterator(m_ptr - n); }
             difference_type operator-( const vectorIterator &rhs ){ return m_ptr - rhs.getPtr(); }
-            
+ 
             // Compound assignment operator
             vectorIterator operator+=( difference_type n )
             {
