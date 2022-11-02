@@ -3,7 +3,6 @@
 
 #include "utils.hpp"
 
-// n + a with a = iterator and b = iterator
 namespace ft
 {
     template < class Iterator >
@@ -25,10 +24,9 @@ namespace ft
             vectorIterator( value_type* p = NULL ) : m_ptr(p) {}
 
             template < class Iter >
-            vectorIterator( const vectorIterator< Iter >  &rhs ) : m_ptr(rhs.getPtr()) {}
+            vectorIterator( const vectorIterator < Iter > &rhs, typename ft::enable_if< ft::is_convertible< Iterator, Iter >::value >::type* = 0 ) : m_ptr(rhs.getPtr()) {}
 
-            template < class Iter >
-            vectorIterator &operator=( const vectorIterator< Iter > &rhs )
+            vectorIterator &operator=( const vectorIterator &rhs )
             {
                 m_ptr = rhs.getPtr();
                 return *this;
@@ -37,14 +35,20 @@ namespace ft
             ~vectorIterator() {}
 
             // Equivalence comparison operator
-            bool operator==( const vectorIterator &rhs ) { return m_ptr == rhs.getPtr(); }
-            bool operator!=( const vectorIterator &rhs ) { return m_ptr != rhs.getPtr(); }
+            template < class iter >
+            bool operator==( const vectorIterator< iter > &rhs ) { return m_ptr == rhs.getPtr(); }
+            template < class iter >
+            bool operator!=( const vectorIterator< iter > &rhs ) { return m_ptr != rhs.getPtr(); }
 
-            // Inequality relational operators 
-            bool operator<( const vectorIterator &rhs ) { return m_ptr < rhs.getPtr(); }
-            bool operator>( const vectorIterator &rhs ) { return m_ptr > rhs.getPtr(); }
-            bool operator<=( const vectorIterator &rhs ) { return m_ptr <= rhs.getPtr(); }
-            bool operator>=( const vectorIterator &rhs ) { return m_ptr >= rhs.getPtr(); }
+            // Inequality relational operators
+            template < class iter >
+            bool operator<( const vectorIterator< iter > &rhs ) { return m_ptr < rhs.getPtr(); }
+            template < class iter >
+            bool operator>( const vectorIterator< iter > &rhs ) { return m_ptr > rhs.getPtr(); }
+            template < class iter >
+            bool operator<=( const vectorIterator< iter > &rhs ) { return m_ptr <= rhs.getPtr(); }
+            template < class iter >
+            bool operator>=( const vectorIterator< iter > &rhs ) { return m_ptr >= rhs.getPtr(); }
 
             // Dereferencing operators
             reference operator*( void ) { return *m_ptr; }

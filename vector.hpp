@@ -418,10 +418,7 @@ namespace ft
 			}
 
 			//Swap member function
-			void swap( vector &x )
-			{
-				std::swap(*this, x);
-			}
+			void swap( vector &x ) { std::swap(*this, x); }
 
             //Clear member function    
             void clear( void )

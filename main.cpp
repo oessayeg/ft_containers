@@ -17,37 +17,28 @@ void checkIter( vector vect )
 
 int main( void )
 {
+	std::cout << "---------STD---------" << std::endl;
 	{
-		std::vector<int> v1(10);
-		std::vector<int> v2(20);
-		std::vector<int>::iterator it;
+		ft::vector<int> v(10);
 
-		std::cout << "Before" << std::endl;
-		std::cout << "Size of v1 = " << v1.size() << ", Capacity of v1 = " << v1.capacity() << std::endl;
-		std::cout << "Size of v2 = " << v2.size() << ", Capacity of v2 = " << v2.capacity() << std::endl;
+		ft::vector<int>::const_iterator b1 = v.begin();
+		ft::vector<int>::iterator b2 = v.begin();
 
-		v1.swap(v2);
-
-		std::cout << "After" << std::endl;
-		std::cout << "Size of v1 = " << v1.size() << ", Capacity of v1 = " << v1.capacity() << std::endl;
-		std::cout << "Size of v2 = " << v2.size() << ", Capacity of v2 = " << v2.capacity() << std::endl;	
+		std::cout << (b2 == b1) << std::endl;
 	}
 
 	std::cout << "---------FT---------" << std::endl;
 
 	{
-		std::vector<int> v1(10);
-		std::vector<int> v2(20);
-		std::vector<int>::iterator it;
+		// ft::vector<int> v1;
+		// ft::vector<int>::const_iterator b1 = v1.begin();
+		// ft::vector<int>::iterator b2;
 
-		std::cout << "Before" << std::endl;
-		std::cout << "Size of v1 = " << v1.size() << ", Capacity of v1 = " << v1.capacity() << std::endl;
-		std::cout << "Size of v2 = " << v2.size() << ", Capacity of v2 = " << v2.capacity() << std::endl;
-
-		v1.swap(v2);
-
-		std::cout << "After" << std::endl;
-		std::cout << "Size of v1 = " << v1.size() << ", Capacity of v1 = " << v1.capacity() << std::endl;
-		std::cout << "Size of v2 = " << v2.size() << ", Capacity of v2 = " << v2.capacity() << std::endl;	
+		// b2 = b1;
+		// std::cout << "Int : " << sizeof(int) << ", Const Int : " << sizeof(const int) << std::endl;
+		// (void)b1;
+		// (void)b2;
+		// (void)b3;
+		// b2 = b1;
 	}
 }

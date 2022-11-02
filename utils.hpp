@@ -43,6 +43,7 @@ namespace ft
         typedef std::random_access_iterator_tag iterator_category;
     };
     
+    //------------DISTANCE BETWEEN ITERATORS------------
     template < class iterator >
     typename iterator_traits< iterator >::difference_type Distance( iterator a, iterator b, std::random_access_iterator_tag )
     {
@@ -65,15 +66,46 @@ namespace ft
         return Distance(a, b, typename ft::iterator_traits< iterator >::iterator_category());
     }
 
+    //------------STRUCT TO CHECK IF 2 TYPES ARE CONVERTIBLE------------
     template < class T, class U >
-    struct is_same
+    struct is_convertible
     {
-	    static const bool value = false;
+        static const bool value = false;
     };
 
-    template<class T>
-    struct is_same<T, T>
+    template < class T >
+    struct is_convertible< T* , T* >
     {
-	    static const bool value = true;
+        static const bool value = true;
+    };
+
+    template < class T >
+    struct is_convertible< const T *, const T * >
+    {
+        static const bool value = true;
+    };
+
+    template < class T, class U >
+    struct is_convertible< const T *, U * >
+    {
+        static const bool value = true;
+    };
+
+    template < class T >
+    struct is_convertible< T , T >
+    {
+        static const bool value = true;
+    };
+
+    template < class T >
+    struct is_convertible< const T , const T  >
+    {
+        static const bool value = true;
+    };
+
+    template < class T, class U >
+    struct is_convertible< const T , U >
+    {
+        static const bool value = true;
     };
 }
