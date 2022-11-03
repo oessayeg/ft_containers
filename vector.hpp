@@ -6,8 +6,7 @@
 #include <limits>
 #include "reimplementationIterator.hpp"
 #include "utils.hpp"
-#include <typeinfo>
-#include <iterator>
+#include "reverse_iterator.hpp"
 
 namespace ft
 {
@@ -23,6 +22,8 @@ namespace ft
             typedef const value_type* const_pointer;
 			typedef vectorIterator< T* > iterator;
 			typedef vectorIterator< const T* > const_iterator;
+			typedef reverse_iterator< const_iterator > const_reverse_iterator;
+			typedef reverse_iterator< iterator > reverse_iterator;
             typedef ptrdiff_t difference_type;
             typedef size_t size_type;
 
@@ -115,6 +116,12 @@ namespace ft
 			const_iterator begin( void ) const { return const_iterator(arr); }
 			iterator end( void ) { return iterator(arr + vecSize); }
 			const_iterator end( void ) const { return const_iterator(arr + vecSize); }
+
+            //-------------REVERSE ITERATORS-------------
+			reverse_iterator rbegin( void ) { return reverse_iterator(arr + (vecSize - 1)); }
+			const_iterator rbegin( void ) const { return const_reverse_iterator(arr + (vecSize - 1)); }
+			reverse_iterator rend( void ) { return reverse_iterator(arr - 1); }
+			const_iterator rend( void ) const { return const_iterator(arr - 1); }
 
             //-------------CAPACITY-------------
             //Size of vector (member function)

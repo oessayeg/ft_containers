@@ -5,8 +5,6 @@
 #include <iostream>
 #include <iterator>
 
-//fixed today : erase, erase_range, swap
-
 template < class vector >
 void checkIter( vector vect )
 {
@@ -19,37 +17,52 @@ int main( void )
 {
 	std::cout << "---------STD---------" << std::endl;
 	{
-		ft::vector<int> v1;
-		ft::vector<int> v2;
+		std::vector<int> vec;
+		std::vector<int>::reverse_iterator iter1;
+		std::vector<int>::reverse_iterator iter2;
 
-		v1.push_back(10);
-		v1.push_back(20);
-		v1.push_back(30);
-		v1.push_back(40);
-		v1.push_back(50);
+		vec.push_back(10);
+		vec.push_back(20);
+		vec.push_back(30);
+		vec.push_back(40);
+		vec.push_back(50);
+		vec.push_back(60);
+		vec.push_back(70);
 
-		v2.push_back(10);
-		v2.push_back(20);
-		v2.push_back(30);
-		v2.push_back(40);
-		v2.push_back(50);
+		iter1 = vec.rbegin();
+		iter2 = vec.rend();
 
-		std::cout << ft::lexicographical_compare(v1.begin(), v1.end(), v2.begin(), v2.end()) << std::endl;
-		std::cout << (v1 <= v2) << std::endl;
+		std::cout << (iter1 == iter2) << std::endl;
+		std::cout << (iter1 != iter2) << std::endl;
+		std::cout << (iter1 > iter2) << std::endl;
+		std::cout << (iter1 >= iter2) << std::endl;
+		std::cout << (iter1 < iter2) << std::endl;
+		std::cout << (iter1 <= iter2) << std::endl;
 	}
 
 	std::cout << "---------FT---------" << std::endl;
-
+	
 	{
-		// ft::vector<int> v1;
-		// ft::vector<int>::const_iterator b1 = v1.begin();
-		// ft::vector<int>::iterator b2;
+		ft::vector<int> vec;
+		ft::vector<int>::reverse_iterator iter1;
+		ft::vector<int>::reverse_iterator iter2;
 
-		// b2 = b1;
-		// std::cout << "Int : " << sizeof(int) << ", Const Int : " << sizeof(const int) << std::endl;
-		// (void)b1;
-		// (void)b2;
-		// (void)b3;
-		// b2 = b1;
+		vec.push_back(10);
+		vec.push_back(20);
+		vec.push_back(30);
+		vec.push_back(40);
+		vec.push_back(50);
+		vec.push_back(60);
+		vec.push_back(70);
+		
+		iter1 = vec.rbegin();
+		iter2 = vec.rend();
+
+		std::cout << (iter1 == iter2) << std::endl;
+		std::cout << (iter1 != iter2) << std::endl;
+		std::cout << (iter1 > iter2) << std::endl;
+		std::cout << (iter1 >= iter2) << std::endl;
+		std::cout << (iter1 < iter2) << std::endl;
+		std::cout << (iter1 <= iter2) << std::endl;
 	}
 }

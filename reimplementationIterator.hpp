@@ -28,7 +28,8 @@ namespace ft
 
             vectorIterator &operator=( const vectorIterator &rhs )
             {
-                m_ptr = rhs.getPtr();
+                if (this != &rhs)
+                    m_ptr = rhs.getPtr();
                 return *this;
             }
 
@@ -89,12 +90,12 @@ namespace ft
             vectorIterator operator+=( difference_type n )
             {
                 m_ptr += n;
-                return m_ptr;
+                return *this;
             }
             vectorIterator operator-=( difference_type n )
             {
                 m_ptr -= n;
-                return m_ptr;
+                return *this;
             }
 
             // Subscript operator (offset dereference)
