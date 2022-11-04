@@ -20,6 +20,8 @@ int main( void )
 		std::vector<int> vec;
 		std::vector<int>::reverse_iterator iter1;
 		std::vector<int>::reverse_iterator iter2;
+		std::vector<int>::const_reverse_iterator citer1;
+		std::vector<int>::const_reverse_iterator citer2;
 
 		vec.push_back(10);
 		vec.push_back(20);
@@ -30,14 +32,13 @@ int main( void )
 		vec.push_back(70);
 
 		iter1 = vec.rbegin();
-		iter2 = vec.rend();
+		iter2 = vec.rbegin();
+		citer2 = vec.rbegin();
+		citer2 = vec.rbegin();
 
-		std::cout << (iter1 == iter2) << std::endl;
-		std::cout << (iter1 != iter2) << std::endl;
-		std::cout << (iter1 > iter2) << std::endl;
-		std::cout << (iter1 >= iter2) << std::endl;
-		std::cout << (iter1 < iter2) << std::endl;
-		std::cout << (iter1 <= iter2) << std::endl;
+		// std::cout << (iter1 < iter1 + 1) << std::endl;
+		std::cout << (iter1 < iter1 ) << std::endl;
+		// std::cout << (iter1 != citer1) << std::endl;
 	}
 
 	std::cout << "---------FT---------" << std::endl;
@@ -46,6 +47,8 @@ int main( void )
 		ft::vector<int> vec;
 		ft::vector<int>::reverse_iterator iter1;
 		ft::vector<int>::reverse_iterator iter2;
+		ft::vector<int>::const_reverse_iterator citer1;
+		ft::vector<int>::const_reverse_iterator citer2;
 
 		vec.push_back(10);
 		vec.push_back(20);
@@ -54,15 +57,14 @@ int main( void )
 		vec.push_back(50);
 		vec.push_back(60);
 		vec.push_back(70);
-		
-		iter1 = vec.rbegin();
-		iter2 = vec.rend();
 
-		std::cout << (iter1 == iter2) << std::endl;
-		std::cout << (iter1 != iter2) << std::endl;
-		std::cout << (iter1 > iter2) << std::endl;
-		std::cout << (iter1 >= iter2) << std::endl;
-		std::cout << (iter1 < iter2) << std::endl;
-		std::cout << (iter1 <= iter2) << std::endl;
+		iter1 = vec.rbegin();
+		iter2 = vec.rbegin();
+		citer2 = vec.rbegin();
+		citer2 = vec.rbegin();
+
+		// std::cout << (iter1 < iter1 + 1) << std::endl;
+		std::cout << (iter1 < iter1) << std::endl;
+		// std::cout << (iter1 != citer1) << std::endl;
 	}
 }

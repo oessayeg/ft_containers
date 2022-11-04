@@ -24,7 +24,8 @@ namespace ft
             vectorIterator( value_type* p = NULL ) : m_ptr(p) {}
 
             template < class Iter >
-            vectorIterator( const vectorIterator < Iter > &rhs, typename ft::enable_if< ft::is_convertible< Iterator, Iter >::value >::type* = 0 ) : m_ptr(rhs.getPtr()) {}
+            vectorIterator( const vectorIterator < Iter > &rhs,
+                typename ft::enable_if< ft::is_convertible< Iterator, Iter >::value >::type* = 0 ) : m_ptr(rhs.getPtr()) {}
 
             vectorIterator &operator=( const vectorIterator &rhs )
             {
