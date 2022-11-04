@@ -38,19 +38,19 @@ namespace ft
 
             // Equivalence comparison operator
             template < class iter >
-            bool operator==( const vectorIterator< iter > &rhs ) { return m_ptr == rhs.getPtr(); }
+            bool operator==( const vectorIterator< iter > &rhs ) const { return m_ptr == rhs.getPtr(); }
             template < class iter >
-            bool operator!=( const vectorIterator< iter > &rhs ) { return m_ptr != rhs.getPtr(); }
+            bool operator!=( const vectorIterator< iter > &rhs ) const { return m_ptr != rhs.getPtr(); }
 
             // Inequality relational operators
             template < class iter >
-            bool operator<( const vectorIterator< iter > &rhs ) { return m_ptr < rhs.getPtr(); }
+            bool operator<( const vectorIterator< iter > &rhs ) const { return m_ptr < rhs.getPtr(); }
             template < class iter >
-            bool operator>( const vectorIterator< iter > &rhs ) { return m_ptr > rhs.getPtr(); }
+            bool operator>( const vectorIterator< iter > &rhs ) const { return m_ptr > rhs.getPtr(); }
             template < class iter >
-            bool operator<=( const vectorIterator< iter > &rhs ) { return m_ptr <= rhs.getPtr(); }
+            bool operator<=( const vectorIterator< iter > &rhs ) const { return m_ptr <= rhs.getPtr(); }
             template < class iter >
-            bool operator>=( const vectorIterator< iter > &rhs ) { return m_ptr >= rhs.getPtr(); }
+            bool operator>=( const vectorIterator< iter > &rhs ) const { return m_ptr >= rhs.getPtr(); }
 
             // Dereferencing operators
             reference operator*( void ) { return *m_ptr; }
@@ -85,7 +85,6 @@ namespace ft
             // Arithmetic operators '+' and '-'
             vectorIterator operator+( difference_type n ){ return vectorIterator(m_ptr + n); }
             vectorIterator operator-( difference_type n ){ return vectorIterator(m_ptr - n); }
-            difference_type operator-( const vectorIterator &rhs ){ return m_ptr - rhs.getPtr(); }
  
             // Compound assignment operator
             vectorIterator operator+=( difference_type n )
@@ -110,6 +109,13 @@ namespace ft
         vectorIterator< I > operator+( typename vectorIterator< I >::difference_type n, vectorIterator< I > &rhs )
         {
             return vectorIterator< I >(rhs.getPtr() + n);
+        }
+
+        template < class T1, class T2 >
+        typename vectorIterator< T1 >::difference_type operator-( vectorIterator< T1 > const &lhs,
+            vectorIterator< T2 > const &rhs )
+        {
+            return lhs.getPtr() - rhs.getPtr();
         }
 }
 

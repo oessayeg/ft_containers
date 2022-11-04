@@ -425,7 +425,13 @@ namespace ft
 			}
 
 			//Swap member function
-			void swap( vector &x ) { std::swap(*this, x); }
+			void swap( vector &x )
+			{
+				std::swap(arr, x.arr);
+				std::swap(vecSize, x.vecSize);
+				std::swap(vecCapacity, x.vecCapacity);
+				std::swap(m_allocator, x.m_allocator);
+			}
 
             //Clear member function    
             void clear( void )

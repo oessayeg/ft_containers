@@ -2,7 +2,7 @@ NAME = main
 
 SRCS = main.cpp
 
-CPPFLAGS = -Wall -Wextra -Werror -std=c++98
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 
 all : $(NAME)
 
