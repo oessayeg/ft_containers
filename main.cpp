@@ -6,7 +6,7 @@
 #include <iterator>
 
 template < class vector >
-void checkIter( vector vect )
+void print( vector vect )
 {
 	for (typename vector::iterator b = vect.begin(); b != vect.end(); b++)
 		std::cout << *b << " ";
@@ -17,54 +17,75 @@ int main( void )
 {
 	std::cout << "---------STD---------" << std::endl;
 	{
-		std::vector<int> vec;
-		std::vector<int>::reverse_iterator iter1;
-		std::vector<int>::reverse_iterator iter2;
-		std::vector<int>::const_reverse_iterator citer1;
-		std::vector<int>::const_reverse_iterator citer2;
+		const int size = 5;
+		std::vector<int> vct(size);
+		std::vector<int>::iterator it_0(vct.begin());
+		std::vector<int>::iterator it_1(vct.end());
+		std::vector<int>::iterator it_mid(vct.end());
 
-		vec.push_back(10);
-		vec.push_back(20);
-		vec.push_back(30);
-		vec.push_back(40);
-		vec.push_back(50);
-		vec.push_back(60);
-		vec.push_back(70);
+		std::vector<int>::const_iterator cit_0 = vct.begin();
+		std::vector<int>::const_iterator cit_1;
+		std::vector<int>::const_iterator cit_mid;
+		for (int i = size; it_0 != it_1; --i)
+				*it_0++ = i;
 
-		iter1 = vec.rbegin();
-		iter2 = vec.rbegin();
-		citer2 = vec.rbegin();
-		citer2 = vec.rbegin();
+		std::cout << "Size = " << vct.size() << std::endl;
+		std::cout << "Capacity = " << vct.size() << std::endl;
+		print(vct);
 
-		// std::cout << (iter1 < iter1 + 1) << std::endl;
-		std::cout << (iter1 < iter1 ) << std::endl;
-		// std::cout << (iter1 != citer1) << std::endl;
+		it_0 = vct.begin();
+		cit_1 = vct.end();
+		it_mid = it_0 + 3;
+		cit_mid = it_0 + 3; cit_mid = cit_0 + 3; cit_mid = it_mid;
+
+		// std::cout << std::boolalpha;
+		std::cout << (it_0 == cit_0 + 3) << " " << (cit_0 + 3 == it_mid) << std::endl;
+		std::cout << *it_0 << std::endl;
+		std::cout << *(cit_0 + 3) << std::endl;
 	}
 
 	std::cout << "---------FT---------" << std::endl;
 	
 	{
-		ft::vector<int> vec;
-		ft::vector<int>::reverse_iterator iter1;
-		ft::vector<int>::reverse_iterator iter2;
-		ft::vector<int>::const_reverse_iterator citer1;
-		ft::vector<int>::const_reverse_iterator citer2;
+		std::vector<int> x, b;
+		std::vector<int>::iterator it1, it2;
 
-		vec.push_back(10);
-		vec.push_back(20);
-		vec.push_back(30);
-		vec.push_back(40);
-		vec.push_back(50);
-		vec.push_back(60);
-		vec.push_back(70);
+		x.push_back(10);
+		x.push_back(20);
+		x.push_back(30);
+		x.push_back(40);
 
-		iter1 = vec.rbegin();
-		iter2 = vec.rbegin();
-		citer2 = vec.rbegin();
-		citer2 = vec.rbegin();
+		b.push_back(10);
+		b.push_back(20);
+		b.push_back(30);
+		b.push_back(40);
 
-		// std::cout << (iter1 < iter1 + 1) << std::endl;
-		std::cout << (iter1 < iter1) << std::endl;
-		// std::cout << (iter1 != citer1) << std::endl;
+		
+		// const int size = 5;
+		// ft::vector<int> vct(size);
+		// ft::vector<int>::iterator it_0(vct.begin());
+		// ft::vector<int>::iterator it_1(vct.end());
+		// ft::vector<int>::iterator it_mid(vct.end());
+
+		// ft::vector<int>::const_iterator cit_0 = vct.begin();
+		// ft::vector<int>::const_iterator cit_1;
+		// ft::vector<int>::const_iterator cit_mid;
+		// for (int i = size; it_0 != it_1; --i)
+		// 		*it_0++ = i;
+
+		// std::cout << "Size = " << vct.size() << std::endl;
+		// std::cout << "Capacity = " << vct.size() << std::endl;
+		// print(vct);
+
+		// it_0 = vct.begin();
+		// cit_1 = vct.end();
+		// it_mid = it_0 + 3;
+		// cit_mid = it_0 + 3; cit_mid = cit_0 + 3; cit_mid = it_mid;
+
+		// std::cout << (it_0 == cit_0 + 3) << " " << (cit_0 + 3 == it_mid) << std::endl;
+		
+		// std::cout << *it_0 << std::endl;
+		// std::cout << *(cit_0 + 3) << std::endl;
 	}
+	return 0;
 }

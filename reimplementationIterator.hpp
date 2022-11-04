@@ -57,7 +57,7 @@ namespace ft
             pointer operator->( void ) { return m_ptr; }
 
             // Incrementation/Decrementation operators
-            vectorIterator operator++( void )
+            vectorIterator &operator++( void )
             {
                 ++m_ptr;
                 return *this;
@@ -69,7 +69,7 @@ namespace ft
                 ++m_ptr;
                 return tmp;
             }
-            vectorIterator operator--( void )
+            vectorIterator &operator--( void )
             {
                 --m_ptr;
                 return *this;

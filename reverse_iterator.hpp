@@ -59,7 +59,7 @@ namespace ft
             }
 
             // Incrementation - Decrementation operators
-            reverse_iterator operator++( void )
+            reverse_iterator &operator++( void )
             {
                 --baseIterator;
                 return *this;
@@ -71,7 +71,7 @@ namespace ft
                 --baseIterator;
                 return tmp;
             }
-            reverse_iterator operator--( void )
+            reverse_iterator &operator--( void )
             {
                 ++baseIterator;
                 return *this;
