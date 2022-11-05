@@ -42,11 +42,17 @@ namespace ft
             iterator_type base() const { return baseIterator; }
 
             // Dereference operators
-            reference operator*( void ) { return *baseIterator; }
-            pointer operator->( void ) { return baseIterator.getPtr() ; }
+            reference operator*( void )
+			{
+				iterator_type tmp;
+				
+				tmp = baseIterator;
+				return *--tmp;
+			}
+            pointer operator->( void ) { return (baseIterator.getPtr() - 1) ; }
 
             // Subscript operator
-            reference operator[]( difference_type idx ) { return baseIterator[-idx]; }
+            reference operator[]( difference_type idx ) { return baseIterator[-idx - 1]; }
 
             // Addition - Substraction operators
             reverse_iterator operator+( difference_type n ) const
@@ -103,8 +109,8 @@ namespace ft
         return reverse_iterator< iterator >(rev_it.base().getPtr() - n);
     }
 
-    template < class iterator >
-    typename reverse_iterator< iterator >::difference_type operator-( const reverse_iterator< iterator > &lhs, const reverse_iterator< iterator > &rhs )
+    template < class iterator1, class iterator2 >
+    typename reverse_iterator< iterator1 >::difference_type operator-( const reverse_iterator< iterator1 > &lhs, const reverse_iterator< iterator2 > &rhs )
     {
         return rhs.base() - lhs.base();
     }

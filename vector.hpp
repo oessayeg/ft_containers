@@ -118,10 +118,10 @@ namespace ft
 			const_iterator end( void ) const { return const_iterator(arr + vecSize); }
 
             //-------------REVERSE ITERATORS-------------
-			reverse_iterator rbegin( void ) { return reverse_iterator(arr + (vecSize - 1)); }
-			const_reverse_iterator rbegin( void ) const { return const_reverse_iterator(arr + (vecSize - 1)); }
-			reverse_iterator rend( void ) { return reverse_iterator(arr - 1); }
-			const_reverse_iterator rend( void ) const { return const_reverse_iterator(arr - 1); }
+			reverse_iterator rbegin( void ) { return reverse_iterator(arr + vecSize); }
+			const_reverse_iterator rbegin( void ) const { return const_reverse_iterator(arr + vecSize); }
+			reverse_iterator rend( void ) { return reverse_iterator(arr); }
+			const_reverse_iterator rend( void ) const { return const_reverse_iterator(arr); }
 
             //-------------CAPACITY-------------
             //Size of vector (member function)
