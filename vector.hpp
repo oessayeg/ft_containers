@@ -50,20 +50,21 @@ namespace ft
             vector( iterator begin, iterator end, const allocator_type& alloc = allocator_type(),
 			typename ft::enable_if< !std::is_integral< iterator >::value >::type* = 0 )
             {
-                difference_type distance;
-				
-				distance = ft::iterDistance(begin, end);
+                difference_type distance = 0;
+				vector<value_type> tmp;
+
+				for (; begin != end; begin++)
+				{
+					tmp.push_back(*begin);
+					distance++;
+				}
                 arr = NULL;
                 vecSize = 0;
                 vecCapacity = 0;
                 m_allocator = alloc;
                 reserve(distance);
                 for (difference_type i = 0; i < distance; i++)
-                {
-                    m_allocator.construct(&arr[i], *begin);
-                    vecSize++;
-                    begin++;
-                }
+					push_back(tmp[i]);
             }
             vector ( const vector &rhs )
             {
