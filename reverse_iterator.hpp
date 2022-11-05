@@ -2,9 +2,6 @@
 
 #include "utils.hpp"
 
-//Compound assignment, Operator + ( n + iter ), distance (-), incrementation, decrementation operators : done
-//addition, substraction, subscript operator : done
-
 namespace ft
 {
     template < class Iterator >

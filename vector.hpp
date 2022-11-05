@@ -4,9 +4,9 @@
 #include <iostream>
 #include <memory>
 #include <limits>
-#include "reimplementationIterator.hpp"
-#include "utils.hpp"
+#include "vector_iterator.hpp"
 #include "reverse_iterator.hpp"
+#include "utils.hpp"
 
 namespace ft
 {
@@ -250,9 +250,19 @@ namespace ft
 			void assign(InputIterator first, InputIterator last,
 			typename ft::enable_if< !std::is_integral<InputIterator>::value >::type* = 0 )
 			{
+				vector<value_type> tmp;
+				size_type distance = 0;
+
 				clear();
 				for (; first != last; first++)
-					push_back(*first);
+				{
+					tmp.push_back(*first);
+					distance++;
+				}
+				if (distance > vecCapacity)
+					reserve(distance);
+				for (size_type i = 0; i < distance; i++)
+					push_back(tmp[i]);
 			}
 
             //Push_back member function
@@ -394,13 +404,10 @@ namespace ft
 			{
 				iterator ret = position;
 
-				m_allocator.destroy(&(*position));
 				++position;
 				for (; position != end(); position++)
-				{
-					m_allocator.construct(&(*(position - 1)), *position);
-					m_allocator.destroy(&(*position));
-				}
+					*(position - 1) = *position;
+				m_allocator.destroy(&(*(position - 1)));
 				vecSize -= 1;
 				return ret;
 			}

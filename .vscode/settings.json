@@ -72,6 +72,8 @@
         "list": "cpp",
         "__cxx_version": "cpp",
         "memory_resource": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "*.ipp": "cpp",
+        "filesystem": "cpp"
     }
 }
