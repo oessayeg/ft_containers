@@ -48,7 +48,7 @@ namespace ft
             }
             template< class iterator >
             vector( iterator begin, iterator end, const allocator_type& alloc = allocator_type(),
-			typename ft::enable_if< !std::is_integral< iterator >::value >::type* = 0 )
+			typename ft::enable_if< !ft::is_integral< iterator >::value >::type* = 0 )
             {
                 difference_type distance = 0;
 				vector<value_type> tmp;
@@ -248,7 +248,7 @@ namespace ft
             }
 			template <class InputIterator>
 			void assign(InputIterator first, InputIterator last,
-			typename ft::enable_if< !std::is_integral<InputIterator>::value >::type* = 0 )
+			typename ft::enable_if< !ft::is_integral<InputIterator>::value >::type* = 0 )
 			{
 				vector<value_type> tmp;
 				size_type distance = 0;
@@ -338,7 +338,7 @@ namespace ft
 
 			template <class InputIterator>
 			void insert( iterator position, InputIterator first, InputIterator last,
-			typename ft::enable_if< !std::is_integral<InputIterator>::value >::type* = 0 )
+			typename ft::enable_if< !ft::is_integral<InputIterator>::value >::type* = 0 )
 			{
 				difference_type distance = 0;
 				vector<value_type> tmp;
@@ -414,7 +414,7 @@ namespace ft
 				std::swap(m_allocator, x.m_allocator);
 			}
 
-            //Clear member function    
+            //Clear member function
             void clear( void )
             {
                 while (vecSize > 0)

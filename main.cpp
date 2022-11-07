@@ -37,15 +37,44 @@ time_t get_time(void)
     return (msecs_time);
 }
 
+class B {
+public:
+    char *l;
+    int i;
+    B():l(nullptr), i(1) {};
+    B(const int &ex) {
+        this->i = ex;
+        this->l = new char('a');
+    };
+    virtual ~B() {
+        delete this->l;
+        this->l = nullptr;
+    };
+};
+
+class A : public B {
+public:
+    A():B(){};
+    A(const B* ex){
+        this->l = new char(*(ex->l));
+        this->i = ex->i;
+        if (ex->i == -1) throw "n";
+    }
+    ~A() {
+        delete this->l;
+        this->l = nullptr;
+    };
+};
+
+using namespace std;
+
 int main( void )
 {
-	time_t start, end;
+    ft::vector<int> vect;
 
-    ft::vector<std::string> v1(1e6, "string2");
-    v1.reserve(1e6 + 1);
-	start = get_time();
-	v1.insert(v1.begin() + 1e5, "string1");
-	end = get_time();
-	std::cout << (end - start) << std::endl;
-	return 0;
+    // std::cout << ft::is_integral<char>::value << std::endl;
+    wchar_t w  = L'A';
+    cout << "Wide character value:: " << w << endl ;
+    cout << "Size of the wide char is:: " << sizeof(w) << endl;
+    return 0;
 }

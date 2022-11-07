@@ -109,7 +109,6 @@ namespace ft
         static const bool value = true;
     };
 
-
     //------------LEXICOGRAPHICAL COMPARE------------
     template <class InputIterator1, class InputIterator2>
     bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
@@ -127,4 +126,88 @@ namespace ft
         return (first2 != last2);
     }
 
+    //------------IS_INTEGRAL------------
+    template < class T >
+    struct is_integral
+    {
+        static const bool value = false;
+    };
+
+    template <>
+    struct is_integral< bool >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< char >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< wchar_t >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< signed char >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< short int >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< int >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< long int >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< long long int >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< unsigned char >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< unsigned short int >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< unsigned int >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< unsigned long int >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_integral< unsigned long long int >
+    {
+        static const bool value = true;
+    };
 }
