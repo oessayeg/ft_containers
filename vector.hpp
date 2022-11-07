@@ -300,37 +300,10 @@ namespace ft
 			// Insert member function
 			iterator insert( iterator position, const value_type &val )
 			{
-				iterator e;
+				difference_type diff = position - begin();
 
-				e = end();
-				if (arr == NULL)
-				{
-					if (position == begin() && position == end())
-					{
-						reserve(1);
-						push_back(val);
-					}
-					return begin();
-				}
-				if (vecSize < vecCapacity)
-				{
-					while (e != position)
-					{
-						m_allocator.construct(&(*e), *(e - 1));
-						m_allocator.destroy(&(*(e - 1)));
-						e--;
-					}
-					*position = val;
-					m_allocator.construct(&(*position), val);
-					vecSize += 1;
-				}
-				else
-				{
-					difference_type diff = position - begin();
-					reserve(vecCapacity * 2);
-					return insert(begin() + diff, val);
-				}
-				return position;
+				insert(position, 1, val);
+				return begin() + diff;
 			}
 			
 			void insert( iterator position, size_type n, const value_type &val )

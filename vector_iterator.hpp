@@ -83,8 +83,8 @@ namespace ft
             }
 
             // Arithmetic operators '+' and '-'
-            vectorIterator operator+( difference_type n ){ return vectorIterator(m_ptr + n); }
-            vectorIterator operator-( difference_type n ){ return vectorIterator(m_ptr - n); }
+            vectorIterator operator+( difference_type n ) const { return vectorIterator(m_ptr + n); }
+            vectorIterator operator-( difference_type n ) const { return vectorIterator(m_ptr - n); }
  
             // Compound assignment operator
             vectorIterator operator+=( difference_type n )

@@ -4,6 +4,7 @@
 #include <iterator>
 #include <iostream>
 #include <iterator>
+#include <sys/time.h>
 
 template < class vector >
 void print( vector vect )
@@ -14,78 +15,37 @@ void print( vector vect )
 }
 
 template < class vector >
-void t( vector vec )
+void printSize( vector vec )
 {
 	std::cout << "Size = " << vec.size() << std::endl;
 	std::cout << "Capacity = " << vec.capacity() << std::endl;
 	print(vec);
 }
 
-//Class from unit test
-class B {
-public:
-    char *l;
-    int i;
-    B():l(nullptr), i(1) {};
-    B(const int &ex) {
-        this->i = ex;
-        this->l = new char('a');
-    };
-    virtual ~B() {
-        delete this->l;
-        this->l = nullptr;
-    };
-};
-
-class A : public B {
-public:
-    A():B(){};
-    A(const B* ex){
-        this->l = new char(*(ex->l));
-        this->i = ex->i;
-        if (ex->i == -1) throw "n";
-    }
-    ~A() {
-        delete this->l;
-        this->l = nullptr;
-    };
-};
 
 template < class T >
 void testFunction( void )
 {
-	T v, tmp, vector;
-    tmp.assign(2600 * 10000, 1);
-    vector.assign(4200 * 10000, 1);
-    vector.insert(vector.end() - 1000 * 10000, tmp.begin(), tmp.end());
-    v.push_back(vector[3]);
-    v.push_back(vector.size());
-    v.push_back(vector.capacity());
+}
 
-    std::unique_ptr<B> k2(new B(3));
-    std::unique_ptr<B> k3(new B(4));
-    std::unique_ptr<B> k4(new B(-1));
-    std::vector<A> vv;
-    std::vector<B*> v1;
+time_t get_time(void)
+{
+    struct timeval time_now;
 
-    v1.push_back(&(*k2));
-    v1.push_back(&(*k3));
-    v1.push_back(&(*k4));
-    try { vv.insert(vv.begin(), v1.begin(), v1.end()); }
-    catch (...) {
-        v.push_back(vv.size());
-        v.push_back(vv.capacity());
-    }
+    gettimeofday(&time_now, NULL);
+    time_t msecs_time = (time_now.tv_sec * 1e3) + (time_now.tv_usec / 1e3);
+    return (msecs_time);
 }
 
 int main( void )
 {
-	{
-		testFunction< std::vector<int> >();
-	}
+	time_t start, end;
 
-	{
-		testFunction< ft::vector<int> >();
-	}
+    ft::vector<std::string> v1(1e6, "string2");
+    v1.reserve(1e6 + 1);
+	start = get_time();
+	v1.insert(v1.begin() + 1e5, "string1");
+	end = get_time();
+	std::cout << (end - start) << std::endl;
 	return 0;
 }
