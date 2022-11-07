@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstddef>
+#include <iterator>
+
 namespace ft
 {
     //------------ENABLE_IF------------
@@ -127,87 +130,126 @@ namespace ft
     }
 
     //------------IS_INTEGRAL------------
+
     template < class T >
-    struct is_integral
+    struct is_integral_t
     {
         static const bool value = false;
     };
 
     template <>
-    struct is_integral< bool >
+    struct is_integral_t< bool >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< char >
+    struct is_integral_t< char >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< wchar_t >
+    struct is_integral_t< wchar_t >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< signed char >
+    struct is_integral_t< signed char >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< short int >
+    struct is_integral_t< short int >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< int >
+    struct is_integral_t< int >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< long int >
+    struct is_integral_t< long int >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< long long int >
+    struct is_integral_t< long long int >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< unsigned char >
+    struct is_integral_t< unsigned char >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< unsigned short int >
+    struct is_integral_t< unsigned short int >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< unsigned int >
+    struct is_integral_t< unsigned int >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< unsigned long int >
+    struct is_integral_t< unsigned long int >
     {
         static const bool value = true;
     };
 
     template <>
-    struct is_integral< unsigned long long int >
+    struct is_integral_t< unsigned long long int >
     {
         static const bool value = true;
     };
+
+    template < class T >
+    struct remove_const
+    {
+        typedef T type;
+    };
+
+    template < class T >
+    struct remove_const< const T >
+    {
+        typedef T type;
+    };
+
+    template < class T >
+    struct remove_volatile
+    {
+        typedef T type;
+    };
+
+    template < class T >
+    struct remove_volatile < volatile T >
+    {
+        typedef T type;
+    };
+
+    template < class T >
+    struct remove_const_volatile
+    {
+        typedef typename ft::remove_const< typename ft::remove_volatile < T >::type >::type type;
+    };
+
+    template < class T >
+    struct is_integral
+    {
+        static const bool value =
+        is_integral_t< typename ft::remove_const_volatile < T >::type >::value;
+    };
+
 }
