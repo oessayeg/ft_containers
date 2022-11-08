@@ -22,12 +22,6 @@ void printSize( vector vec )
 	print(vec);
 }
 
-
-template < class T >
-void testFunction( void )
-{
-}
-
 time_t get_time(void)
 {
     struct timeval time_now;
@@ -37,9 +31,11 @@ time_t get_time(void)
     return (msecs_time);
 }
 
+#include <utility>
+
 int main( void )
 {
-    std::cout << std::is_integral<const volatile wchar_t>::value << std::endl;
-    std::cout << ft::is_integral<const volatile wchar_t>::value << std::endl;
+	ft::pair<std::string, int>("hello", -123);
+
     return 0;
 }
