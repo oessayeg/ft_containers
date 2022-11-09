@@ -1,6 +1,9 @@
 #pragma once
 
-#include "utils.hpp"
+#include "utils/iterator_traits.hpp"
+#include "utils/type_traits.hpp"
+#include "utils/utility.hpp"
+#include "utils/algorithm.hpp"
 
 namespace ft
 {

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <iterator>
 #include <sys/time.h>
+#include "stack.hpp"
 
 template < class vector >
 void print( vector vect )
@@ -32,10 +33,44 @@ time_t get_time(void)
 }
 
 #include <utility>
+#include <algorithm>
+#include <stack>
+#include <deque>
+
+class test
+{
+	protected :
+		int num;
+	public :
+		test() : num() {}
+		test( int n ) : num(n) {}
+		~test() {}
+};
+
+class a
+{
+	private :
+		int *i;
+
+	public :
+		a()
+		{
+			std::cout << "+++CONSTRUCTOR+++" << std::endl;;
+			i = (int *)malloc(sizeof(int));
+		}
+		~a()
+		{
+			std::cout << "---DESTRUCTOR---" << std::endl;
+			free(i);
+		}
+};
 
 int main( void )
 {
-	ft::pair<std::string, int>("hello", -123);
+	std::allocator<a> m_alloc;
+	a *arr = m_alloc.allocate(1);
 
+	m_alloc.construct(&arr[0], a());
+	// m_alloc.destroy(&arr[0]);
     return 0;
 }

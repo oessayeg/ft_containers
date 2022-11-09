@@ -3,10 +3,12 @@
 
 #include <iostream>
 #include <memory>
-#include <limits>
 #include "vector_iterator.hpp"
 #include "reverse_iterator.hpp"
-#include "utils.hpp"
+#include "utils/iterator_traits.hpp"
+#include "utils/type_traits.hpp"
+#include "utils/utility.hpp"
+#include "utils/algorithm.hpp"
 
 namespace ft
 {
@@ -201,8 +203,8 @@ namespace ft
             }
             const_reference at( size_type idx ) const
             {
-                if ( arr == NULL || idx >= vecSize )
-                    throw std::out_of_range("vector");
+				if ( arr == NULL || idx >= vecSize )
+					throw std::out_of_range("vector");
                 return arr[idx];
             }
 
