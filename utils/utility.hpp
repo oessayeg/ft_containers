@@ -11,18 +11,21 @@ namespace ft
             S second;
 
         public :
+            // Default constructor
             pair() : first(), second() {}
+
+            // Parameterized constructor
             pair ( const F &a, const S &b )
             {
                 first = a;
                 second = b;
             }
+
+            // Copy constructor
             template < class T1, class T2 >
-            pair ( const pair < T1, T2 > &rhs )
-            {
-                first = rhs.first;
-                second = rhs.second;
-            }
+            pair ( const pair < T1, T2 > &rhs ) : first(rhs.first), second(rhs.second) { }
+
+            // Copy assignment operator overload
             pair &operator=( const pair &rhs )
             {
                 if (this != &rhs)
@@ -32,6 +35,8 @@ namespace ft
                 }
                 return *this;
             }
+
+            // Destructor
             ~pair() {}
     };
 

@@ -11,7 +11,7 @@ namespace ft
             typedef typename container::size_type size_type;
             typedef typename container::reference reference;
             typedef typename container::const_reference const_reference;
-        
+
         protected :
             container_type ctr;
         
@@ -31,7 +31,7 @@ namespace ft
             const_reference top( void ) const { return ctr.back(); }
             void push( const value_type &val ) { ctr.push_back(val); }
             void pop( void ) { ctr.pop_back(); }
-    
+
         template < class D, class C >
         friend bool operator==( stack< D, C > const &lhs, stack< D, C > const &rhs )
         {
