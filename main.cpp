@@ -209,12 +209,33 @@ class INT
 		~INT( ) { }
 };
 
+#include <functional>
+struct m_less
+{
+	bool operator()( const INT &lhs, const INT &rhs ) const
+	{
+		return lhs.num < rhs.num;
+	}
+};
+
+#include "vector.hpp"
 int main( void )
 {
-	ft::map< std::string, int > m_map;
+	INT obj1(20), obj2(10);
 
-	m_map.insert(ft::make_pair("BoB", 10));
-	m_map.insert(ft::make_pair("1oB", 10));
-	m_map.insert(ft::make_pair("roB", 10));
+	std::map< INT, int, m_less > test;
+	test.insert(std::make_pair(obj1, 20));
+	test.insert(std::make_pair(obj2, 10));
+	// test.insert(std::make_pair(obj1, 10));
+	// test[obj1] = 10;
+	for (std::map< INT, int, m_less>::iterator b = test.begin();
+	b != test.end(); b++)
+		std::cout << b->second << std::endl;
+	// ft::map<int, std::string > m_map1;
+	// m_map1.insert(ft::make_pair(10, "Bob"));
+	// m_map1.insert(ft::make_pair(5, "Bob"));
+	// m_map1.insert(ft::make_pair(20, "Bob"));
+	// m_map1.insert(ft::make_pair(90, "Bob"));
+	// m_map1.print();
 	return 0;
 }

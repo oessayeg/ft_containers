@@ -3,6 +3,7 @@
 #include "utils/utility.hpp"
 #include "utils/functional.hpp"
 #include <memory>
+#include <queue>
 
 namespace ft
 {
@@ -13,7 +14,7 @@ namespace ft
 			P data;
 			avlTree *right;
 			avlTree *left;
-		
+
 		public :
 			avlTree( ) { }
 			avlTree( P toInit ) : data(toInit), right(NULL), left(NULL) { }
@@ -53,23 +54,65 @@ namespace ft
         private :
             avlTree *createNode( const value_type &val ) { return new avlTree(val); }
 
+			size_type height( avlTree *root )
+			{
+				if (root == NULL)
+					return 0;
+				return (std::max(height(root->left), height(root->right)) + 1);
+			}
+
             void insertRecursively( avlTree **root, const value_type &val )
             {
+				int balanceFactor = 0;
+
                 if (*root == NULL)
                 {
                     *root = createNode(val);
                     return ;
                 }
-				if (comp(val.first, (*root)->data.first))
-					std::cout << "is lower" << std::endl;
-				else
-					std::cout << "is greater" << std::endl;
+				if(comp(val.first, (*root)->data.first) && (*root)->left == NULL)
+					(*root)->left = createNode(val);
+				else if (!comp(val.first, (*root)->data.first) && (*root)->right == NULL)
+					(*root)->right = createNode(val);
+				else if (comp(val.first, (*root)->data.first))
+					insertRecursively(&(*root)->left, val);
+				else if (!comp(val.first, (*root)->data.first))
+					insertRecursively(&(*root)->right, val);
+
+				balanceFactor = height((*root)->left) - height((*root)->right);
+				// To Do : check the balance factor and rotate
             }
 
         //---------------------PUBLIC MEMBER FUNCTIONS---------------------
         public :
             map( ) : baseTree(NULL), mapSize(0), m_allocator(allocator_type()), comp(key_compare()) { }
             void insert( const value_type &val ) { insertRecursively(&baseTree, val); }
+			void print( void )
+			{
+				avlTree *tmp;
+				std::queue< avlTree* > q;
+				int nodes = 0;
+
+				if (baseTree == NULL)
+					return ;
+				q.push(baseTree);
+				while (!q.empty())
+				{
+					nodes = q.size();
+					while (nodes > 0)
+					{
+						tmp = q.front();
+						std::cout << "(" << tmp->data.first << " " << tmp->data.second << ")";
+						q.pop();
+						if (tmp->left)
+							q.push(tmp->left);
+						if (tmp->right)
+							q.push(tmp->right);
+						nodes--;
+					}
+					std::cout << std::endl;
+				}
+			}
             ~map( ) { }
    };
 }
