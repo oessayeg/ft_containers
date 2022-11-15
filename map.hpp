@@ -1,15 +1,15 @@
 #pragma once
 
 #include "utils/utility.hpp"
+#include "utils/functional.hpp"
 #include <memory>
-#include <functional>
 
 namespace ft
 {
 	template < class P >
 	class avlTree
 	{
-		private :
+		public :
 			P data;
 			avlTree *right;
 			avlTree *left;
@@ -20,7 +20,7 @@ namespace ft
 			~avlTree( ) { }
 	};
 
-    template < class Key, class T, class Compare = std::less< Key >, class Allocator = std::allocator<ft::pair< const Key, T > > >
+    template < class Key, class T, class Compare = ft::less< Key >, class Allocator = std::allocator<ft::pair< const Key, T > > >
     class map
     {
         //---------------------MEMBER TYPES---------------------
@@ -44,22 +44,14 @@ namespace ft
 
         //---------------------MEMBER ATTRIBUTES---------------------
         private :
-            size_type mapSize;
             avlTree *baseTree;
+            size_type mapSize;
             allocator_type m_allocator;
+			key_compare comp;
 
         //---------------------PRIVATE MEMBER FUNCTIONS---------------------
         private :
-            avlTree *createNode( const value_type &val )
-            {
-                avlTree *node;
-
-                node = new avlTree;
-                node->data = val;
-                node->left = NULL;
-                node->right = NULL;
-                return node;
-            }
+            avlTree *createNode( const value_type &val ) { return new avlTree(val); }
 
             void insertRecursively( avlTree **root, const value_type &val )
             {
@@ -68,11 +60,15 @@ namespace ft
                     *root = createNode(val);
                     return ;
                 }
+				if (comp(val.first, (*root)->data.first))
+					std::cout << "is lower" << std::endl;
+				else
+					std::cout << "is greater" << std::endl;
             }
 
         //---------------------PUBLIC MEMBER FUNCTIONS---------------------
         public :
-            map( ) : mapSize(0), baseTree(NULL) { }
+            map( ) : baseTree(NULL), mapSize(0), m_allocator(allocator_type()), comp(key_compare()) { }
             void insert( const value_type &val ) { insertRecursively(&baseTree, val); }
             ~map( ) { }
    };

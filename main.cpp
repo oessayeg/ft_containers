@@ -8,6 +8,7 @@
 #include <map>
 #include <cmath>
 #include "map.hpp"
+#include "utils/functional.hpp"
 
 // template < class T >
 // class avlTree
@@ -198,8 +199,22 @@ class test
 		int getNum( void ) const { return num; }
 };
 
+class INT
+{
+	public :
+		int num;
+		INT( ) { }
+		INT( int n ) : num(n) {}
+		void print( ) { std::cout << num << std::endl; }
+		~INT( ) { }
+};
+
 int main( void )
 {
+	ft::map< std::string, int > m_map;
 
+	m_map.insert(ft::make_pair("BoB", 10));
+	m_map.insert(ft::make_pair("1oB", 10));
+	m_map.insert(ft::make_pair("roB", 10));
 	return 0;
 }
