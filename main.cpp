@@ -9,14 +9,27 @@
 #include <cmath>
 #include "map.hpp"
 
-template < class T >
-struct avlTree
-{
-	T data;
-	struct avlTree *right;
-	struct avlTree *left;
-	size_t height;
-};
+// template < class T >
+// class avlTree
+// {
+// 	private :
+// 		T data;
+// 		avlTree *right;
+// 		avlTree *left;
+
+// 	public :
+// 		avlTree( ) {}
+// 		avlTree( T toInit ) : data(toInit), right(NULL), left(NULL) {}
+
+// };
+
+   template < class T >
+    struct avlTree
+    {
+        T data;
+        avlTree* right;
+        avlTree* left;
+    };
 
 template < class T >
 avlTree< T > *createNode( T val )
@@ -187,13 +200,6 @@ class test
 
 int main( void )
 {
-	ft::map<std::string, int> mapTest;
-	avlTree < ft::pair<std::string, int> > tmp;
 
-	mapTest.insert(ft::make_pair("Bob", 20));
-	// ft::pair<>
-	// test.test1.insert(ft::make_pair(12, 3));
-	// test1.insert(std::make_pair(obj2, 20));
-	// test1.insert(ft::make_pair("Bob", 21));
 	return 0;
 }

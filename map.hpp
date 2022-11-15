@@ -6,13 +6,19 @@
 
 namespace ft
 {
-    template < class T >
-    struct avlTree
-    {
-        T data;
-        avlTree* right;
-        avlTree* left;
-    };
+	template < class P >
+	class avlTree
+	{
+		private :
+			P data;
+			avlTree *right;
+			avlTree *left;
+		
+		public :
+			avlTree( ) { }
+			avlTree( P toInit ) : data(toInit), right(NULL), left(NULL) { }
+			~avlTree( ) { }
+	};
 
     template < class Key, class T, class Compare = std::less< Key >, class Allocator = std::allocator<ft::pair< const Key, T > > >
     class map
