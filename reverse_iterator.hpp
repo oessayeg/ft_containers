@@ -8,7 +8,7 @@
 namespace ft
 {
     template < class Iterator >
-    class reverse_iterator : public vectorIterator< typename Iterator::pointer >
+    class reverse_iterator
     {
         public :
             typedef Iterator iterator_type;

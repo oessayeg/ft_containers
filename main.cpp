@@ -221,21 +221,26 @@ struct m_less
 #include "vector.hpp"
 int main( void )
 {
-	INT obj1(20), obj2(10);
+	ft::map< int, std::string > test;
+	test.insert(ft::make_pair(10, "Nice"));
+	test.insert(ft::make_pair(5, "Bob"));
+	test.insert(ft::make_pair(1, "Bob"));
 
-	std::map< INT, int, m_less > test;
-	test.insert(std::make_pair(obj1, 20));
-	test.insert(std::make_pair(obj2, 10));
-	// test.insert(std::make_pair(obj1, 10));
-	// test[obj1] = 10;
-	for (std::map< INT, int, m_less>::iterator b = test.begin();
-	b != test.end(); b++)
-		std::cout << b->second << std::endl;
-	// ft::map<int, std::string > m_map1;
-	// m_map1.insert(ft::make_pair(10, "Bob"));
-	// m_map1.insert(ft::make_pair(5, "Bob"));
-	// m_map1.insert(ft::make_pair(20, "Bob"));
-	// m_map1.insert(ft::make_pair(90, "Bob"));
-	// m_map1.print();
+	test.print();
+	std::cout << std::endl;
+	std::cout << "First : " << test.baseTree->data.first << ", ";
+	std::cout << "Second : " << test.baseTree->data.second << ", ";
+	std::cout << "Parent : " << test.baseTree->parent << std::endl;
+
+	std::cout << "First : " << test.baseTree->left->data.first << ", ";
+	std::cout << "Second : " << test.baseTree->left->data.second << "\n";
+	if (test.baseTree->right->parent == test.baseTree)
+		std::cout << "GOOD PARENT\n";	
+
+	std::cout << "First : " << test.baseTree->right->data.first << ", ";
+	std::cout << "Second : " << test.baseTree->right->data.second << "\n";
+	if (test.baseTree->left->parent == test.baseTree)
+		std::cout << "GOOD PARENT\n";	
+
 	return 0;
 }

@@ -1,26 +1,16 @@
 #pragma once
 
-#include "utils/utility.hpp"
-#include "utils/functional.hpp"
 #include <memory>
 #include <queue>
 
+#include "utils/utility.hpp"
+#include "utils/tree.hpp"
+#include "utils/functional.hpp"
+#include "map_iterator.hpp"
+#include "reverse_iterator.hpp"
+
 namespace ft
 {
-	template < class P >
-	class avlTree
-	{
-		public :
-			P data;
-			avlTree *right;
-			avlTree *left;
-
-		public :
-			avlTree( ) { }
-			avlTree( P toInit ) : data(toInit), right(NULL), left(NULL) { }
-			~avlTree( ) { }
-	};
-
     template < class Key, class T, class Compare = ft::less< Key >, class Allocator = std::allocator<ft::pair< const Key, T > > >
     class map
     {
@@ -36,23 +26,26 @@ namespace ft
             typedef value_type* pointer;
             typedef const value_type* const_pointer;
             typedef avlTree< value_type > avlTree;
-            //iterator
-            //const_iterator
+            typedef map_iterator< value_type* > iterator;
+            typedef map_iterator< const value_type* > const_iterator;
             //reverse_iterator
             //const_reverse_iterator
             typedef std::ptrdiff_t difference_type;
             typedef size_t size_type;
+            avlTree *baseTree;
 
         //---------------------MEMBER ATTRIBUTES---------------------
         private :
-            avlTree *baseTree;
             size_type mapSize;
             allocator_type m_allocator;
 			key_compare comp;
 
         //---------------------PRIVATE MEMBER FUNCTIONS---------------------
         private :
-            avlTree *createNode( const value_type &val ) { return new avlTree(val); }
+            avlTree *createNode( const value_type &val, avlTree *parent )
+			{
+				return new avlTree(val, parent);
+			}
 
 			size_type height( avlTree *root )
 			{
@@ -67,7 +60,11 @@ namespace ft
 				avlTree *rightOfLeftRoot = leftRoot->right;
 
 				leftRoot->right = root;
+				leftRoot->parent = root->parent;
+				root->parent = leftRoot;
 				root->left = rightOfLeftRoot;
+				if (rightOfLeftRoot)
+					rightOfLeftRoot->parent = root;
 				return leftRoot;
 			}
 
@@ -77,7 +74,11 @@ namespace ft
 				avlTree *leftOfRightRoot = rightRoot->left;
 
 				rightRoot->left = root;
+				rightRoot->parent = root->parent;
+				root->parent = rightRoot;
 				root->right = leftOfRightRoot;
+				if (leftOfRightRoot)
+					leftOfRightRoot->parent = root;
 				return rightRoot;
 			}
 
@@ -87,13 +88,13 @@ namespace ft
 
                 if (*root == NULL)
                 {
-                    *root = createNode(val);
+                    *root = createNode(val, NULL);
                     return ;
                 }
 				if(comp(val.first, (*root)->data.first) && (*root)->left == NULL)
-					(*root)->left = createNode(val);
+					(*root)->left = createNode(val, *root);
 				else if (comp((*root)->data.first, val.first) && (*root)->right == NULL)
-					(*root)->right = createNode(val);
+					(*root)->right = createNode(val, *root);
 				else if (comp(val.first, (*root)->data.first) && (*root)->left)
 					insertRecursively(&(*root)->left, val);
 				else if (comp((*root)->data.first, val.first) && (*root)->right)
@@ -148,5 +149,9 @@ namespace ft
 				}
 			}
             ~map( ) { }
+
+        //---------------------ITERATORS---------------------
+		iterator begin( void ) { return iterator(); }
+		const_iterator begin( void ) const { return const_iterator(); }
    };
 }
