@@ -60,6 +60,26 @@ namespace ft
 					return 0;
 				return (std::max(height(root->left), height(root->right)) + 1);
 			}
+			
+			avlTree* rightRotation( avlTree *root )
+			{
+				avlTree *leftRoot = root->left;
+				avlTree *rightOfLeftRoot = leftRoot->right;
+
+				leftRoot->right = root;
+				root->left = rightOfLeftRoot;
+				return leftRoot;
+			}
+
+			avlTree *leftRotation( avlTree *root )
+			{
+				avlTree *rightRoot = root->right;
+				avlTree *leftOfRightRoot = rightRoot->left;
+
+				rightRoot->left = root;
+				root->right = leftOfRightRoot;
+				return rightRoot;
+			}
 
             void insertRecursively( avlTree **root, const value_type &val )
             {
@@ -72,16 +92,30 @@ namespace ft
                 }
 				if(comp(val.first, (*root)->data.first) && (*root)->left == NULL)
 					(*root)->left = createNode(val);
-				else if (!comp(val.first, (*root)->data.first) && (*root)->right == NULL)
+				else if (comp((*root)->data.first, val.first) && (*root)->right == NULL)
 					(*root)->right = createNode(val);
-				else if (comp(val.first, (*root)->data.first))
+				else if (comp(val.first, (*root)->data.first) && (*root)->left)
 					insertRecursively(&(*root)->left, val);
-				else if (!comp(val.first, (*root)->data.first))
+				else if (comp((*root)->data.first, val.first) && (*root)->right)
 					insertRecursively(&(*root)->right, val);
-
+				else
+					return ;
 				balanceFactor = height((*root)->left) - height((*root)->right);
-				// To Do : check the balance factor and rotate
-            }
+				if (balanceFactor > 1 && comp(val.first, (*root)->left->data.first))
+					(*root) = rightRotation(*root);
+				else if (balanceFactor < -1 && comp((*root)->right->data.first, val.first))
+					(*root) = leftRotation(*root);
+				else if (balanceFactor > 1 && comp((*root)->left->data.first, val.first))
+				{
+					(*root)->left = leftRotation((*root)->left);
+					(*root) = rightRotation(*root);
+				}
+				else if (balanceFactor < -1 && comp(val.first, (*root)->right->data.first))
+				{
+					(*root)->right = rightRotation((*root)->right);
+					(*root) = leftRotation(*root);
+				}
+			}
 
         //---------------------PUBLIC MEMBER FUNCTIONS---------------------
         public :
