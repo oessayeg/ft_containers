@@ -19,7 +19,8 @@ namespace ft
 
         private :
             avlTree *m_root;
-            
+            // int isEnd;
+
             avlTree *leftMost( avlTree *node )
             {
                 while (node->left != NULL)
@@ -44,13 +45,42 @@ namespace ft
                 return parent;
             }
 
+            avlTree *rightMost( avlTree *node )
+            {
+                while (node->right != NULL)
+                    node = node->right;
+                return node;
+            }
+
+            avlTree *previousNode( void )
+            {
+                avlTree *tmp_root = m_root;
+                avlTree *parent;
+
+                if (tmp_root->left != NULL)
+                    return rightMost(tmp_root);
+                parent = tmp_root->parent;
+
+                if (tmp_root == parent->right)
+                    return parent;
+
+                while (parent != NULL && tmp_root != parent->right)
+                {
+                    tmp_root = parent;
+                    parent = tmp_root->parent;
+                }
+                return parent;
+            }
+
         public :
-            map_iterator( avlTree *ptr = NULL ) : m_root(ptr) { }
-            map_iterator( const map_iterator &rhs ) : m_root(rhs.m_root) { }
+            map_iterator( avlTree *ptr = NULL ) : m_root(ptr), isEnd(0) { }
+            map_iterator( avlTree *ptr, int ) : m_root(ptr), isEnd(1) {}
+            map_iterator( const map_iterator &rhs ) : m_root(rhs.m_root), isEnd(0) { }
             map_iterator &operator=( const map_iterator &rhs )
             {
                 if (this != &rhs)
                 {
+                    isEnd = rhs.isEnd();
                     m_root = rhs.m_root;
                     return *this;
                 }
@@ -75,18 +105,18 @@ namespace ft
                 return tmp;
             }
 
-            // map_iterator &operator--( void )
-            // {
-            //     m_root = previousNode();
-            //     return *this;
-            // }
+            map_iterator &operator--( void )
+            {
+                m_root = previousNode();
+                return *this;
+            }
 
-            // map_iterator operator--( void )
-            // {
-            //     map_iterator(m_root);
+            map_iterator operator--( int )
+            {
+                map_iterator tmp(m_root);
 
-            //     m_root = previousNode();
-            //     return *this;
-            // }
+                m_root = previousNode();
+                return tmp;
+            }
     };
 }
