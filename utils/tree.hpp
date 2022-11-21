@@ -1,5 +1,8 @@
 #pragma once
 
+#define BEGIN 1
+#define END 2
+
 namespace ft
 {
     template < class P >

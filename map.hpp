@@ -151,35 +151,10 @@ namespace ft
             ~map( ) { }
 
         //---------------------ITERATORS---------------------
-		iterator begin( void )
-		{
-			avlTree *tmp = baseTree;
+		iterator begin( void ) { return iterator(baseTree, BEGIN); }
+		const_iterator begin( void ) const { return const_iterator(baseTree, BEGIN); }
+		iterator end( void ) { return iterator(baseTree, END); }
+		const_iterator end( void ) const { return const_iterator(baseTree, END); }
 
-			if (baseTree == NULL)
-				return iterator(NULL);
-			while (tmp->left != NULL)
-				tmp = tmp->left;
-			return iterator(tmp);
-		}
-		const_iterator begin( void ) const
-		{
-			avlTree *tmp = baseTree;
-
-			if (baseTree == NULL)
-				return iterator(NULL);
-			tmp = baseTree;
-			while (tmp->left != NULL)
-				tmp = tmp->left;
-			return const_iterator(tmp);
-		}
-		// iterator end( void )
-		// {
-		// 	avlTree *tmp;
-
-		// 	tmp = baseTree;
-		// 	while (tmp->right != NULL)
-		// 		tmp = tmp->right;
-		// 	return iterator(tmp, 1);
-		// }
    };
 }

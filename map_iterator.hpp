@@ -18,70 +18,46 @@ namespace ft
             typedef avlTree< value_type > avlTree;
 
         private :
-            avlTree *m_root;
-            // int isEnd;
-
-            avlTree *leftMost( avlTree *node )
-            {
-                while (node->left != NULL)
-                    node = node->left;
-                return node;
-            }
-            avlTree *nextNode( void )
-            {
-                avlTree *tmp_root = m_root;
-                avlTree *parent;
-
-                if (tmp_root->right != NULL)
-                    return leftMost(tmp_root->right);
-                parent = tmp_root->parent;
-                if (tmp_root == parent->left)
-                    return parent;
-                while (parent != NULL && tmp_root != parent->left)
-                {
-                    tmp_root = parent;
-                    parent = tmp_root->parent;
-                }
-                return parent;
-            }
-
-            avlTree *rightMost( avlTree *node )
-            {
-                while (node->right != NULL)
-                    node = node->right;
-                return node;
-            }
-
-            avlTree *previousNode( void )
-            {
-                avlTree *tmp_root = m_root;
-                avlTree *parent;
-
-                if (tmp_root->left != NULL)
-                    return rightMost(tmp_root);
-                parent = tmp_root->parent;
-
-                if (tmp_root == parent->right)
-                    return parent;
-
-                while (parent != NULL && tmp_root != parent->right)
-                {
-                    tmp_root = parent;
-                    parent = tmp_root->parent;
-                }
-                return parent;
-            }
+            avlTree *m_current_node;
+            avlTree *first_node;
+            avlTree *last_node;
+			int		check;
 
         public :
-            map_iterator( avlTree *ptr = NULL ) : m_root(ptr), isEnd(0) { }
-            map_iterator( avlTree *ptr, int ) : m_root(ptr), isEnd(1) {}
-            map_iterator( const map_iterator &rhs ) : m_root(rhs.m_root), isEnd(0) { }
+            map_iterator( void ) : m_current_node(NULL), first_node(NULL), last_node(NULL), check(0) { }
+            map_iterator( avlTree *root, int pos )
+            {
+                avlTree *tmp = root;
+
+				while (tmp->left != NULL)
+					tmp = tmp->left;
+				first_node = tmp;
+				while (root->right != NULL)
+					root = root->right;
+				last_node = root;
+                if (pos == BEGIN)
+				{
+                    m_current_node = first_node;
+					check = 0;
+				}
+				else if (pos == END)
+				{
+					m_current_node = NULL;
+					check = 1;
+				}
+            }
+
+            map_iterator( const map_iterator &rhs ) : m_current_node(rhs.m_current_node),
+            first_node(rhs.first_node), last_node(rhs.last_node), check(rhs.check) { }
+
             map_iterator &operator=( const map_iterator &rhs )
             {
                 if (this != &rhs)
                 {
-                    isEnd = rhs.isEnd();
-                    m_root = rhs.m_root;
+                    m_current_node = rhs.m_current_node;
+                    first_node = rhs.first_node;
+                    last_node = rhs.last_node;
+					check = rhs.check;
                     return *this;
                 }
                 return *this;
@@ -89,34 +65,92 @@ namespace ft
             ~map_iterator( ) { }
 
             // Dereference operators
-            reference operator*( void ) { return m_root->data; }
-            pointer operator->( void ) { return &m_root->data; }
+            reference operator*( void ) { return m_current_node->data; }
+            pointer operator->( void ) { return &m_current_node->data; }
 
+            // Pre and post increment operators
             map_iterator &operator++( void )
             {
-                m_root = nextNode();
+                m_current_node = nextNode(m_current_node);
                 return *this;
             }
+
             map_iterator operator++( int )
             {
-                map_iterator tmp(m_root);
+                map_iterator tmp(*this);
 
-                m_root = nextNode();
+                m_current_node = nextNode(m_current_node);
                 return tmp;
             }
+            
+            // Pre and post decrement operators
+			map_iterator &operator--( void )
+			{
+				m_current_node = previousNode(m_current_node);
+				return *this;
+			}
 
-            map_iterator &operator--( void )
-            {
-                m_root = previousNode();
-                return *this;
+			map_iterator operator--( int )
+			{
+				map_iterator tmp(*this);
+
+				m_current_node = previousNode(m_current_node);
+				return tmp;
+			}
+
+        //---------------------PRIVATE MEMBER FUNCTIONS---------------------
+        private :
+            avlTree *nextNode( avlTree *node )
+			{
+				avlTree *parent;
+
+				if (node == last_node || node == NULL)
+					return NULL;
+				parent = node->parent;
+				if (node->right != NULL)
+				{
+					node = node->right;
+					while (node->left != NULL)
+						node = node->left;
+					return node;
+				}
+				if (node == parent->left)
+					return parent;
+				while (parent != NULL && node != parent->left)
+				{
+					node = parent;
+					parent = node->parent;
+				}
+				return parent;
             }
 
-            map_iterator operator--( int )
-            {
-                map_iterator tmp(m_root);
+			avlTree *previousNode( avlTree *node )
+			{
+				avlTree *parent;
 
-                m_root = previousNode();
-                return tmp;
-            }
+				if (check == 1 && node == NULL)
+				{
+					check = 0;
+					return last_node;
+				}
+				else if (node == first_node || node == NULL)
+					return NULL;
+				parent = node->parent;
+				if (node->left != NULL)
+				{
+					node = node->left;
+					while (node->right != NULL)
+						node = node->right;
+					return node;
+				}
+				if (node == parent->right)
+					return parent;
+				while (parent != NULL && node != parent->right)
+				{
+					node = parent;
+					parent = node->parent;
+				}
+				return parent;
+			}
     };
 }
