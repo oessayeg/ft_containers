@@ -60,7 +60,22 @@ namespace ft
 					check = 1;
 				}
             }
+			map_iterator( avlTree *current)
+			{
+				avlTree *root;
 
+				m_current_node = current;
+				check = 0;
+				while (current->parent != NULL)
+					current = current->parent;
+				root = current;
+				while (root->left != NULL)
+					root = root->left;
+				while (current->right != NULL)
+					current = current->right;
+				first_node = root;
+				last_node = current;	
+			}
 			template < class U >
             map_iterator( const map_iterator< U > &rhs, typename ft::enable_if< ft::is_convertible< T, U >::value >::type * = 0 )
 			{

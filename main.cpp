@@ -17,13 +17,16 @@ int main( void )
 {
 	{
 		ft::map< int, std::string > test1;
-		ft::map<int, std::string> test2;
+		// ft::map<int, std::string> test2;
 
 		test1.insert(ft::make_pair(20, "Bob"));
 		test1.insert(ft::make_pair(30, "Doc"));
 		test1.insert(ft::make_pair(10, "Aot"));
-		test2 = test1;
 
+		// if (test1.find(10) == test1.end())
+		// 	std::cout << "Not found\n";
+		// else
+		// 	std::cout << "Found\n";
 		// for (ft::map< int, std::string >::iterator b = test2.begin(); b != test2.end(); b++)
 		// 	std::cout << b->first << ", " << b->second << std::endl;
 	};

@@ -106,6 +106,26 @@ namespace ft
 			key_compare key_comp() const { return key_compare(); }
 			value_compare value_comp() const { return value_compare(key_compare()); }
 
+        	//---------------------Operations---------------------
+			iterator find( const key_type &k )
+			{
+				avlTree *found;
+
+				found = findKey(k, baseTree);
+				if (found == NULL)
+					return iterator(baseTree, END);
+				return iterator(found);
+			}
+			const_iterator find( const key_type &k ) const
+			{
+				avlTree *found;
+
+				found = findKey(k, baseTree);
+				if (found == NULL)
+					return const_iterator(baseTree, END);
+				return const_iterator(found);
+			}
+
 			// Insert member function
             void insert( const value_type &val ) { insertRecursively(&baseTree, val); }
 
@@ -209,5 +229,16 @@ namespace ft
 				delete root;
 			}
 
+			avlTree *findKey( const key_type &k, avlTree *root ) const
+			{
+				if (root == NULL)
+					return NULL;
+				else if (comp(k, root->data.first))
+					return findKey(k, root->left);
+				else if (comp(root->data.first, k))
+					return findKey(k, root->right);
+				else
+					return root;
+			}
    };
 }
