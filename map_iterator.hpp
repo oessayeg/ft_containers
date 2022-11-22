@@ -2,12 +2,14 @@
 
 #include "utils/iterator_traits.hpp"
 #include "utils/tree.hpp"
+#include "utils/type_traits.hpp"
 
 namespace ft
 {
     template < class T >
     class map_iterator
     {
+		// -----------------------Member Types-----------------------
         public :
             typedef typename ft::iterator_traits< T >::value_type value_type;
             typedef typename ft::iterator_traits< T >::difference_type difference_type;
@@ -17,18 +19,21 @@ namespace ft
             typedef size_t size_type;
             typedef avlTree< value_type > avlTree;
 
+		// -----------------------Member Attributes-----------------------
         private :
             avlTree *m_current_node;
             avlTree *first_node;
             avlTree *last_node;
 			int		check;
 
+		// -----------------------Public Member Functions-----------------------
         public :
             map_iterator( void ) : m_current_node(NULL), first_node(NULL), last_node(NULL), check(0) { }
             map_iterator( avlTree *root, int pos )
             {
-                avlTree *tmp = root;
+                avlTree *tmp;
 
+				tmp = root;
 				while (tmp->left != NULL)
 					tmp = tmp->left;
 				first_node = tmp;
@@ -47,8 +52,14 @@ namespace ft
 				}
             }
 
-            map_iterator( const map_iterator &rhs ) : m_current_node(rhs.m_current_node),
-            first_node(rhs.first_node), last_node(rhs.last_node), check(rhs.check) { }
+			template < class U >
+            map_iterator( const map_iterator< U > &rhs, typename ft::enable_if< ft::is_convertible< T, U >::value >::type * = 0 )
+			{
+				m_current_node = rhs.getCurrent();
+				first_node = rhs.getFirst();
+				last_node = rhs.getLast();
+				check = rhs.getCheck();
+			}
 
             map_iterator &operator=( const map_iterator &rhs )
             {
@@ -98,7 +109,26 @@ namespace ft
 				return tmp;
 			}
 
-        //---------------------PRIVATE MEMBER FUNCTIONS---------------------
+			// Getters for private member attributes
+			avlTree *getCurrent() const { return m_current_node; }
+			avlTree *getFirst() const { return first_node; }
+			avlTree *getLast() const { return last_node; }
+			int getCheck() const { return check; }
+
+			// Equality, Inequality operators
+			bool operator==( const map_iterator &rhs )
+			{
+				if (m_current_node == rhs.getCurrent() && first_node == rhs.getFirst()
+					&& last_node == rhs.getLast() && check == rhs.getCheck())
+					return true;
+				return false;
+			}
+			bool operator!=( const map_iterator &rhs )
+			{
+				return !(*this == rhs);
+			}
+
+		// -----------------------Private Member Functions-----------------------
         private :
             avlTree *nextNode( avlTree *node )
 			{
