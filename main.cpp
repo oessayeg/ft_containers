@@ -13,13 +13,11 @@
 #include <utility>
 #include "vector.hpp"
 
-typedef ft::avlTree< ft::pair< int, std::string > > avl;
-
 int main( void )
 {
 	{
 		ft::map< int, std::string > test;
-		ft::map< int, std::string >::iterator b;
+		ft::map< int, std::string >::iterator e;
 
 		test.insert(ft::make_pair(50, "Bob"));
 		test.insert(ft::make_pair(40, "Iel"));
@@ -27,33 +25,19 @@ int main( void )
 		test.insert(ft::make_pair(3, "Alice"));
 		test.insert(ft::make_pair(45, "Xor"));
 		test.insert(ft::make_pair(65, "Coco"));
-		test.insert(ft::make_pair(70, "Coco"));
-		test.insert(ft::make_pair(2, "Coco"));
-		test.insert(ft::make_pair(5, "Coco"));
+		test.insert(ft::make_pair(70, "Nurmang"));
+		test.insert(ft::make_pair(2, "Balence"));
+		test.insert(ft::make_pair(5, "Vlad"));
 
-		b = test.end();
-		--b;
-		std::cout << b->first << std::endl;
-		--b;
-		std::cout << b->first << std::endl;
-		--b;
-		std::cout << b->first << std::endl;
-		--b;
-		std::cout << b->first << std::endl;
-		--b;
-		std::cout << b->first << std::endl;
-		--b;
-		std::cout << b->first << std::endl;
-		--b;
-		std::cout << b->first << std::endl;
-		--b;
-		std::cout << b->first << std::endl;
-		--b;
-		std::cout << b->first << std::endl;
-		--b;
+		ft::map< int, std::string > test2(test.begin(), test.end());
+
+		// ft::map< int, std::string >::iterator b = test2.begin();
+		// for (; b != test2.end(); b++)
+		// 	std::cout << b->first << ", " << b->second << std::endl;
 		// test.print();
 
 		// *b = ft::make_pair(50, "Ok");
 	}
+
 	return 0;
 }

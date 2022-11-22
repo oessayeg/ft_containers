@@ -28,6 +28,7 @@ namespace ft
 
 		// -----------------------Public Member Functions-----------------------
         public :
+			// ------------------Contstructors, asiggnment overload, destructor------------------
             map_iterator( void ) : m_current_node(NULL), first_node(NULL), last_node(NULL), check(0) { }
             map_iterator( avlTree *root, int pos )
             {
@@ -119,7 +120,7 @@ namespace ft
 			bool operator==( const map_iterator &rhs )
 			{
 				if (m_current_node == rhs.getCurrent() && first_node == rhs.getFirst()
-					&& last_node == rhs.getLast() && check == rhs.getCheck())
+					&& last_node == rhs.getLast())
 					return true;
 				return false;
 			}

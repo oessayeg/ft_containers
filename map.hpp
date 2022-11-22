@@ -32,13 +32,92 @@ namespace ft
             //const_reverse_iterator
             typedef std::ptrdiff_t difference_type;
             typedef size_t size_type;
-            avlTree *baseTree;
 
         //---------------------MEMBER ATTRIBUTES---------------------
         private :
+            avlTree *baseTree;
             size_type mapSize;
             allocator_type m_allocator;
 			key_compare comp;
+
+        //---------------------PUBLIC MEMBER FUNCTIONS---------------------
+        public :
+        	//---------------------Constructors, assignment overload, destructor---------------------
+			explicit map( const key_compare &comp = key_compare(), const allocator_type& alloc = allocator_type() ) :
+				baseTree(NULL), mapSize(0), m_allocator(alloc), comp(comp) { }
+
+			template < class InputIterator >
+			map ( InputIterator first, InputIterator last, const key_compare& comp = key_compare(),
+				const allocator_type &alloc = allocator_type() )
+			{
+				baseTree = NULL;
+				mapSize = 0;
+				m_allocator = alloc;
+				this->comp = comp;
+				for (; first != last; first++)
+					insert(value_type(first->first, first->second));
+			}
+
+			map ( const map &rhs )
+			{
+				baseTree = NULL;
+				mapSize = 0;
+				m_allocator = rhs.m_allocator;
+				comp = rhs.comp;
+				*this = rhs;
+			}
+
+			template < class iter >
+			map &operator=( const map &rhs )
+			{
+				iter b, e;
+
+				if (this != &rhs)
+				{
+					b = rhs.begin();
+					e = rhs.end();
+					for (; b != e; b++)
+						insert(value_type(b->first, b->second));
+				}
+				return *this;
+			}
+
+            ~map( ) { }
+
+			// Insert member function
+            void insert( const value_type &val ) { insertRecursively(&baseTree, val); }
+			void print( void )
+			{
+				avlTree *tmp;
+				std::queue< avlTree* > q;
+				int nodes = 0;
+
+				if (baseTree == NULL)
+					return ;
+				q.push(baseTree);
+				while (!q.empty())
+				{
+					nodes = q.size();
+					while (nodes > 0)
+					{
+						tmp = q.front();
+						std::cout << "(" << tmp->data.first << " " << tmp->data.second << ")";
+						q.pop();
+						if (tmp->left)
+							q.push(tmp->left);
+						if (tmp->right)
+							q.push(tmp->right);
+						nodes--;
+					}
+					std::cout << std::endl;
+				}
+			}
+
+        //---------------------ITERATORS---------------------
+		iterator begin( void ) { return iterator(baseTree, BEGIN); }
+		const_iterator begin( void ) const { return const_iterator(baseTree, BEGIN); }
+		iterator end( void ) { return iterator(baseTree, END); }
+		const_iterator end( void ) const { return const_iterator(baseTree, END); }
 
         //---------------------PRIVATE MEMBER FUNCTIONS---------------------
         private :
@@ -117,44 +196,6 @@ namespace ft
 					(*root) = leftRotation(*root);
 				}
 			}
-
-        //---------------------PUBLIC MEMBER FUNCTIONS---------------------
-        public :
-            map( ) : baseTree(NULL), mapSize(0), m_allocator(allocator_type()), comp(key_compare()) { }
-            void insert( const value_type &val ) { insertRecursively(&baseTree, val); }
-			void print( void )
-			{
-				avlTree *tmp;
-				std::queue< avlTree* > q;
-				int nodes = 0;
-
-				if (baseTree == NULL)
-					return ;
-				q.push(baseTree);
-				while (!q.empty())
-				{
-					nodes = q.size();
-					while (nodes > 0)
-					{
-						tmp = q.front();
-						std::cout << "(" << tmp->data.first << " " << tmp->data.second << ")";
-						q.pop();
-						if (tmp->left)
-							q.push(tmp->left);
-						if (tmp->right)
-							q.push(tmp->right);
-						nodes--;
-					}
-					std::cout << std::endl;
-				}
-			}
-            ~map( ) { }
-
-        //---------------------ITERATORS---------------------
-		iterator begin( void ) { return iterator(baseTree, BEGIN); }
-		const_iterator begin( void ) const { return const_iterator(baseTree, BEGIN); }
-		iterator end( void ) { return iterator(baseTree, END); }
-		const_iterator end( void ) const { return const_iterator(baseTree, END); }
 
    };
 }

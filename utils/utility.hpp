@@ -15,11 +15,7 @@ namespace ft
             pair() : first(), second() {}
 
             // Parameterized constructor
-            pair ( const F &a, const S &b )
-            {
-                first = a;
-                second = b;
-            }
+            pair ( const F &a, const S &b ) : first(a), second(b) { }
 
             // Copy constructor
             template < class T1, class T2 >
