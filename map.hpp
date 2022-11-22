@@ -137,6 +137,24 @@ namespace ft
 		iterator end( void ) { return iterator(baseTree, END); }
 		const_iterator end( void ) const { return const_iterator(baseTree, END); }
 
+        //---------------------MEMBER ACCESS---------------------
+		mapped_type &at( key_type const &k )
+		{
+			avlTree *found = findKey(k, baseTree);
+			
+			if (found == NULL)
+				throw std::out_of_range("map::at:  key not found");
+			return found->data.second;
+		}
+		const mapped_type &at( key_type const &k ) const
+		{
+			avlTree *found = findKey(k, baseTree);
+			
+			if (found == NULL)
+				throw std::out_of_range("map::at:  key not found");
+			return found->data.second;
+		}
+
         //---------------------PRIVATE MEMBER FUNCTIONS---------------------
         private :
             avlTree *createNode( const value_type &val, avlTree *parent )
