@@ -126,6 +126,8 @@ namespace ft
 				return const_iterator(found);
 			}
 
+			size_type count ( const key_type &k ) { return (findKey(k, baseTree) != NULL); }
+
 			// Insert member function
             void insert( const value_type &val ) { insertRecursively(&baseTree, val); }
 
