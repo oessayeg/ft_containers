@@ -89,6 +89,9 @@ namespace ft
 			size_type size ( void ) const { return mapSize; }
 			size_type max_size( void ) const { return m_allocator.max_size(); }
 
+        	//---------------------Observers---------------------
+			key_compare key_comp() const { return key_compare(); }
+
 			// Insert member function
             void insert( const value_type &val ) { insertRecursively(&baseTree, val); }
 			void print( void )
