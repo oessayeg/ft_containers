@@ -84,6 +84,11 @@ namespace ft
 
             ~map( ) { }
 
+        	//---------------------Capacity member functions---------------------
+			bool empty ( void ) const { return baseTree == NULL; }
+			size_type size ( void ) const { return mapSize; }
+			size_type max_size( void ) const { return m_allocator.max_size(); }
+
 			// Insert member function
             void insert( const value_type &val ) { insertRecursively(&baseTree, val); }
 			void print( void )
@@ -168,12 +173,19 @@ namespace ft
                 if (*root == NULL)
                 {
                     *root = createNode(val, NULL);
+					mapSize += 1;
                     return ;
                 }
 				if(comp(val.first, (*root)->data.first) && (*root)->left == NULL)
+				{
 					(*root)->left = createNode(val, *root);
+					mapSize += 1;
+				}
 				else if (comp((*root)->data.first, val.first) && (*root)->right == NULL)
+				{
 					(*root)->right = createNode(val, *root);
+					mapSize += 1;
+				}
 				else if (comp(val.first, (*root)->data.first) && (*root)->left)
 					insertRecursively(&(*root)->left, val);
 				else if (comp((*root)->data.first, val.first) && (*root)->right)
