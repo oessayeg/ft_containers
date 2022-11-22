@@ -16,32 +16,17 @@
 int main( void )
 {
 	{
-		std::map< int, std::string > test;
-		ft::map< int, std::string > test2;
-		std::map< int, std::string >::iterator e;
+		ft::map< int, std::string > test1;
+		ft::map<int, std::string> test2;
 
-		std::cout << test.key_comp()(3, 4) << std::endl;
-		std::cout << test2.key_comp()(3, 4) << std::endl;
+		test1.insert(ft::make_pair(20, "Bob"));
+		test1.insert(ft::make_pair(30, "Doc"));
+		test1.insert(ft::make_pair(10, "Aot"));
+		test2 = test1;
 
-		test2.key_comp() t;
-		// test.insert(ft::make_pair(50, "Bob"));
-		// test.insert(ft::make_pair(40, "Iel"));
-		// test.insert(ft::make_pair(60, "Coco"));
-		// test.insert(ft::make_pair(3, "Alice"));
-		// test.insert(ft::make_pair(45, "Xor"));
-		// test.insert(ft::make_pair(65, "Coco"));
-		// test.insert(ft::make_pair(70, "Nurmang"));
-		// test.insert(ft::make_pair(2, "Balence"));
-		// test.insert(ft::make_pair(5, "Vlad"));
-
-		// std::cout << test.size() << std::endl;
-		// ft::map< int, std::string >::iterator b = test2.begin();
-		// for (; b != test2.end(); b++)
+		// for (ft::map< int, std::string >::iterator b = test2.begin(); b != test2.end(); b++)
 		// 	std::cout << b->first << ", " << b->second << std::endl;
-		// test.print();
-
-		// *b = ft::make_pair(50, "Ok");
-	}
+	};
 
 	return 0;
 }

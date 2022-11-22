@@ -1,8 +1,9 @@
 #pragma once
 
-#include <memory>
 #include <queue>
+#include <iostream>
 
+#include <memory>
 #include "utils/utility.hpp"
 #include "utils/tree.hpp"
 #include "utils/functional.hpp"
@@ -74,18 +75,18 @@ namespace ft
 			{
 				baseTree = NULL;
 				mapSize = 0;
-				m_allocator = rhs.m_allocator;
-				comp = rhs.comp;
 				*this = rhs;
 			}
 
-			template < class iter >
 			map &operator=( const map &rhs )
 			{
-				iter b, e;
+				const_iterator b, e;
 
 				if (this != &rhs)
 				{
+					freeAll(baseTree);
+					mapSize = 0;
+					baseTree = NULL;
 					b = rhs.begin();
 					e = rhs.end();
 					for (; b != e; b++)
@@ -94,7 +95,7 @@ namespace ft
 				return *this;
 			}
 
-            ~map( ) { }
+            ~map( ) { freeAll(baseTree); }
 
         	//---------------------Capacity member functions---------------------
 			bool empty ( void ) const { return baseTree == NULL; }
@@ -107,32 +108,6 @@ namespace ft
 
 			// Insert member function
             void insert( const value_type &val ) { insertRecursively(&baseTree, val); }
-			void print( void )
-			{
-				avlTree *tmp;
-				std::queue< avlTree* > q;
-				int nodes = 0;
-
-				if (baseTree == NULL)
-					return ;
-				q.push(baseTree);
-				while (!q.empty())
-				{
-					nodes = q.size();
-					while (nodes > 0)
-					{
-						tmp = q.front();
-						std::cout << "(" << tmp->data.first << " " << tmp->data.second << ")";
-						q.pop();
-						if (tmp->left)
-							q.push(tmp->left);
-						if (tmp->right)
-							q.push(tmp->right);
-						nodes--;
-					}
-					std::cout << std::endl;
-				}
-			}
 
         //---------------------ITERATORS---------------------
 		iterator begin( void ) { return iterator(baseTree, BEGIN); }
@@ -223,6 +198,15 @@ namespace ft
 					(*root)->right = rightRotation((*root)->right);
 					(*root) = leftRotation(*root);
 				}
+			}
+
+			void freeAll( avlTree *root )
+			{
+				if (root == NULL)
+					return ;
+				freeAll(root->left);
+				freeAll(root->right);
+				delete root;
 			}
 
    };

@@ -35,6 +35,14 @@ namespace ft
                 avlTree *tmp;
 
 				tmp = root;
+				if (tmp == NULL)
+				{
+					m_current_node = NULL;
+					first_node = NULL;
+					last_node = NULL;
+					check = 0;
+					return ;
+				}
 				while (tmp->left != NULL)
 					tmp = tmp->left;
 				first_node = tmp;
