@@ -76,6 +76,7 @@
         "*.ipp": "cpp",
         "filesystem": "cpp",
         "csignal": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "clocale": "cpp"
     }
 }

@@ -39,6 +39,18 @@ namespace ft
             size_type mapSize;
             allocator_type m_allocator;
 			key_compare comp;
+			class value_compare
+			{
+				protected :
+					Compare c;
+
+				public :
+					value_compare( Compare com ) : c(com) { }
+					bool operator()( const value_type &lhs, const value_type &rhs ) const
+					{
+						return c(lhs.first, rhs.first);
+					}
+			};
 
         //---------------------PUBLIC MEMBER FUNCTIONS---------------------
         public :
@@ -91,6 +103,7 @@ namespace ft
 
         	//---------------------Observers---------------------
 			key_compare key_comp() const { return key_compare(); }
+			value_compare value_comp() const { return value_compare(key_compare()); }
 
 			// Insert member function
             void insert( const value_type &val ) { insertRecursively(&baseTree, val); }
