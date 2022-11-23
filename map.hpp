@@ -107,6 +107,7 @@ namespace ft
 			value_compare value_comp() const { return value_compare(key_compare()); }
 
         	//---------------------Operations---------------------
+			// Find member function (non-const and const)
 			iterator find( const key_type &k )
 			{
 				avlTree *found;
@@ -126,7 +127,61 @@ namespace ft
 				return const_iterator(found);
 			}
 
+			// Count member function
 			size_type count ( const key_type &k ) { return (findKey(k, baseTree) != NULL); }
+
+			// Lower_bound member function (non-const and const)
+			iterator lower_bound( const key_type &k )
+			{
+				iterator b;
+				
+				for (b = begin(); b != end(); b++)
+					if (comp(b->first, k) == false)
+						break;
+				return b;
+			}
+
+			const_iterator lower_bound( const key_type &k ) const
+			{
+				const_iterator b;
+
+				for (b = begin(); b != end(); b++)
+					if (comp(b->first, k) == false)
+						break;
+				return b;
+			}
+
+			// Upper_bound member function (non-const and const)
+			iterator upper_bound( const key_type &k )
+			{
+				iterator b;
+
+				for (b = begin(); b != end(); b++)
+					if (comp(k, b->first) == true)
+						break;
+				return b;
+			}
+
+			const_iterator upper_bound( const key_type &k ) const
+			{
+				const_iterator b;
+
+				for (b = begin(); b != end(); b++)
+					if (comp(k, b->first) == true)
+						break;
+				return b;
+			}
+
+			// Equal_range member function (non-const and const)
+			ft::pair< iterator, iterator > equal_range( const key_type &k )
+			{
+				return ft::make_pair(lower_bound(k), upper_bound(k));
+			}
+
+			ft::pair< const_iterator, const_iterator > equal_range( const key_type &k ) const
+			{
+				return ft::make_pair(lower_bound(k), upper_bound(k));
+			}
 
 			// Insert member function
             ft::pair< iterator, bool > insert( const value_type &val )
@@ -139,6 +194,19 @@ namespace ft
 				insertRecursively(&baseTree, val);
 				found = findKey(val.first, baseTree);
 				return ft::make_pair(iterator(found), true);
+			}
+
+			iterator insert( iterator position, const value_type &val )
+			{
+				(void)position;
+				return insert(val).first;
+			}
+
+			template < class InputIterator >
+			void insert( InputIterator first, InputIterator last )
+			{
+				for (; first != last; first++)
+					insert(value_type(first->first, first->second));
 			}
 
         //---------------------ITERATORS---------------------
@@ -174,6 +242,9 @@ namespace ft
 				return tmp->data.second;
 			return insert(value_type(k, mapped_type())).first->second;
 		}
+
+        //---------------------ALLOCATOR---------------------
+		allocator_type get_allocator( void ) const { return m_allocator; }
 
         //---------------------PRIVATE MEMBER FUNCTIONS---------------------
         private :
@@ -281,4 +352,35 @@ namespace ft
 					return root;
 			}
    };
+
+    //---------------------NON MEMBER FUNCTION OVERLOADS---------------------
+	template < class Key, class T, class Comp, class Alloc >
+	bool operator==( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	{
+		typename ft::map< Key, T, Comp, Alloc >::const_iterator b1, e1, b2, e2;
+		
+		b1 = lhs.begin();
+		e1 = lhs.end();
+		b2 = rhs.begin();
+		e2 = rhs.end();
+		while (b1 != e1 && b2 != e2)
+		{
+			if (b1->first != b2->first || b1->second != b2->second)
+				return false;
+			b1++;
+			b2++;
+		}
+		if (b1 == e1 && b2 == e2)
+			return true;
+		return false;
+	}
+
+	template < class Key, class T, class Comp, class Alloc >
+	bool operator!=( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	{
+		return !(lhs == rhs);
+	}
+
+
+	template < class Key, class T, class Comp, class Alloc >
 }
