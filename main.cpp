@@ -16,20 +16,37 @@
 int main( void )
 {
 	{
-		ft::map< int, std::string > test1;
-		// ft::map<int, std::string> test2;
+		std::map< int, std::string > m1, m2;
+ 
+		m1.insert(std::make_pair(100, "Hello1"));
+		m1.insert(std::make_pair(200, "Hello1"));
+		m1.insert(std::make_pair(300, "Hello1"));
+		m1.insert(std::make_pair(400, "Hello1"));
+		m1.insert(std::make_pair(500, "Hello1"));
 
-		test1.insert(ft::make_pair(20, "Bob"));
-		test1.insert(ft::make_pair(30, "Doc"));
-		test1.insert(ft::make_pair(10, "Aot"));
+        m2.insert(std::make_pair(2147483647, "zxcvzx"));
+		m2.insert(std::make_pair(7, "Hello"));
+		m2.insert(std::make_pair(8, "Hello"));
+		m2.insert(std::make_pair(1, "Hello"));
+		m2.insert(std::make_pair(0, "Hello"));
+		std::cout << (m1 <= m2) << std::endl;
+	}
+	{
+		ft::map< int, std::string > m1, m2;
 
-		// if (test1.find(10) == test1.end())
-		// 	std::cout << "Not found\n";
-		// else
-		// 	std::cout << "Found\n";
-		// for (ft::map< int, std::string >::iterator b = test2.begin(); b != test2.end(); b++)
-		// 	std::cout << b->first << ", " << b->second << std::endl;
-	};
+		m1.insert(ft::make_pair(100, "Hello1"));
+		m1.insert(ft::make_pair(200, "Hello1"));
+		m1.insert(ft::make_pair(300, "Hello1"));
+		m1.insert(ft::make_pair(400, "Hello1"));
+		m1.insert(ft::make_pair(500, "Hello1"));
 
+        m2.insert(ft::make_pair(2147483647, "zxcvzx"));
+		m2.insert(ft::make_pair(7, "Hello"));
+		m2.insert(ft::make_pair(8, "Hello"));
+		m2.insert(ft::make_pair(1, "Hello"));
+		m2.insert(ft::make_pair(0, "Hello"));
+
+		std::cout << (m1 <= m2) << std::endl;
+	}
 	return 0;
 }

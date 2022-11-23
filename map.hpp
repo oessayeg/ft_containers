@@ -359,6 +359,8 @@ namespace ft
 	{
 		typename ft::map< Key, T, Comp, Alloc >::const_iterator b1, e1, b2, e2;
 		
+		if (lhs.size() != rhs.size())
+			return false;
 		b1 = lhs.begin();
 		e1 = lhs.end();
 		b2 = rhs.begin();
@@ -383,4 +385,45 @@ namespace ft
 
 
 	template < class Key, class T, class Comp, class Alloc >
+	bool operator<( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	{
+		typename ft::map< Key, T, Comp, Alloc >::const_iterator b1, e1, b2, e2;
+
+		if (lhs.size() == 0 && rhs.size() > 0)
+			return true;
+		else if (rhs.size() == 0 && lhs.size() > 0)
+			return false;
+		b1 = lhs.begin();
+		e1 = lhs.end();
+		b2 = rhs.begin();
+		e2 = rhs.end();
+		while (b1 != e1 && b2 != e2)
+		{
+			if (*b1 < *b2)
+				return true;
+			b1++;
+			b2++;
+		}
+		if (b1 == e1 && b2 != e2)
+			return true;
+		return false;
+	}
+
+	template < class Key, class T, class Comp, class Alloc >
+	bool operator<=( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	{
+		return !(lhs > rhs);
+	}
+
+	template < class Key, class T, class Comp, class Alloc >
+	bool operator>( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	{
+		return (rhs < lhs);
+	}
+
+	template < class Key, class T, class Comp, class Alloc >
+	bool operator>=( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	{
+		return !(lhs < rhs);
+	}
 }
