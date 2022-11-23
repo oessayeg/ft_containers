@@ -129,7 +129,17 @@ namespace ft
 			size_type count ( const key_type &k ) { return (findKey(k, baseTree) != NULL); }
 
 			// Insert member function
-            void insert( const value_type &val ) { insertRecursively(&baseTree, val); }
+            ft::pair< iterator, bool > insert( const value_type &val )
+			{
+				avlTree *found;
+
+				found = findKey(val.first, baseTree);
+				if (found != NULL)
+					return ft::make_pair(iterator(found), false);
+				insertRecursively(&baseTree, val);
+				found = findKey(val.first, baseTree);
+				return ft::make_pair(iterator(found), true);
+			}
 
         //---------------------ITERATORS---------------------
 		iterator begin( void ) { return iterator(baseTree, BEGIN); }
@@ -153,6 +163,16 @@ namespace ft
 			if (found == NULL)
 				throw std::out_of_range("map::at:  key not found");
 			return found->data.second;
+		}
+
+		mapped_type &operator[]( const key_type &k )
+		{
+			avlTree *tmp;
+
+			tmp = findKey(k, baseTree);
+			if (tmp != NULL)
+				return tmp->data.second;
+			return insert(value_type(k, mapped_type())).first->second;
 		}
 
         //---------------------PRIVATE MEMBER FUNCTIONS---------------------

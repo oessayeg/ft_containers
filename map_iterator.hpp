@@ -60,7 +60,7 @@ namespace ft
 					check = 1;
 				}
             }
-			map_iterator( avlTree *current)
+			map_iterator( avlTree *current )
 			{
 				avlTree *root;
 
