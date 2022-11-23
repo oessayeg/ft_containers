@@ -29,17 +29,20 @@ namespace ft
             typedef avlTree< value_type > avlTree;
             typedef map_iterator< value_type* > iterator;
             typedef map_iterator< const value_type* > const_iterator;
-            //reverse_iterator
-            //const_reverse_iterator
+            typedef ft::reverse_iterator< iterator > reverse_iterator;
+            typedef ft::reverse_iterator< const_iterator > const_reverse_iterator;
             typedef std::ptrdiff_t difference_type;
             typedef size_t size_type;
 
-        //---------------------MEMBER ATTRIBUTES---------------------
+        //---------------------PRIVATE MEMBER ATTRIBUTES---------------------
         private :
             avlTree *baseTree;
             size_type mapSize;
             allocator_type m_allocator;
 			key_compare comp;
+
+        //---------------------PUBLIC MEMBER ATTRIBUTE---------------------
+		public :
 			class value_compare
 			{
 				protected :
@@ -209,11 +212,30 @@ namespace ft
 					insert(value_type(first->first, first->second));
 			}
 
+			void swap( map &x )
+			{
+				std::swap(mapSize, x.mapSize);
+				std::swap(baseTree, x.baseTree);
+				std::swap(m_allocator, x.m_allocator);
+			}
+
+			void clear( void )
+			{
+				freeAll(baseTree);
+				mapSize = 0;
+				baseTree = NULL;
+			}
+
         //---------------------ITERATORS---------------------
 		iterator begin( void ) { return iterator(baseTree, BEGIN); }
 		const_iterator begin( void ) const { return const_iterator(baseTree, BEGIN); }
 		iterator end( void ) { return iterator(baseTree, END); }
 		const_iterator end( void ) const { return const_iterator(baseTree, END); }
+
+		reverse_iterator rbegin( void ) { return reverse_iterator(end()); }
+		const_reverse_iterator rbegin( void ) const { return const_reverse_iterator(end()); }
+		reverse_iterator rend( void ) { return reverse_iterator(begin()); }
+		const_reverse_iterator rend( void ) const { return const_reverse_iterator(begin()); }
 
         //---------------------MEMBER ACCESS---------------------
 		mapped_type &at( key_type const &k )
@@ -353,9 +375,9 @@ namespace ft
 			}
    };
 
-    //---------------------NON MEMBER FUNCTION OVERLOADS---------------------
+    //---------------------NON MEMBER FUNCTIONS---------------------
 	template < class Key, class T, class Comp, class Alloc >
-	bool operator==( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	bool operator==( const ft::map< Key, T, Comp, Alloc > &lhs, const ft::map< Key, T, Comp, Alloc > &rhs )
 	{
 		typename ft::map< Key, T, Comp, Alloc >::const_iterator b1, e1, b2, e2;
 		
@@ -378,14 +400,14 @@ namespace ft
 	}
 
 	template < class Key, class T, class Comp, class Alloc >
-	bool operator!=( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	bool operator!=( const ft::map< Key, T, Comp, Alloc > &lhs, const ft::map< Key, T, Comp, Alloc > &rhs )
 	{
 		return !(lhs == rhs);
 	}
 
 
 	template < class Key, class T, class Comp, class Alloc >
-	bool operator<( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	bool operator<( const ft::map< Key, T, Comp, Alloc > &lhs, const ft::map< Key, T, Comp, Alloc > &rhs )
 	{
 		typename ft::map< Key, T, Comp, Alloc >::const_iterator b1, e1, b2, e2;
 
@@ -410,20 +432,26 @@ namespace ft
 	}
 
 	template < class Key, class T, class Comp, class Alloc >
-	bool operator<=( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	bool operator<=( const ft::map< Key, T, Comp, Alloc > &lhs, const ft::map< Key, T, Comp, Alloc > &rhs )
 	{
 		return !(lhs > rhs);
 	}
 
 	template < class Key, class T, class Comp, class Alloc >
-	bool operator>( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	bool operator>( const ft::map< Key, T, Comp, Alloc > &lhs, const ft::map< Key, T, Comp, Alloc > &rhs )
 	{
 		return (rhs < lhs);
 	}
 
 	template < class Key, class T, class Comp, class Alloc >
-	bool operator>=( const map< Key, T, Comp, Alloc > &lhs, const map< Key, T, Comp, Alloc > &rhs )
+	bool operator>=( const ft::map< Key, T, Comp, Alloc > &lhs, const ft::map< Key, T, Comp, Alloc > &rhs )
 	{
 		return !(lhs < rhs);
+	}
+
+	template < class Key, class T, class Comp, class Alloc >
+	void swap( ft::map< Key, T, Comp, Alloc > &x, ft::map< Key, T, Comp, Alloc > &y )
+	{
+		x.swap(y);
 	}
 }

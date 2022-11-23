@@ -140,14 +140,17 @@ namespace ft
 			int getCheck() const { return check; }
 
 			// Equality, Inequality operators
-			bool operator==( const map_iterator &rhs )
+			template < class X >
+			bool operator==( const map_iterator< X > &rhs )
 			{
 				if (m_current_node == rhs.getCurrent() && first_node == rhs.getFirst()
 					&& last_node == rhs.getLast())
 					return true;
 				return false;
 			}
-			bool operator!=( const map_iterator &rhs )
+
+			template < class Y >
+			bool operator!=( const map_iterator< Y > &rhs )
 			{
 				return !(*this == rhs);
 			}
