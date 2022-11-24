@@ -212,6 +212,21 @@ namespace ft
 					insert(value_type(first->first, first->second));
 			}
 
+			// Erase member function
+			size_type erase( const key_type &k )
+			{
+				avlTree *found;
+
+				found = findKey(k, baseTree);
+				if (found == NULL)
+					return 0;
+				if (found->right == NULL || found->left == NULL)
+					deleteNodeWithOneChild(found);
+				else
+					deleteNodeWithTwoChilds(found);
+				return 1;
+			}
+
 			void swap( map &x )
 			{
 				std::swap(mapSize, x.mapSize);
@@ -372,6 +387,48 @@ namespace ft
 					return findKey(k, root->right);
 				else
 					return root;
+			}
+
+			void deleteNodeWithOneChild( avlTree *node )
+			{
+				avlTree *child;
+
+				if (node->right)
+					child = node->right;
+				else
+					child = node->left;
+				if (child != NULL)
+					child->parent = node->parent;
+				if (node->parent == NULL)
+					baseTree = child;
+				else if (node->parent->left == node)
+					node->parent->left = child;
+				else
+					node->parent->right = child;
+				delete node;
+			}
+
+			void deleteNodeWithTwoChilds( avlTree *node )
+			{
+				avlTree *smallest;
+				avlTree *newNode;
+
+				smallest = node->right;
+				while (smallest->left != NULL)
+					smallest = smallest->left;
+				newNode = new avlTree(smallest->data, node->parent);
+				newNode->left = node->left;
+				newNode->right = node->right;
+				node->right->parent = newNode;
+				node->left->parent = newNode;
+				if (node->parent == NULL)
+					baseTree = newNode;
+				else if (node->parent->left == node)
+					node->parent->left = newNode;
+				else if (node->parent->right == node)
+					node->parent->right = newNode;
+				delete node;
+				deleteNodeWithOneChild(smallest);
 			}
    };
 
