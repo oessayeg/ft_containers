@@ -101,12 +101,15 @@ namespace ft
 
             // Dereference operators
             reference operator*( void ) { return m_current_node->data; }
-            pointer operator->( void ) { return &m_current_node->data; }
+			const value_type &operator*( void ) const { return m_current_node->data; }
+            pointer operator->( void ) const { return &m_current_node->data; }
 
             // Pre and post increment operators
             map_iterator &operator++( void )
             {
                 m_current_node = nextNode(m_current_node);
+				if (m_current_node == NULL)
+					check = 1;
                 return *this;
             }
 
@@ -115,6 +118,8 @@ namespace ft
                 map_iterator tmp(*this);
 
                 m_current_node = nextNode(m_current_node);
+				if (m_current_node == NULL)
+					check = 1;
                 return tmp;
             }
             
@@ -143,8 +148,10 @@ namespace ft
 			template < class X >
 			bool operator==( const map_iterator< X > &rhs )
 			{
-				if (m_current_node == rhs.getCurrent() && first_node == rhs.getFirst()
-					&& last_node == rhs.getLast())
+				// if (m_current_node == rhs.getCurrent() && first_node == rhs.getFirst()
+				// 	&& last_node == rhs.getLast())
+				// 	return true;
+				if (m_current_node == rhs.getCurrent())
 					return true;
 				return false;
 			}

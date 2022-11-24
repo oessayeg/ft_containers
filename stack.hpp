@@ -45,12 +45,6 @@ namespace ft
         }
 
         template < class D, class C >
-        friend bool operator!=( stack< D, C > const &lhs, stack< D, C > const &rhs )
-        {
-            return !(lhs.ctr == rhs.ctr);
-        }
-
-        template < class D, class C >
         friend bool operator<( stack< D, C > const &lhs, stack< D, C > const &rhs )
         {
             return (lhs.ctr < rhs.ctr);

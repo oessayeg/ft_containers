@@ -132,7 +132,7 @@ namespace ft
 			}
 
 			// Count member function
-			size_type count ( const key_type &k ) { return (findKey(k, baseTree) != NULL); }
+			size_type count ( const key_type &k ) const { return (findKey(k, baseTree) != NULL); }
 
 			// Lower_bound member function (non-const and const)
 			iterator lower_bound( const key_type &k )

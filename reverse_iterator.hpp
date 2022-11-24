@@ -57,6 +57,13 @@ namespace ft
                 return &(*--tmp) ;
             }
 
+            const value_type* operator->( void ) const
+            {
+                iterator_type tmp;
+
+                tmp = baseIterator;
+                return &(*--tmp) ;
+            }
             // Subscript operator
             reference operator[]( difference_type idx ) { return baseIterator[-idx - 1]; }
 
