@@ -9,6 +9,7 @@
 #include "utils/functional.hpp"
 #include "map_iterator.hpp"
 #include "reverse_iterator.hpp"
+#include "vector.hpp"
 
 namespace ft
 {
@@ -213,6 +214,8 @@ namespace ft
 			}
 
 			// Erase member function
+			void erase( iterator position ) { erase(position->first); }
+
 			size_type erase( const key_type &k )
 			{
 				avlTree *found;
@@ -220,11 +223,23 @@ namespace ft
 				found = findKey(k, baseTree);
 				if (found == NULL)
 					return 0;
+				mapSize -= 1;
 				if (found->right == NULL || found->left == NULL)
 					deleteNodeWithOneChild(found);
 				else
 					deleteNodeWithTwoChilds(found);
+				balanceTree(&baseTree);
 				return 1;
+			}
+
+			void erase( iterator first, iterator last )
+			{
+				ft::vector< const key_type > keys;
+
+				for (; first != last; first++)
+					keys.push_back(first->first);
+				for (size_t i = 0; i < keys.size(); i++)
+					erase(keys[i]);
 			}
 
 			void swap( map &x )
@@ -429,6 +444,31 @@ namespace ft
 					node->parent->right = newNode;
 				delete node;
 				deleteNodeWithOneChild(smallest);
+			}
+
+			void balanceTree( avlTree **root )
+			{
+				int balanceFactor;
+
+				if (*root == NULL)
+					return ;
+				balanceTree(&(*root)->left);
+				balanceTree(&(*root)->right);
+				balanceFactor = height((*root)->left) - height((*root)->right);
+				if (balanceFactor == 2 && (*root)->left->left != NULL)
+					*root = rightRotation(*root);
+				else if (balanceFactor == 2 && (*root)->left->right != NULL)
+				{
+					(*root)->left = leftRotation((*root)->left);
+					*root = rightRotation((*root));
+				}
+				else if (balanceFactor == -2 && (*root)->right->right != NULL)
+					*root = leftRotation(*root);
+				else if (balanceFactor == -2 && (*root)->right->left != NULL)
+				{
+					(*root)->right = rightRotation((*root)->right);
+					*root = leftRotation(*root);
+				}
 			}
    };
 
