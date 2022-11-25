@@ -214,7 +214,17 @@ namespace ft
 			}
 
 			// Erase member function
-			void erase( iterator position ) { erase(position->first); }
+			void erase( iterator position )
+			{
+				avlTree *current;
+
+				current = position.getCurrent();
+				if (current != NULL)
+				{
+					mapSize -= 1;
+					eraseNode(current);
+				}
+			}
 
 			size_type erase( const key_type &k )
 			{
@@ -224,22 +234,31 @@ namespace ft
 				if (found == NULL)
 					return 0;
 				mapSize -= 1;
-				if (found->right == NULL || found->left == NULL)
-					deleteNodeWithOneChild(found);
-				else
-					deleteNodeWithTwoChilds(found);
-				balanceTree(&baseTree);
+				eraseNode(found);
 				return 1;
 			}
 
 			void erase( iterator first, iterator last )
 			{
 				ft::vector< const key_type > keys;
+				avlTree *found;
 
 				for (; first != last; first++)
 					keys.push_back(first->first);
 				for (size_t i = 0; i < keys.size(); i++)
-					erase(keys[i]);
+				{
+					found = findKey(keys[i], baseTree);
+					if (found != NULL)
+					{
+						mapSize -= 1;
+						if (found->right == NULL || found->left == NULL)
+							deleteNodeWithOneChild(found);
+						else
+							deleteNodeWithTwoChilds(found);	
+					}
+				}
+				balanceTree(&baseTree);
+
 			}
 
 			void swap( map &x )
@@ -342,7 +361,7 @@ namespace ft
 
             void insertRecursively( avlTree **root, const value_type &val )
             {
-				int balanceFactor = 0;
+				// int balanceFactor = 0;
 
                 if (*root == NULL)
                 {
@@ -366,21 +385,22 @@ namespace ft
 					insertRecursively(&(*root)->right, val);
 				else
 					return ;
-				balanceFactor = height((*root)->left) - height((*root)->right);
-				if (balanceFactor > 1 && comp(val.first, (*root)->left->data.first))
-					(*root) = rightRotation(*root);
-				else if (balanceFactor < -1 && comp((*root)->right->data.first, val.first))
-					(*root) = leftRotation(*root);
-				else if (balanceFactor > 1 && comp((*root)->left->data.first, val.first))
-				{
-					(*root)->left = leftRotation((*root)->left);
-					(*root) = rightRotation(*root);
-				}
-				else if (balanceFactor < -1 && comp(val.first, (*root)->right->data.first))
-				{
-					(*root)->right = rightRotation((*root)->right);
-					(*root) = leftRotation(*root);
-				}
+				balanceTree(root);
+				// balanceFactor = height((*root)->left) - height((*root)->right);
+				// if (balanceFactor > 1 && comp(val.first, (*root)->left->data.first))
+				// 	(*root) = rightRotation(*root);
+				// else if (balanceFactor < -1 && comp((*root)->right->data.first, val.first))
+				// 	(*root) = leftRotation(*root);
+				// else if (balanceFactor > 1 && comp((*root)->left->data.first, val.first))
+				// {
+				// 	(*root)->left = leftRotation((*root)->left);
+				// 	(*root) = rightRotation(*root);
+				// }
+				// else if (balanceFactor < -1 && comp(val.first, (*root)->right->data.first))
+				// {
+				// 	(*root)->right = rightRotation((*root)->right);
+				// 	(*root) = leftRotation(*root);
+				// }
 			}
 
 			void freeAll( avlTree *root )
@@ -470,6 +490,15 @@ namespace ft
 					*root = leftRotation(*root);
 				}
 			}
+
+			void eraseNode( avlTree *node )
+			{
+				if (node->right == NULL || node->left == NULL)
+					deleteNodeWithOneChild(node);
+				else
+					deleteNodeWithTwoChilds(node);
+				balanceTree(&baseTree);	
+			}
    };
 
     //---------------------NON MEMBER FUNCTIONS---------------------
@@ -520,6 +549,8 @@ namespace ft
 		{
 			if (*b1 < *b2)
 				return true;
+			else if (*b1 > *b2)
+				return false;
 			b1++;
 			b2++;
 		}
