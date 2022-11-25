@@ -13,12 +13,13 @@ namespace ft
                 avlTree *right;
                 avlTree *left;
                 avlTree *parent;
+                int height;
 
             public :
                 avlTree( ) { }
 
                 avlTree( P toInit, avlTree *parent ) : data(toInit), right(NULL),
-                left(NULL), parent(parent) { }
+                left(NULL), parent(parent), height(0) { }
 
                 ~avlTree( ) { }
         };

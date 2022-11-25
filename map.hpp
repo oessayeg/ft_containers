@@ -71,8 +71,7 @@ namespace ft
 				mapSize = 0;
 				m_allocator = alloc;
 				this->comp = comp;
-				for (; first != last; first++)
-					insert(value_type(first->first, first->second));
+				insert(first, last);
 			}
 
 			map ( const map &rhs )
@@ -91,10 +90,7 @@ namespace ft
 					freeAll(baseTree);
 					mapSize = 0;
 					baseTree = NULL;
-					b = rhs.begin();
-					e = rhs.end();
-					for (; b != e; b++)
-						insert(value_type(b->first, b->second));
+					insert(rhs.begin(), rhs.end());
 				}
 				return *this;
 			}
@@ -191,13 +187,58 @@ namespace ft
             ft::pair< iterator, bool > insert( const value_type &val )
 			{
 				avlTree *found;
+				avlTree *ret;
 
-				found = findKey(val.first, baseTree);
-				if (found != NULL)
+				ret = NULL;
+				found = giveLast(&baseTree, val);
+				if (found == NULL)
+				{
+					baseTree = createNode(val, NULL);
+					mapSize += 1;
+					return ft::make_pair(begin(), true);
+				}
+				else if (found->data.first == val.first)
 					return ft::make_pair(iterator(found), false);
-				insertRecursively(&baseTree, val);
-				found = findKey(val.first, baseTree);
-				return ft::make_pair(iterator(found), true);
+				else
+				{
+					if (comp(val.first, found->data.first))
+					{
+						found->left = createNode(val, found);
+						ret = found->left;
+						while (found->parent != NULL)
+						{
+							found->height = std::max(giveHeight(found->left), giveHeight(found->right)) + 1;
+							found = found->parent;
+						}
+						found->height = std::max(giveHeight(found->left), giveHeight(found->right)) + 1;
+						if (ret->parent->right == NULL)
+							balanceTree(&baseTree);
+					}
+					else if (comp(found->data.first, val.first))
+					{
+						found->right = createNode(val, found);
+						ret = found->right;
+						while (found->parent != NULL)
+						{
+							found->height = std::max(giveHeight(found->left), giveHeight(found->right)) + 1;
+							found = found->parent;
+						}
+						found->height = std::max(giveHeight(found->left), giveHeight(found->right)) + 1;
+						if (ret->parent->left == NULL)
+							balanceTree(&baseTree);
+					}
+					mapSize += 1;
+				}
+				// balanceTree(&baseTree);
+				// avlTree *found;
+
+				// found = findKey(val.first, baseTree);
+				// if (found != NULL)
+				// 	return ft::make_pair(iterator(found), false);
+				// insertRecursively(&baseTree, val);
+				// balanceTree(&baseTree);
+				// found = findKey(val.first, baseTree);
+				return ft::make_pair(iterator(ret), true);
 			}
 
 			iterator insert( iterator position, const value_type &val )
@@ -210,7 +251,8 @@ namespace ft
 			void insert( InputIterator first, InputIterator last )
 			{
 				for (; first != last; first++)
-					insert(value_type(first->first, first->second));
+					insertRecursively(&baseTree, value_type(first->first, first->second));
+				balanceTree(&baseTree);
 			}
 
 			// Erase member function
@@ -258,7 +300,6 @@ namespace ft
 					}
 				}
 				balanceTree(&baseTree);
-
 			}
 
 			void swap( map &x )
@@ -330,7 +371,7 @@ namespace ft
 					return 0;
 				return (std::max(height(root->left), height(root->right)) + 1);
 			}
-			
+
 			avlTree* rightRotation( avlTree *root )
 			{
 				avlTree *leftRoot = root->left;
@@ -361,8 +402,6 @@ namespace ft
 
             void insertRecursively( avlTree **root, const value_type &val )
             {
-				// int balanceFactor = 0;
-
                 if (*root == NULL)
                 {
                     *root = createNode(val, NULL);
@@ -385,24 +424,15 @@ namespace ft
 					insertRecursively(&(*root)->right, val);
 				else
 					return ;
-				balanceTree(root);
-				// balanceFactor = height((*root)->left) - height((*root)->right);
-				// if (balanceFactor > 1 && comp(val.first, (*root)->left->data.first))
-				// 	(*root) = rightRotation(*root);
-				// else if (balanceFactor < -1 && comp((*root)->right->data.first, val.first))
-				// 	(*root) = leftRotation(*root);
-				// else if (balanceFactor > 1 && comp((*root)->left->data.first, val.first))
-				// {
-				// 	(*root)->left = leftRotation((*root)->left);
-				// 	(*root) = rightRotation(*root);
-				// }
-				// else if (balanceFactor < -1 && comp(val.first, (*root)->right->data.first))
-				// {
-				// 	(*root)->right = rightRotation((*root)->right);
-				// 	(*root) = leftRotation(*root);
-				// }
+				(*root)->height = std::max(giveHeight((*root)->right), giveHeight((*root)->left)) + 1;
 			}
 
+			int giveHeight( avlTree *t )
+			{
+				if (t == NULL)
+					return 0;
+				return t->height;
+			}
 			void freeAll( avlTree *root )
 			{
 				if (root == NULL)
@@ -474,7 +504,8 @@ namespace ft
 					return ;
 				balanceTree(&(*root)->left);
 				balanceTree(&(*root)->right);
-				balanceFactor = height((*root)->left) - height((*root)->right);
+				// balanceFactor = height((*root)->left) - height((*root)->right);
+				balanceFactor = giveHeight((*root)->left) - giveHeight((*root)->right);
 				if (balanceFactor == 2 && (*root)->left->left != NULL)
 					*root = rightRotation(*root);
 				else if (balanceFactor == 2 && (*root)->left->right != NULL)
@@ -498,6 +529,28 @@ namespace ft
 				else
 					deleteNodeWithTwoChilds(node);
 				balanceTree(&baseTree);	
+			}
+
+			avlTree *giveLast( avlTree **root, const value_type &val )
+			{
+				avlTree *tmp;
+				
+				tmp = *root;
+				if (tmp == NULL)
+					return NULL;
+				while (tmp != NULL)
+				{
+					if (!comp(val.first, tmp->data.first) && !(comp(tmp->data.first, val.first)))
+						return tmp;
+					if ((comp(val.first, tmp->data.first) && tmp->left == NULL)
+						|| (comp(tmp->data.first, val.first) && tmp->right == NULL))
+						return tmp;
+					else if (comp(val.first, tmp->data.first) && tmp->left != NULL)
+						tmp = tmp->left;
+					else if (comp(tmp->data.first, val.first) && tmp->right != NULL)
+						tmp = tmp->right;
+				}
+				return tmp;
 			}
    };
 

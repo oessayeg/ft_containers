@@ -13,56 +13,48 @@
 #include <utility>
 #include "vector.hpp"
 #include "stack.hpp"
+// #include "containers_test/srcs/map/common.hpp"
 
-int	main(void)
+time_t get_time(void)
 {
+    struct timeval time_now;
 
-	ft::map < int, int > mp;
-	
-	mp.insert(ft::make_pair(5, 12));
-	mp.insert(ft::make_pair(50, 12));
+    gettimeofday(&time_now, NULL);
+    time_t msecs_time = (time_now.tv_sec * 1e3) + (time_now.tv_usec / 1e3);
+    return (msecs_time);
+}
 
-	ft::map< int, int >::iterator b = mp.begin();
+int		main(void)
+{
+	{
+		time_t start, end;
+		ft::map< int, std::string > mp, mp2;
 
-	b++;
-	b++;
-	--b;
-	std::cout << b->first << std::endl;
-	// ft::map < float, int > mp;
+		start = get_time();
+		for (int i = 0; i < 30000; i++)
+			mp.insert(ft::make_pair(i, "hello"));
+		end = get_time();
+		std::cout << end - start << std::endl;
 
-	// mp.insert(ft::make_pair(-1.5f, 35));
-	// mp.insert(ft::make_pair(-0.5f, 28));
-	// mp.insert(ft::make_pair(0.5f, 21));
-	// mp.insert(ft::make_pair(1.5f, 14));
-	// mp.insert(ft::make_pair(2.5f, 7));
-	// // ft::map<float, int>::reverse_iterator it(mp.rbegin());
-	// ft::map<float, int>::const_reverse_iterator ite(mp.rbegin());
+		start = get_time();
+		mp2.insert(mp.begin(), mp.end());
+		end = get_time();
+		std::cout << end - start << std::endl;
+		// mp2.insert(mp.begin(), mp.end());
+	}
 
-	// std::cout << ite->first << std::endl;
-	// ++ite;
-	// std::cout << ite->first << std::endl;
-	// ite++;
-	// std::cout << ite->first << std::endl;
-	// ite++;
-	// std::cout << ite->first << std::endl;
-	// ++ite;
-	// std::cout << ite->first << std::endl;
+	// ft::map< int, std::string > mp;
+	// ft::map< int, std::string >::iterator b;
 
-	// // ++it;
-	// // it++;
-	// // it++;
-	// // ++it;
+	// mp.insert(ft::make_pair(1, "Hi"));
+	// mp.insert(ft::make_pair(3, "Hi"));
+	// mp.insert(ft::make_pair(5, "Hi"));
+	// mp.insert(ft::make_pair(3, "Hi"));
+	// mp.insert(ft::make_pair(7, "Hi"));
+	// mp.insert(ft::make_pair(8, "Hi"));
+	// mp.insert(ft::make_pair(2, "Hi"));
 
-	// --ite;
-	// ite--;
-	// ite--;
-	// std::cout << "---------\n";
-	// std::cout << ite.base().getCurrent()->data.first << std::endl;
-	// std::cout << ite->first << std::endl;
-	// std::cout << "---------\n";
-	// --ite;
-
-	// std::cout << ite->first << std::endl;
-
+	// for (b = mp.begin(); b != mp.end(); b++)
+	// 	std::cout << b->first << std::endl;
 	return (0);
 }
