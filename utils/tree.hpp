@@ -19,7 +19,10 @@ namespace ft
                 avlTree( ) { }
 
                 avlTree( P toInit, avlTree *parent ) : data(toInit), right(NULL),
-                left(NULL), parent(parent), height(0) { }
+                   left(NULL), parent(parent), height(0) { }
+
+                avlTree ( const avlTree &rhs ) : data(rhs.data), right(rhs.right),
+                    left(rhs.left), parent(rhs.parent), height(rhs.height) { }
 
                 ~avlTree( ) { }
         };

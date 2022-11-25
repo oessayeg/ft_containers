@@ -40,6 +40,7 @@ namespace ft
             avlTree *baseTree;
             size_type mapSize;
             allocator_type m_allocator;
+			std::allocator< avlTree > avlAlloc;
 			key_compare comp;
 
         //---------------------PUBLIC MEMBER ATTRIBUTE---------------------
@@ -362,7 +363,11 @@ namespace ft
         private :
             avlTree *createNode( const value_type &val, avlTree *parent )
 			{
-				return new avlTree(val, parent);
+				avlTree *node;
+
+				node = avlAlloc.allocate(1);
+				avlAlloc.construct(node, avlTree(val, parent));
+				return node;
 			}
 
 			avlTree* rightRotation( avlTree *root )
@@ -433,7 +438,8 @@ namespace ft
 					return ;
 				freeAll(root->left);
 				freeAll(root->right);
-				delete root;
+				avlAlloc.destroy(&(*root));
+				avlAlloc.deallocate(root, 1);
 			}
 
 			avlTree *findKey( const key_type &k, avlTree *root ) const
@@ -464,7 +470,8 @@ namespace ft
 					node->parent->left = child;
 				else
 					node->parent->right = child;
-				delete node;
+				avlAlloc.destroy(node);
+				avlAlloc.deallocate(node, 1);
 			}
 
 			void deleteNodeWithTwoChilds( avlTree *node )
@@ -475,7 +482,7 @@ namespace ft
 				smallest = node->right;
 				while (smallest->left != NULL)
 					smallest = smallest->left;
-				newNode = new avlTree(smallest->data, node->parent);
+				newNode = createNode(smallest->data, node->parent);
 				newNode->left = node->left;
 				newNode->right = node->right;
 				node->right->parent = newNode;
@@ -486,7 +493,8 @@ namespace ft
 					node->parent->left = newNode;
 				else if (node->parent->right == node)
 					node->parent->right = newNode;
-				delete node;
+				avlAlloc.destroy(node);
+				avlAlloc.deallocate(node, 1);
 				deleteNodeWithOneChild(smallest);
 			}
 
