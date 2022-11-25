@@ -365,13 +365,6 @@ namespace ft
 				return new avlTree(val, parent);
 			}
 
-			size_type height( avlTree *root )
-			{
-				if (root == NULL)
-					return 0;
-				return (std::max(height(root->left), height(root->right)) + 1);
-			}
-
 			avlTree* rightRotation( avlTree *root )
 			{
 				avlTree *leftRoot = root->left;
@@ -427,12 +420,13 @@ namespace ft
 				(*root)->height = std::max(giveHeight((*root)->right), giveHeight((*root)->left)) + 1;
 			}
 
-			int giveHeight( avlTree *t )
+			size_type giveHeight( avlTree *t )
 			{
 				if (t == NULL)
 					return 0;
 				return t->height;
 			}
+
 			void freeAll( avlTree *root )
 			{
 				if (root == NULL)
@@ -504,7 +498,6 @@ namespace ft
 					return ;
 				balanceTree(&(*root)->left);
 				balanceTree(&(*root)->right);
-				// balanceFactor = height((*root)->left) - height((*root)->right);
 				balanceFactor = giveHeight((*root)->left) - giveHeight((*root)->right);
 				if (balanceFactor == 2 && (*root)->left->left != NULL)
 					*root = rightRotation(*root);

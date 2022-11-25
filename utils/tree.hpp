@@ -13,7 +13,7 @@ namespace ft
                 avlTree *right;
                 avlTree *left;
                 avlTree *parent;
-                int height;
+                size_t height;
 
             public :
                 avlTree( ) { }
