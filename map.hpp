@@ -188,58 +188,19 @@ namespace ft
             ft::pair< iterator, bool > insert( const value_type &val )
 			{
 				avlTree *found;
-				avlTree *ret;
 
-				ret = NULL;
-				found = giveLast(&baseTree, val);
-				if (found == NULL)
+				if (baseTree == NULL)
 				{
 					baseTree = createNode(val, NULL);
 					mapSize += 1;
 					return ft::make_pair(begin(), true);
 				}
-				else if (found->data.first == val.first)
+				found = findKey(val.first, baseTree);
+				if (found != NULL)
 					return ft::make_pair(iterator(found), false);
-				else
-				{
-					if (comp(val.first, found->data.first))
-					{
-						found->left = createNode(val, found);
-						ret = found->left;
-						while (found->parent != NULL)
-						{
-							found->height = std::max(giveHeight(found->left), giveHeight(found->right)) + 1;
-							found = found->parent;
-						}
-						found->height = std::max(giveHeight(found->left), giveHeight(found->right)) + 1;
-						if (ret->parent->right == NULL)
-							balanceTree(&baseTree);
-					}
-					else if (comp(found->data.first, val.first))
-					{
-						found->right = createNode(val, found);
-						ret = found->right;
-						while (found->parent != NULL)
-						{
-							found->height = std::max(giveHeight(found->left), giveHeight(found->right)) + 1;
-							found = found->parent;
-						}
-						found->height = std::max(giveHeight(found->left), giveHeight(found->right)) + 1;
-						if (ret->parent->left == NULL)
-							balanceTree(&baseTree);
-					}
-					mapSize += 1;
-				}
-				// balanceTree(&baseTree);
-				// avlTree *found;
-
-				// found = findKey(val.first, baseTree);
-				// if (found != NULL)
-				// 	return ft::make_pair(iterator(found), false);
-				// insertRecursively(&baseTree, val);
-				// balanceTree(&baseTree);
-				// found = findKey(val.first, baseTree);
-				return ft::make_pair(iterator(ret), true);
+				insertAndBalance(&baseTree, val);
+				mapSize += 1;
+				return ft::make_pair(iterator(findKey(val.first, baseTree)), true);
 			}
 
 			iterator insert( iterator position, const value_type &val )
@@ -370,6 +331,38 @@ namespace ft
 				return node;
 			}
 
+			void insertAndBalance( avlTree **root, const value_type &val )
+			{
+				int bf = 0;
+
+				if (*root == NULL)
+					return ;
+				if (comp(val.first, (*root)->data.first) && (*root)->left == NULL)
+					(*root)->left = createNode(val, *root);
+				else if (comp((*root)->data.first, val.first) && (*root)->right == NULL)
+					(*root)->right = createNode(val, *root);
+				else if (comp(val.first, (*root)->data.first) && (*root)->left != NULL)
+					insertAndBalance(&(*root)->left, val);
+				else if (comp((*root)->data.first, val.first) && (*root)->right != NULL)
+					insertAndBalance(&(*root)->right, val);
+				(*root)->height = std::max(giveHeight((*root)->left), giveHeight((*root)->right)) + 1;
+				bf = giveHeight((*root)->left) - giveHeight((*root)->right);
+				if (bf == 2 && (*root)->left->left != NULL)
+					*root = rightRotation(*root);
+				else if (bf == 2 && (*root)->left->right != NULL)
+				{
+					(*root)->left = leftRotation((*root)->left);
+					*root = rightRotation((*root));
+				}
+				else if (bf == -2 && (*root)->right->right != NULL)
+					*root = leftRotation(*root);
+				else if (bf == -2 && (*root)->right->left != NULL)
+				{
+					(*root)->right = rightRotation((*root)->right);
+					*root = leftRotation(*root);
+				}
+			}
+
 			avlTree* rightRotation( avlTree *root )
 			{
 				avlTree *leftRoot = root->left;
@@ -379,6 +372,8 @@ namespace ft
 				leftRoot->parent = root->parent;
 				root->parent = leftRoot;
 				root->left = rightOfLeftRoot;
+				root->height = std::max(giveHeight(root->left), giveHeight(root->right)) + 1;
+				leftRoot->height = std::max(giveHeight(leftRoot->left), giveHeight(leftRoot->right)) + 1;
 				if (rightOfLeftRoot)
 					rightOfLeftRoot->parent = root;
 				return leftRoot;
@@ -393,6 +388,8 @@ namespace ft
 				rightRoot->parent = root->parent;
 				root->parent = rightRoot;
 				root->right = leftOfRightRoot;
+				root->height = std::max(giveHeight(root->left), giveHeight(root->right)) + 1;
+				rightRoot->height = std::max(giveHeight(rightRoot->left), giveHeight(rightRoot->right)) + 1;
 				if (leftOfRightRoot)
 					leftOfRightRoot->parent = root;
 				return rightRoot;
@@ -470,6 +467,7 @@ namespace ft
 					node->parent->left = child;
 				else
 					node->parent->right = child;
+				// node->parent->height = std::max(node->parent->left, node->parent->right) + 1;
 				avlAlloc.destroy(node);
 				avlAlloc.deallocate(node, 1);
 			}
