@@ -2,7 +2,7 @@
 
 namespace ft
 {
-    //------------DISTANCE BETWEEN ITERATORS------------
+    //------------Distance Between Iterators------------
     template < class iterator >
     typename iterator_traits< iterator >::difference_type distance( iterator a, iterator b, std::random_access_iterator_tag )
     {
@@ -25,7 +25,7 @@ namespace ft
         return distance(a, b, typename ft::iterator_traits< iterator >::iterator_category());
     }
 
-    //------------LEXICOGRAPHICAL COMPARE------------
+    //------------Lexicographical Compare------------
     template <class InputIterator1, class InputIterator2>
     bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
         InputIterator2 first2, InputIterator2 last2)
@@ -42,7 +42,7 @@ namespace ft
         return (first2 != last2);
     }
 
-    //------------EQUAL------------
+    //------------Equal------------
     template < class inputIterator >
     bool equal( inputIterator first1, inputIterator last1, inputIterator first2 )
     {

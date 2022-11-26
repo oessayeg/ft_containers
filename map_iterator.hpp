@@ -28,8 +28,9 @@ namespace ft
 
 		// -----------------------Public Member Functions-----------------------
         public :
-			// ------------------Contstructors, asiggnment overload, destructor------------------
+			// ------------------Contstructors, Assignment operator overload, Destructor------------------
             map_iterator( void ) : m_current_node(NULL), first_node(NULL), last_node(NULL), check(0) { }
+
             map_iterator( avlTree *root, int pos )
             {
                 avlTree *tmp;
@@ -60,6 +61,7 @@ namespace ft
 					check = 1;
 				}
             }
+
 			map_iterator( avlTree *current )
 			{
 				avlTree *root;
@@ -76,6 +78,7 @@ namespace ft
 				first_node = root;
 				last_node = current;	
 			}
+
 			template < class U >
             map_iterator( const map_iterator< U > &rhs, typename ft::enable_if< ft::is_convertible< T, U >::value >::type * = 0 )
 			{
@@ -97,6 +100,7 @@ namespace ft
                 }
                 return *this;
             }
+
             ~map_iterator( ) { }
 
             // Dereference operators
@@ -148,12 +152,7 @@ namespace ft
 			template < class X >
 			bool operator==( const map_iterator< X > &rhs )
 			{
-				// if (m_current_node == rhs.getCurrent() && first_node == rhs.getFirst()
-				// 	&& last_node == rhs.getLast())
-				// 	return true;
-				if (m_current_node == rhs.getCurrent())
-					return true;
-				return false;
+				return m_current_node == rhs.getCurrent();
 			}
 
 			template < class Y >

@@ -5,7 +5,7 @@
 
 namespace ft
 {
-    //------------ITERATOR_TRAITS------------
+    //------------Iterator Traits------------
     template < class Iter >
     struct iterator_traits
     {

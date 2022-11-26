@@ -1,5 +1,4 @@
-#ifndef REIMPLEMENTATIONITERATOR_HPP
-# define REIMPLEMENTATIONITERATOR_HPP
+#pragma once
 
 #include "utils/iterator_traits.hpp"
 #include "utils/type_traits.hpp"
@@ -11,6 +10,7 @@ namespace ft
     template < class Iterator >
     class vectorIterator
     {
+		// ---------------------Iterator Member Types---------------------
         public :
             typedef typename ft::iterator_traits< Iterator >::iterator_category iterator_category;
             typedef typename ft::iterator_traits< Iterator >::value_type value_type;
@@ -19,11 +19,12 @@ namespace ft
             typedef typename ft::iterator_traits< Iterator >::reference reference;
             typedef size_t size_type;
 
+		// ---------------------Base Pointer---------------------
         private :
             value_type* m_ptr;
 
         public :
-            // Constructors, Destructor, assignment operator overload
+            // Constructors, Assignment operator overload, Destructor
             vectorIterator( value_type* p = NULL ) : m_ptr(p) {}
 
             template < class Iter >
@@ -39,13 +40,13 @@ namespace ft
 
             ~vectorIterator() {}
 
-            // Equivalence comparison operator
+            // Equivalence Comparison operator
             template < class iter >
             bool operator==( const vectorIterator< iter > &rhs ) const { return m_ptr == rhs.getPtr(); }
             template < class iter >
             bool operator!=( const vectorIterator< iter > &rhs ) const { return m_ptr != rhs.getPtr(); }
 
-            // Inequality relational operators
+            // Inequality Relational operators
             template < class iter >
             bool operator<( const vectorIterator< iter > &rhs ) const { return m_ptr < rhs.getPtr(); }
             template < class iter >
@@ -121,5 +122,3 @@ namespace ft
             return lhs.getPtr() - rhs.getPtr();
         }
 }
-
-#endif

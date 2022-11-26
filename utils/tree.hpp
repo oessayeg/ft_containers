@@ -5,6 +5,7 @@
 
 namespace ft
 {
+	// Base tree of the map
 	template < class P >
 	class avlTree
 	{

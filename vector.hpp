@@ -1,5 +1,4 @@
-#ifndef VECTOR_HPP
-# define VECTOR_HPP
+#pragma once
 
 #include <iostream>
 #include <memory>
@@ -15,6 +14,7 @@ namespace ft
     template< class T, class allocator = std::allocator< T > >
     class vector
     {
+        //----------------Vector Member Types----------------
         public :
             typedef T value_type;
             typedef allocator allocator_type;
@@ -29,6 +29,7 @@ namespace ft
             typedef ptrdiff_t difference_type;
             typedef size_t size_type;
 
+        //----------------Private member attributes----------------
         private :
             value_type *arr;
             size_type vecSize;
@@ -36,9 +37,11 @@ namespace ft
             allocator_type m_allocator;
 
         public :
-            //-------------CONSTRUCTORS-------------
-            explicit vector( const allocator_type& alloc = allocator_type() ) : arr(NULL), vecSize(0), vecCapacity(0), m_allocator(alloc) {}
-            explicit vector( size_type n, const value_type &val = value_type(), const allocator_type& alloc = allocator_type())
+            //-------------Constructors, Copy assignment operator overload, Destructor-------------
+            explicit vector( const allocator_type& alloc = allocator_type() ) : arr(NULL), vecSize(0),
+				vecCapacity(0), m_allocator(alloc) { }
+
+            explicit vector( size_type n, const value_type &val = value_type(), const allocator_type& alloc = allocator_type() )
             {
                 arr = NULL;
                 vecSize = 0;
@@ -48,6 +51,7 @@ namespace ft
                 while (vecSize != n)
 					push_back(val);
             }
+
             template< class iterator >
             vector( iterator begin, iterator end, const allocator_type& alloc = allocator_type(),
 			typename ft::enable_if< !ft::is_integral< iterator >::value >::type* = 0 )
@@ -68,6 +72,7 @@ namespace ft
                 for (difference_type i = 0; i < distance; i++)
 					push_back(tmp[i]);
             }
+
             vector ( const vector &rhs )
             {
                 arr = NULL;
@@ -76,6 +81,7 @@ namespace ft
                 m_allocator = allocator_type();
                 *this = rhs;
             }
+
             vector &operator=( const vector &rhs )
             {
                 if (this == &rhs || (arr == NULL && rhs.data() == NULL))
@@ -104,6 +110,7 @@ namespace ft
                 }
                 return *this;
             }
+
             ~vector ( void )
             {
                 if (arr)
@@ -114,26 +121,26 @@ namespace ft
                 }
             }
 
-            //-------------ITERATORS-------------
+            //-------------Iterators-------------
 			iterator begin( void ) { return iterator(arr); }
 			const_iterator begin( void ) const { return const_iterator(arr); }
 			iterator end( void ) { return iterator(arr + vecSize); }
 			const_iterator end( void ) const { return const_iterator(arr + vecSize); }
 
-            //-------------REVERSE ITERATORS-------------
+            //-------------Reverse Iterators-------------
 			reverse_iterator rbegin( void ) { return reverse_iterator(arr + vecSize); }
 			const_reverse_iterator rbegin( void ) const { return const_reverse_iterator(arr + vecSize); }
 			reverse_iterator rend( void ) { return reverse_iterator(arr); }
 			const_reverse_iterator rend( void ) const { return const_reverse_iterator(arr); }
 
-            //-------------CAPACITY-------------
-            //Size of vector (member function)
+            //-------------Capacity Functions Category-------------
+            // Size of vector (member function)
             size_type size( void ) const { return vecSize; }
 
-            //Max_size member function (max size to allocate)
+            // Max_size member function (max size to allocate)
             size_type max_size( void ) const { return m_allocator.max_size(); }
 
-            //Resize member function
+            // Resize member function
             void resize( size_type n, value_type val = value_type() )
             {
 				if (n == vecSize)
@@ -152,13 +159,13 @@ namespace ft
 				}
             }
 
-            //Capacity member function (blocks allocated)
+            // Capacity member function (blocks allocated)
             size_type capacity( void ) const { return vecCapacity; }
 
-            //Empty member function
+            // Empty member function
             bool empty( void ) const { return vecSize == 0; }
 
-            //Reserve member function
+            // Reserve member function
             void reserve( size_type n )
             {
                 if (n > max_size())
@@ -189,12 +196,12 @@ namespace ft
                 }
             }
 
-            //-------------ELEMENT ACCESS-------------
-            //Subscript operator
+            //-------------Element Access Functions Category-------------
+            // Subscript operator
             reference operator[]( size_type idx ) { return arr[idx]; }
             const_reference operator[]( size_type idx ) const { return arr[idx]; }
 
-            //At member function
+            // At member function
             reference at( size_type idx )
             {
                 if ( idx >= vecSize )
@@ -208,20 +215,20 @@ namespace ft
                 return arr[idx];
             }
 
-            //Front member function
+            // Front member function
             reference front( void ) { return arr[0]; }
             const_reference front( void ) const { return arr[0]; }
 
-            //Back member function
+            // Back member function
             reference back( void ) { return arr[vecSize - 1]; }
             const_reference back( void ) const { return arr[vecSize - 1]; }
 
-            //Data member function
+            // Data member function
             pointer data( void ) throw() { return arr; }
             const_pointer data( void ) const throw() { return arr; }
 
-            //-------------MODIFIERS-------------
-            //Assign member function
+            //-------------Modifiers Functions Category-------------
+            // Assign member function
             void assign ( size_type n, const value_type &val )
             {
 				if (n == 0)
@@ -248,6 +255,7 @@ namespace ft
 						push_back(val);
                 }
             }
+
 			template <class InputIterator>
 			void assign(InputIterator first, InputIterator last,
 			typename ft::enable_if< !ft::is_integral<InputIterator>::value >::type* = 0 )
@@ -267,7 +275,7 @@ namespace ft
 					push_back(tmp[i]);
 			}
 
-            //Push_back member function
+            // Push_back member function
             void push_back( const_reference val )
             {
                 if (vecCapacity == 0)
@@ -292,7 +300,7 @@ namespace ft
                 vecSize++;
             }
 
-            //Pop_back member function    
+            // Pop_back member function    
             void pop_back( void )
             {
                 m_allocator.destroy( &arr[vecSize - 1] );
@@ -374,7 +382,7 @@ namespace ft
 					push_back(*b);
 			}
 
-			//Erase member function
+			// Erase member function
 			iterator erase( iterator position )
 			{
 				iterator ret = position;
@@ -407,7 +415,7 @@ namespace ft
 				return first;
 			}
 
-			//Swap member function
+			// Swap member function
 			void swap( vector &x )
 			{
 				std::swap(arr, x.arr);
@@ -416,22 +424,23 @@ namespace ft
 				std::swap(m_allocator, x.m_allocator);
 			}
 
-            //Clear member function
+            // Clear member function
             void clear( void )
             {
                 while (vecSize > 0)
                     pop_back();
             }
 
-            //-------------ALLOCATOR-------------
+            //-------------Allocator Category-------------
             allocator_type get_allocator( void ) const { return m_allocator; }
             
     };
- 			       //-------------Non member functions-------------
+		//-------------Non Member Functions-------------
+		// Swap non-member function
 		template < class T, class allocator >
 		void swap( vector< T, allocator >& x, vector< T, allocator >& y ) { x.swap(y); }
 
-            		//-------------RELATIONAL OPERATORS-------------
+        // Relational operators
 		template< class T, class allocator >
 		bool operator==( vector< T, allocator > const &lhs, vector< T, allocator > const &rhs )
 		{
@@ -509,5 +518,3 @@ namespace ft
 			return !(lhs < rhs);
 		}
 }
-
-#endif

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "vector.hpp"
 
 namespace ft
@@ -5,6 +7,7 @@ namespace ft
     template < class T, class container = ft::vector< T > >
     class stack
     {
+        //-----------------Stack Member Types-----------------
         public :
             typedef container container_type;
             typedef typename container::value_type value_type;
@@ -16,15 +19,17 @@ namespace ft
             container_type ctr;
         
         public :
+            //-----------------Constructors, Assignment Operator overload, Destructor-----------------
             explicit stack ( const container_type &ctnr = container_type() ) : ctr(ctnr) {}
             stack ( const stack &rhs ) { *this = rhs; }
-            stack &operator= ( const stack &rhs )
+            stack &operator=( const stack &rhs )
             {
                 if (this != &rhs)
                     ctr = rhs.ctr;
                 return *this;
             }
             ~stack() {}
+
             bool empty ( void ) const { return ctr.empty(); }
             size_type size( void ) const{ return ctr.size(); }
             reference top( void ) { return ctr.back(); }
@@ -32,40 +37,58 @@ namespace ft
             void push( const value_type &val ) { ctr.push_back(val); }
             void pop( void ) { ctr.pop_back(); }
 
+            // Comparison Operators
+            template < class D, class C >
+            friend bool operator==( stack< D, C > const &lhs, stack< D, C > const &rhs );
+
+            template < class D, class C >
+            friend bool operator!=( stack< D, C > const &lhs, stack< D, C > const &rhs );
+
+            template < class D, class C >
+            friend bool operator<( stack< D, C > const &lhs, stack< D, C > const &rhs );
+
+            template < class D, class C >
+            friend bool operator<=( stack< D, C > const &lhs, stack< D, C > const &rhs );
+
+            template < class D, class C >
+            friend bool operator>( stack< D, C > const &lhs, stack< D, C > const &rhs );
+
+            template < class D, class C >
+            friend bool operator>=( stack< D, C > const &lhs, stack< D, C > const &rhs );
+    };
         template < class D, class C >
-        friend bool operator==( stack< D, C > const &lhs, stack< D, C > const &rhs )
+        bool operator==( stack< D, C > const &lhs, stack< D, C > const &rhs )
         {
             return lhs.ctr == rhs.ctr;
         }
-
+        
         template < class D, class C >
-        friend bool operator!=( stack< D, C > const &lhs, stack< D, C > const &rhs )
+        bool operator!=( stack< D, C > const &lhs, stack< D, C > const &rhs )
         {
-            return !(lhs.ctr == rhs.ctr);
+            return lhs.ctr != rhs.ctr;
         }
 
         template < class D, class C >
-        friend bool operator<( stack< D, C > const &lhs, stack< D, C > const &rhs )
+        bool operator<( stack< D, C > const &lhs, stack< D, C > const &rhs )
         {
             return (lhs.ctr < rhs.ctr);
         }
 
         template < class D, class C >
-        friend bool operator<=( stack< D, C > const &lhs, stack< D, C > const &rhs )
+        bool operator<=( stack< D, C > const &lhs, stack< D, C > const &rhs )
         {
             return (lhs.ctr <= rhs.ctr);
         }
 
         template < class D, class C >
-        friend bool operator>( stack< D, C > const &lhs, stack< D, C > const &rhs )
+        bool operator>( stack< D, C > const &lhs, stack< D, C > const &rhs )
         {
             return (lhs.ctr > rhs.ctr);
         }
 
         template < class D, class C >
-        friend bool operator>=( stack< D, C > const &lhs, stack< D, C > const &rhs )
+        bool operator>=( stack< D, C > const &lhs, stack< D, C > const &rhs )
         {
             return (lhs.ctr >= rhs.ctr);
         }
-    };
 }

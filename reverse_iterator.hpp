@@ -10,6 +10,7 @@ namespace ft
     template < class Iterator >
     class reverse_iterator
     {
+        // ---------------Reverse Iterator Member Types---------------
         public :
             typedef Iterator iterator_type;
             typedef typename ft::iterator_traits< Iterator >::iterator_category iterator_category;
@@ -18,11 +19,13 @@ namespace ft
             typedef typename ft::iterator_traits< Iterator >::pointer pointer;
             typedef typename ft::iterator_traits< Iterator >::reference reference;
 
+        // ---------------Base Iterator---------------
         protected :
             iterator_type baseIterator;
 
         public :
-            reverse_iterator( void ) {};
+            // ---------------Constructors, Copy assignment operator overload, Destructor---------------
+            reverse_iterator( ) { }
 
             explicit reverse_iterator( iterator_type it ) : baseIterator(it) {}
 
@@ -36,7 +39,7 @@ namespace ft
                 return *this;
             }
 
-            ~reverse_iterator( void ) {}
+            ~reverse_iterator( ) { }
 
             // Base iterator
             iterator_type base() const { return baseIterator; }
@@ -64,6 +67,7 @@ namespace ft
                 tmp = baseIterator;
                 return &(*--tmp) ;
             }
+
             // Subscript operator
             reference operator[]( difference_type idx ) { return baseIterator[-idx - 1]; }
 
@@ -116,6 +120,7 @@ namespace ft
             }
     };
 
+    //------------------Addition, Substraction non member overloads------------------
     template < class iterator >
     reverse_iterator< iterator > operator+( typename reverse_iterator< iterator >::difference_type n, const reverse_iterator< iterator > &rev_it )
     {
@@ -128,7 +133,7 @@ namespace ft
         return rhs.base() - lhs.base();
     }
     
-    //------------------RELATIONAL OPERATORS------------------
+    //------------------Relational Operators------------------
     template < class iter1, class iter2 >
     bool operator==( const reverse_iterator< iter1 > &lhs, const reverse_iterator< iter2 > &rhs )
     {

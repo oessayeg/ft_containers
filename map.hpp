@@ -16,7 +16,7 @@ namespace ft
     template < class Key, class T, class Compare = ft::less< Key >, class Allocator = std::allocator<ft::pair< const Key, T > > >
     class map
     {
-        //---------------------MEMBER TYPES---------------------
+        //---------------------Map Member Types---------------------
         public :
             typedef Key key_type;
             typedef T mapped_type;
@@ -35,7 +35,7 @@ namespace ft
             typedef std::ptrdiff_t difference_type;
             typedef size_t size_type;
 
-        //---------------------PRIVATE MEMBER ATTRIBUTES---------------------
+        //---------------------Private Member Attributes---------------------
         private :
             avlTree *baseTree;
             size_type mapSize;
@@ -43,7 +43,8 @@ namespace ft
 			std::allocator< avlTree > avlAlloc;
 			key_compare comp;
 
-        //---------------------PUBLIC MEMBER ATTRIBUTE---------------------
+        //---------------------Public Member Attribute--------------------
+		// Function Object that compares two given values with the same type
 		public :
 			class value_compare
 			{
@@ -58,9 +59,9 @@ namespace ft
 					}
 			};
 
-        //---------------------PUBLIC MEMBER FUNCTIONS---------------------
+        //---------------------Public Member Functions---------------------
         public :
-        	//---------------------Constructors, assignment overload, destructor---------------------
+        	//---------------Constructors, Assignment operator overload, Destructor---------------
 			explicit map( const key_compare &comp = key_compare(), const allocator_type& alloc = allocator_type() ) :
 				baseTree(NULL), mapSize(0), m_allocator(alloc), comp(comp) { }
 
@@ -98,104 +99,54 @@ namespace ft
 
             ~map( ) { freeAll(baseTree); }
 
-        	//---------------------Capacity member functions---------------------
+			//---------------------ITERATORS---------------------
+			iterator begin( void ) { return iterator(baseTree, BEGIN); }
+			const_iterator begin( void ) const { return const_iterator(baseTree, BEGIN); }
+			iterator end( void ) { return iterator(baseTree, END); }
+			const_iterator end( void ) const { return const_iterator(baseTree, END); }
+
+			reverse_iterator rbegin( void ) { return reverse_iterator(end()); }
+			const_reverse_iterator rbegin( void ) const { return const_reverse_iterator(end()); }
+			reverse_iterator rend( void ) { return reverse_iterator(begin()); }
+			const_reverse_iterator rend( void ) const { return const_reverse_iterator(begin()); }
+
+        	//---------------------Capacity Category---------------------
 			bool empty ( void ) const { return baseTree == NULL; }
 			size_type size ( void ) const { return mapSize; }
 			size_type max_size( void ) const { return m_allocator.max_size(); }
 
-        	//---------------------Observers---------------------
-			key_compare key_comp() const { return key_compare(); }
-			value_compare value_comp() const { return value_compare(key_compare()); }
-
-        	//---------------------Operations---------------------
-			// Find member function (non-const and const)
-			iterator find( const key_type &k )
+        	//-----------------Element Access Category-----------------
+			// Subscript Operator
+			mapped_type &operator[]( const key_type &k )
 			{
-				avlTree *found;
+				avlTree *tmp;
 
-				found = findKey(k, baseTree);
+				tmp = findKey(k, baseTree);
+				if (tmp != NULL)
+					return tmp->data.second;
+				return insert(value_type(k, mapped_type())).first->second;
+			}
+
+			// At member function (for const and non-const map)
+			mapped_type &at( key_type const &k )
+			{
+				avlTree *found = findKey(k, baseTree);
+
 				if (found == NULL)
-					return iterator(baseTree, END);
-				return iterator(found);
+					throw std::out_of_range("map::at:  key not found");
+				return found->data.second;
 			}
-			const_iterator find( const key_type &k ) const
-			{
-				avlTree *found;
 
-				found = findKey(k, baseTree);
+			const mapped_type &at( key_type const &k ) const
+			{
+				avlTree *found = findKey(k, baseTree);
+
 				if (found == NULL)
-					return const_iterator(baseTree, END);
-				return const_iterator(found);
+					throw std::out_of_range("map::at:  key not found");
+				return found->data.second;
 			}
 
-			// Count member function
-			size_type count ( const key_type &k ) const { return (findKey(k, baseTree) != NULL); }
-
-			// Lower_bound member function (non-const and const)
-			iterator lower_bound( const key_type &k )
-			{
-				iterator b;
-				iterator e;
-
-				b = begin();
-				e = end();
-				for (; b != e; b++)
-					if (comp(b->first, k) == false)
-						break;
-				return b;
-			}
-
-			const_iterator lower_bound( const key_type &k ) const
-			{
-				const_iterator b;
-				const_iterator e;
-
-				b = begin();
-				e = end();
-				for (; b != e; b++)
-					if (comp(b->first, k) == false)
-						break;
-				return b;
-			}
-
-			// Upper_bound member function (non-const and const)
-			iterator upper_bound( const key_type &k )
-			{
-				iterator b;
-				iterator e;
-
-				b = begin();
-				e = end();
-				for (; b != e; b++)
-					if (comp(k, b->first) == true)
-						break;
-				return b;
-			}
-
-			const_iterator upper_bound( const key_type &k ) const
-			{
-				const_iterator b;
-				const_iterator e;
-
-				b = begin();
-				e = end();
-				for (; b != e; b++)
-					if (comp(k, b->first) == true)
-						break;
-				return b;
-			}
-
-			// Equal_range member function (non-const and const)
-			ft::pair< iterator, iterator > equal_range( const key_type &k )
-			{
-				return ft::make_pair(lower_bound(k), upper_bound(k));
-			}
-
-			ft::pair< const_iterator, const_iterator > equal_range( const key_type &k ) const
-			{
-				return ft::make_pair(lower_bound(k), upper_bound(k));
-			}
-
+        	//-----------------Modifiers Category-----------------
 			// Insert member function
             ft::pair< iterator, bool > insert( const value_type &val )
 			{
@@ -289,76 +240,108 @@ namespace ft
 				baseTree = NULL;
 			}
 
-        //---------------------ITERATORS---------------------
-		iterator begin( void ) { return iterator(baseTree, BEGIN); }
-		const_iterator begin( void ) const { return const_iterator(baseTree, BEGIN); }
-		iterator end( void ) { return iterator(baseTree, END); }
-		const_iterator end( void ) const { return const_iterator(baseTree, END); }
+        	//---------------------Observers Category---------------------
+			key_compare key_comp() const { return key_compare(); }
+			value_compare value_comp() const { return value_compare(key_compare()); }
 
-		reverse_iterator rbegin( void ) { return reverse_iterator(end()); }
-		const_reverse_iterator rbegin( void ) const { return const_reverse_iterator(end()); }
-		reverse_iterator rend( void ) { return reverse_iterator(begin()); }
-		const_reverse_iterator rend( void ) const { return const_reverse_iterator(begin()); }
+        	//---------------------Operations Category---------------------
+			// Find member function (non-const and const)
+			iterator find( const key_type &k )
+			{
+				avlTree *found;
 
-        //---------------------MEMBER ACCESS---------------------
-		mapped_type &at( key_type const &k )
-		{
-			avlTree *found = findKey(k, baseTree);
-			
-			if (found == NULL)
-				throw std::out_of_range("map::at:  key not found");
-			return found->data.second;
-		}
-		const mapped_type &at( key_type const &k ) const
-		{
-			avlTree *found = findKey(k, baseTree);
-			
-			if (found == NULL)
-				throw std::out_of_range("map::at:  key not found");
-			return found->data.second;
-		}
+				found = findKey(k, baseTree);
+				if (found == NULL)
+					return iterator(baseTree, END);
+				return iterator(found);
+			}
 
-		mapped_type &operator[]( const key_type &k )
-		{
-			avlTree *tmp;
+			const_iterator find( const key_type &k ) const
+			{
+				avlTree *found;
 
-			tmp = findKey(k, baseTree);
-			if (tmp != NULL)
-				return tmp->data.second;
-			return insert(value_type(k, mapped_type())).first->second;
-		}
+				found = findKey(k, baseTree);
+				if (found == NULL)
+					return const_iterator(baseTree, END);
+				return const_iterator(found);
+			}
 
-        //---------------------ALLOCATOR---------------------
+			// Count member function
+			size_type count ( const key_type &k ) const { return (findKey(k, baseTree) != NULL); }
+
+			// Lower_bound member function (non-const and const)
+			iterator lower_bound( const key_type &k )
+			{
+				iterator b;
+				iterator e;
+
+				b = begin();
+				e = end();
+				for (; b != e; b++)
+					if (comp(b->first, k) == false)
+						break;
+				return b;
+			}
+
+			const_iterator lower_bound( const key_type &k ) const
+			{
+				const_iterator b;
+				const_iterator e;
+
+				b = begin();
+				e = end();
+				for (; b != e; b++)
+					if (comp(b->first, k) == false)
+						break;
+				return b;
+			}
+
+			// Upper_bound member function (non-const and const)
+			iterator upper_bound( const key_type &k )
+			{
+				iterator b;
+				iterator e;
+
+				b = begin();
+				e = end();
+				for (; b != e; b++)
+					if (comp(k, b->first) == true)
+						break;
+				return b;
+			}
+
+			const_iterator upper_bound( const key_type &k ) const
+			{
+				const_iterator b;
+				const_iterator e;
+
+				b = begin();
+				e = end();
+				for (; b != e; b++)
+					if (comp(k, b->first) == true)
+						break;
+				return b;
+			}
+
+			// Equal_range member function (non-const and const)
+			ft::pair< iterator, iterator > equal_range( const key_type &k )
+			{
+				return ft::make_pair(lower_bound(k), upper_bound(k));
+			}
+
+			ft::pair< const_iterator, const_iterator > equal_range( const key_type &k ) const
+			{
+				return ft::make_pair(lower_bound(k), upper_bound(k));
+			}
+
+
+        //---------------------Allocator Category---------------------
 		allocator_type get_allocator( void ) const { return m_allocator; }
 		
-		void printLevel( void )
-		{
-			std::queue < avlTree * > q;
-			avlTree *tmp = baseTree, *tmp2;
-			int size = 0;
-
-			if (baseTree == NULL)
-				return ;
-			q.push(tmp);
-			while (q.size() > 0)
-			{
-				size = q.size();
-				while (size > 0)
-				{
-					tmp2 = q.front();
-					q.pop();
-					std::cout << tmp2->data.first << ", height = " << tmp2->height << ", ";
-					if (tmp2->left)
-						q.push(tmp2->left);
-					if (tmp2->right)
-						q.push(tmp2->right);
-					size--;
-				}
-				std::cout << std::endl;
-			}
-		}
-        //---------------------PRIVATE MEMBER FUNCTIONS---------------------
+        //---------------------Private Member Functions---------------------
+        //---------------------Functions To Manipulate AvlTree---------------------
         private :
+			// Create a new node with the pair 'val'
             avlTree *createNode( const value_type &val, avlTree *parent )
 			{
 				avlTree *node;
@@ -368,6 +351,7 @@ namespace ft
 				return node;
 			}
 
+			// Insert a new node and balance the tree if there is a property violation
 			void insertAndBalance( avlTree **root, const value_type &val )
 			{
 				int bf = 0;
@@ -400,6 +384,7 @@ namespace ft
 				}
 			}
 
+			// Perform a right rotation
 			avlTree* rightRotation( avlTree *root )
 			{
 				avlTree *leftRoot = root->left;
@@ -416,6 +401,7 @@ namespace ft
 				return leftRoot;
 			}
 
+			// Perform a left rotation
 			avlTree *leftRotation( avlTree *root )
 			{
 				avlTree *rightRoot = root->right;
@@ -432,33 +418,7 @@ namespace ft
 				return rightRoot;
 			}
 
-            void insertRecursively( avlTree **root, const value_type &val )
-            {
-                if (*root == NULL)
-                {
-                    *root = createNode(val, NULL);
-					mapSize += 1;
-                    return ;
-                }
-				if(comp(val.first, (*root)->data.first) && (*root)->left == NULL)
-				{
-					(*root)->left = createNode(val, *root);
-					mapSize += 1;
-				}
-				else if (comp((*root)->data.first, val.first) && (*root)->right == NULL)
-				{
-					(*root)->right = createNode(val, *root);
-					mapSize += 1;
-				}
-				else if (comp(val.first, (*root)->data.first) && (*root)->left)
-					insertRecursively(&(*root)->left, val);
-				else if (comp((*root)->data.first, val.first) && (*root)->right)
-					insertRecursively(&(*root)->right, val);
-				else
-					return ;
-				(*root)->height = std::max(giveHeight((*root)->right), giveHeight((*root)->left)) + 1;
-			}
-
+			// Give the height of a node
 			size_type giveHeight( avlTree *t )
 			{
 				if (t == NULL)
@@ -466,6 +426,7 @@ namespace ft
 				return t->height;
 			}
 
+			// Free all nodes of the tree
 			void freeAll( avlTree *root )
 			{
 				if (root == NULL)
@@ -476,6 +437,7 @@ namespace ft
 				avlAlloc.deallocate(root, 1);
 			}
 
+			// Find the node with the specified key 'k' and return it
 			avlTree *findKey( const key_type &k, avlTree *root ) const
 			{
 				if (root == NULL)
@@ -488,6 +450,7 @@ namespace ft
 					return root;
 			}
 
+			// Delete a leaf node or a node with just one child
 			void deleteNodeWithOneChild( avlTree *node )
 			{
 				avlTree *child;
@@ -515,6 +478,7 @@ namespace ft
 				avlAlloc.deallocate(node, 1);
 			}
 
+			// Delete a node with two childs
 			void deleteNodeWithTwoChilds( avlTree *node )
 			{
 				avlTree *smallest;
@@ -539,6 +503,7 @@ namespace ft
 				deleteNodeWithOneChild(smallest);
 			}
 
+			// Check if the tree is balanced and balance it if not
 			void balanceTree( avlTree **root )
 			{
 				int balanceFactor;
@@ -564,6 +529,7 @@ namespace ft
 				}
 			}
 
+			// Check if the node to delete has two childs or not to perform the right deletion
 			void eraseNode( avlTree *node )
 			{
 				if (node->right == NULL || node->left == NULL)
@@ -574,7 +540,7 @@ namespace ft
 			}
    };
 
-    //---------------------NON MEMBER FUNCTIONS---------------------
+    //---------------------Non Member Functions---------------------
 	template < class Key, class T, class Comp, class Alloc >
 	bool operator==( const ft::map< Key, T, Comp, Alloc > &lhs, const ft::map< Key, T, Comp, Alloc > &rhs )
 	{
@@ -603,7 +569,6 @@ namespace ft
 	{
 		return !(lhs == rhs);
 	}
-
 
 	template < class Key, class T, class Comp, class Alloc >
 	bool operator<( const ft::map< Key, T, Comp, Alloc > &lhs, const ft::map< Key, T, Comp, Alloc > &rhs )

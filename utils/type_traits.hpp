@@ -2,7 +2,7 @@
 
 namespace ft
 {
-    //------------ENABLE_IF------------
+    //------------Enable_if------------
     template < bool B, class T = void >
     struct enable_if {} ;
 
@@ -12,7 +12,7 @@ namespace ft
         typedef T type;
     };
 
-    //------------CONST TO NON-CONST CHECK------------
+    //------------Const to non-const Check------------
     template < class T, class U >
     struct is_convertible
     {
@@ -55,7 +55,7 @@ namespace ft
         static const bool value = true;
     };
 
-    //------------IS_INTEGRAL------------
+    //------------Is_integral------------
     template < class T >
     struct is_integral_t
     {

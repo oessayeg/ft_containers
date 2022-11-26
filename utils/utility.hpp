@@ -2,7 +2,7 @@
 
 namespace ft
 {
-    //------------PAIR STRUCT------------
+    //------------Pair Struct------------
     template < class F, class S >
     struct pair
     {
@@ -72,7 +72,7 @@ namespace ft
         return !(lhs < rhs);
     }
 
-    // ------------MAKE_PAIR------------
+    // ------------Make_pair Function------------
     template < class T1, class T2 >
     pair< T1, T2 > make_pair( T1 a, T2 b )
     {
