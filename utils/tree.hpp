@@ -5,25 +5,26 @@
 
 namespace ft
 {
-    template < class P >
-        class avlTree
-        {
-            public :
-                P data;
-                avlTree *right;
-                avlTree *left;
-                avlTree *parent;
-                size_t height;
+	template < class P >
+	class avlTree
+	{
+		public :
+			P data;
+			avlTree *right;
+			avlTree *left;
+			avlTree *parent;
+			size_t height;
 
-            public :
-                avlTree( ) { }
+        public :
+ 			avlTree( void ) : data(P()), right(NULL), left(NULL), parent(NULL), height(1) { }
 
-                avlTree( P toInit, avlTree *parent ) : data(toInit), right(NULL),
-                   left(NULL), parent(parent), height(0) { }
+			avlTree( P toInit, avlTree *parent ) : data(toInit), right(NULL),
+				left(NULL), parent(parent), height(1) { }
+				
+			avlTree ( const avlTree &rhs ) : data(rhs.data), right(rhs.right),
+				left(rhs.left), parent(rhs.parent), height(rhs.height) { }
 
-                avlTree ( const avlTree &rhs ) : data(rhs.data), right(rhs.right),
-                    left(rhs.left), parent(rhs.parent), height(rhs.height) { }
+			~avlTree( ) { }
 
-                ~avlTree( ) { }
         };
 }

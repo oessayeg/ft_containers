@@ -135,8 +135,11 @@ namespace ft
 			iterator lower_bound( const key_type &k )
 			{
 				iterator b;
-				
-				for (b = begin(); b != end(); b++)
+				iterator e;
+
+				b = begin();
+				e = end();
+				for (; b != e; b++)
 					if (comp(b->first, k) == false)
 						break;
 				return b;
@@ -145,8 +148,11 @@ namespace ft
 			const_iterator lower_bound( const key_type &k ) const
 			{
 				const_iterator b;
+				const_iterator e;
 
-				for (b = begin(); b != end(); b++)
+				b = begin();
+				e = end();
+				for (; b != e; b++)
 					if (comp(b->first, k) == false)
 						break;
 				return b;
@@ -156,8 +162,11 @@ namespace ft
 			iterator upper_bound( const key_type &k )
 			{
 				iterator b;
+				iterator e;
 
-				for (b = begin(); b != end(); b++)
+				b = begin();
+				e = end();
+				for (; b != e; b++)
 					if (comp(k, b->first) == true)
 						break;
 				return b;
@@ -166,8 +175,11 @@ namespace ft
 			const_iterator upper_bound( const key_type &k ) const
 			{
 				const_iterator b;
+				const_iterator e;
 
-				for (b = begin(); b != end(); b++)
+				b = begin();
+				e = end();
+				for (; b != e; b++)
 					if (comp(k, b->first) == true)
 						break;
 				return b;
@@ -213,8 +225,7 @@ namespace ft
 			void insert( InputIterator first, InputIterator last )
 			{
 				for (; first != last; first++)
-					insertRecursively(&baseTree, value_type(first->first, first->second));
-				balanceTree(&baseTree);
+					insert(value_type(first->first, first->second));
 			}
 
 			// Erase member function
@@ -319,7 +330,33 @@ namespace ft
 
         //---------------------ALLOCATOR---------------------
 		allocator_type get_allocator( void ) const { return m_allocator; }
+		
+		void printLevel( void )
+		{
+			std::queue < avlTree * > q;
+			avlTree *tmp = baseTree, *tmp2;
+			int size = 0;
 
+			if (baseTree == NULL)
+				return ;
+			q.push(tmp);
+			while (q.size() > 0)
+			{
+				size = q.size();
+				while (size > 0)
+				{
+					tmp2 = q.front();
+					q.pop();
+					std::cout << tmp2->data.first << ", height = " << tmp2->height << ", ";
+					if (tmp2->left)
+						q.push(tmp2->left);
+					if (tmp2->right)
+						q.push(tmp2->right);
+					size--;
+				}
+				std::cout << std::endl;
+			}
+		}
         //---------------------PRIVATE MEMBER FUNCTIONS---------------------
         private :
             avlTree *createNode( const value_type &val, avlTree *parent )
@@ -454,6 +491,7 @@ namespace ft
 			void deleteNodeWithOneChild( avlTree *node )
 			{
 				avlTree *child;
+				avlTree *tmp;
 
 				if (node->right)
 					child = node->right;
@@ -467,7 +505,12 @@ namespace ft
 					node->parent->left = child;
 				else
 					node->parent->right = child;
-				// node->parent->height = std::max(node->parent->left, node->parent->right) + 1;
+				tmp = node->parent;
+				while (tmp != NULL)
+				{
+					tmp->height = std::max(giveHeight(tmp->left), giveHeight(tmp->right)) + 1;
+					tmp = tmp->parent;
+				}
 				avlAlloc.destroy(node);
 				avlAlloc.deallocate(node, 1);
 			}
@@ -505,16 +548,16 @@ namespace ft
 				balanceTree(&(*root)->left);
 				balanceTree(&(*root)->right);
 				balanceFactor = giveHeight((*root)->left) - giveHeight((*root)->right);
-				if (balanceFactor == 2 && (*root)->left->left != NULL)
+				if (balanceFactor >= 2 && (*root)->left->left != NULL)
 					*root = rightRotation(*root);
-				else if (balanceFactor == 2 && (*root)->left->right != NULL)
+				else if (balanceFactor >= 2 && (*root)->left->right != NULL)
 				{
 					(*root)->left = leftRotation((*root)->left);
 					*root = rightRotation((*root));
 				}
-				else if (balanceFactor == -2 && (*root)->right->right != NULL)
+				else if (balanceFactor <= -2 && (*root)->right->right != NULL)
 					*root = leftRotation(*root);
-				else if (balanceFactor == -2 && (*root)->right->left != NULL)
+				else if (balanceFactor <= -2 && (*root)->right->left != NULL)
 				{
 					(*root)->right = rightRotation((*root)->right);
 					*root = leftRotation(*root);
@@ -528,28 +571,6 @@ namespace ft
 				else
 					deleteNodeWithTwoChilds(node);
 				balanceTree(&baseTree);	
-			}
-
-			avlTree *giveLast( avlTree **root, const value_type &val )
-			{
-				avlTree *tmp;
-				
-				tmp = *root;
-				if (tmp == NULL)
-					return NULL;
-				while (tmp != NULL)
-				{
-					if (!comp(val.first, tmp->data.first) && !(comp(tmp->data.first, val.first)))
-						return tmp;
-					if ((comp(val.first, tmp->data.first) && tmp->left == NULL)
-						|| (comp(tmp->data.first, val.first) && tmp->right == NULL))
-						return tmp;
-					else if (comp(val.first, tmp->data.first) && tmp->left != NULL)
-						tmp = tmp->left;
-					else if (comp(tmp->data.first, val.first) && tmp->right != NULL)
-						tmp = tmp->right;
-				}
-				return tmp;
 			}
    };
 
