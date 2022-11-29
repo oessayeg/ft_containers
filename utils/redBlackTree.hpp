@@ -22,12 +22,13 @@ namespace ft
 			bool isBlack;
 			Alloc m_alloc;
 
+		// --------------Base constructor--------------
 		public :
 			base( void ) : data(NULL), left(NULL), right(NULL),
 				parent(NULL), isBlack(true), m_alloc(Alloc()) { }
 
-			base( T val, base *parent, bool color ) : left(NULL),
-				right(NULL), parent(parent), isBlack(color)
+			base( T val, base *parent, bool color, Alloc allocator ) : left(NULL),
+				right(NULL), parent(parent), isBlack(color), m_alloc(allocator)
 			{
 				data = m_alloc.allocate(1);
 				m_alloc.construct(data, val);
@@ -49,10 +50,15 @@ namespace ft
 		private :
 			base *baseTree;
 			Comp compare;
+			Alloc m_alloc;
 
 		// --------------Constructor, Destructor--------------
 		public :
 			redBlackTree( void ) : baseTree(NULL) { }
+
+			redBlackTree( Alloc alloc, Comp m_comp ) : baseTree(NULL),
+				compare(m_comp), m_alloc(alloc) { }
+
 			~redBlackTree( void ) { }
 
 		// --------------Red Black Tree Public Methods--------------
@@ -61,7 +67,7 @@ namespace ft
 			void insert( T val )
 			{
 				if (baseTree == NULL)
-					baseTree = new base(val, NULL, BLACK);
+					baseTree = new base(val, NULL, BLACK, m_alloc);
 				else
 					insertAndBalance(&baseTree, val);
 			}
@@ -116,12 +122,12 @@ namespace ft
 			{
 				if (compare(val, *(*root)->data) && (*root)->left == NULL)
 				{
-					(*root)->left = new base(val, *root, RED);
+					(*root)->left = new base(val, *root, RED, m_alloc);
 					checkColor((*root)->left);
 				}
 				else if (compare(*(*root)->data, val) && (*root)->right == NULL)
 				{
-					(*root)->right = new base(val, *root, RED);
+					(*root)->right = new base(val, *root, RED, m_alloc);
 					checkColor((*root)->right);
 				}
 				else if (compare(val, *(*root)->data) && (*root)->left != NULL)
