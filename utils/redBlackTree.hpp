@@ -56,6 +56,7 @@ namespace ft
 			~redBlackTree( void ) { }
 
 		// --------------Red Black Tree Public Methods--------------
+		// ---------------------------------------
 		public :
 			void insert( T val )
 			{
@@ -106,126 +107,37 @@ namespace ft
 					std::cout << std::endl;
 				}
 			}
-			//Printing functions end
+			// ---------------------------------------
 
 		// --------------Red Black Tree Private Methods--------------
 		private :
-			base *giveSibling( base *node )
+			// Insert and check the color of the new node
+			void insertAndBalance( base **root, T val )
 			{
-				if (node->parent->right == node)
-					return node->parent->left;
-				return node->parent->right;
-			}
-
-			int giveSuitableRotation( base *node )
-			{
-				if (node->parent->left == node && node->parent->parent->left == node->parent)
-					return RIGHT_ROTATION;
-				else if (node->parent->right == node && node->parent->parent->right == node->parent)
-					return LEFT_ROTATION;
-				else if (node->parent->right == node && node->parent->parent->left == node->parent)
-					return LEFT_RIGHT_ROTATION;
-				return RIGHT_LEFT_ROTATION;
-			}
-
-			void rotateForRoot( int rotation, base *node )
-			{
-				if (rotation == RIGHT_ROTATION)
-					baseTree = rightRotation(node->parent->parent);
-				else if (rotation == LEFT_ROTATION)
-					baseTree = leftRotation(node->parent->parent);
-				else if (rotation == LEFT_RIGHT_ROTATION)
+				if (compare(val, *(*root)->data) && (*root)->left == NULL)
 				{
-					baseTree->left = leftRotation(baseTree->left);
-					baseTree = rightRotation(baseTree);
+					(*root)->left = new base(val, *root, RED);
+					checkColor((*root)->left);
 				}
-				else if (rotation == RIGHT_LEFT_ROTATION)
+				else if (compare(*(*root)->data, val) && (*root)->right == NULL)
 				{
-					baseTree->right = rightRotation(baseTree->right);
-					baseTree = leftRotation(baseTree);
+					(*root)->right = new base(val, *root, RED);
+					checkColor((*root)->right);
 				}
-			}
-			
-			void rotateForLeftSubtree( int rotation, base *toRotate )
-			{
-				base *tmp;
-
-				tmp = toRotate->parent;
-				if (rotation == RIGHT_ROTATION)
-					tmp->left = rightRotation(toRotate);
-				else if (rotation == LEFT_ROTATION)
-					tmp->left = leftRotation(toRotate);
-				else if (rotation == LEFT_RIGHT_ROTATION)
-				{
-					toRotate->left = leftRotation(toRotate->left);
-					tmp->left = rightRotation(toRotate);
-				}
-				else if (rotation == RIGHT_LEFT_ROTATION)
-				{
-					toRotate->right = rightRotation(toRotate->right);
-					tmp->left = leftRotation(toRotate);
-				}
+				else if (compare(val, *(*root)->data) && (*root)->left != NULL)
+					insertAndBalance(&(*root)->left, val);
+				else if (compare(*(*root)->data, val) && (*root)->right != NULL)
+					insertAndBalance(&(*root)->right, val);
+				else
+					return ;
 			}
 
-			void rotateForRightSubtree( int rotation, base *toRotate )
-			{
-				base *tmp;
-
-				tmp = toRotate->parent;
-				if (rotation == RIGHT_ROTATION)
-					tmp->right = rightRotation(toRotate);
-				else if (rotation == LEFT_ROTATION)
-					tmp->right = leftRotation(toRotate);
-				else if (rotation == LEFT_RIGHT_ROTATION)
-				{
-					toRotate->left = leftRotation(toRotate->left);
-					tmp->right = rightRotation(toRotate);
-				}
-				else if (rotation == RIGHT_LEFT_ROTATION)
-				{
-					toRotate->right = rightRotation(toRotate->right);
-					tmp->right = leftRotation(toRotate);
-				}
-			}
-
-			base *rightRotation( base *node )
-			{
-				base *leftNode;
-				base *rightOfLeftnode;
-
-				leftNode = node->left;
-				rightOfLeftnode = leftNode->right;
-				node->isBlack = false;
-				leftNode->isBlack = true;
-				leftNode->parent = node->parent;
-				node->parent = leftNode;
-				leftNode->right = node;
-				node->left = rightOfLeftnode;
-				return leftNode;
-			}
-
-			base *leftRotation( base *node )
-			{
-				base *rightNode;
-				base *leftOfRightnode;
-
-				rightNode = node->right;
-				leftOfRightnode = rightNode->left;
-				node->isBlack = false;
-				rightNode->isBlack = true;
-				rightNode->parent = node->parent;
-				node->parent = rightNode;
-				rightNode->left = node;
-				node->right = leftOfRightnode;
-				return rightNode;
-			}
-
+			// Check the color of the inserted node
 			void checkColor( base *insertedNode )
 			{
 				base *sibling;
 				int rotation;
 
-				// Should not forget to protect parent for root node
 				if (insertedNode->parent->isBlack)
 					return ;
 				sibling = giveSibling(insertedNode->parent);
@@ -250,25 +162,121 @@ namespace ft
 				}
 			}
 
-			void insertAndBalance( base **root, T val )
+			// Get the sibling of a node to check the color
+			base *giveSibling( base *node )
 			{
-				if (compare(val, *(*root)->data) && (*root)->left == NULL)
-				{
-					(*root)->left = new base(val, *root, RED);
-					checkColor((*root)->left);
-				}
-				else if (compare(*(*root)->data, val) && (*root)->right == NULL)
-				{
-					(*root)->right = new base(val, *root, RED);
-					checkColor((*root)->right);
-				}
-				else if (compare(val, *(*root)->data) && (*root)->left != NULL)
-					insertAndBalance(&(*root)->left, val);
-				else if (compare(*(*root)->data, val) && (*root)->right != NULL)
-					insertAndBalance(&(*root)->right, val);
-				else
-					return ;
+				if (node->parent->right == node)
+					return node->parent->left;
+				return node->parent->right;
+			}
+			
+			// Return an int indicating which rotation should be done
+			int giveSuitableRotation( base *node )
+			{
+				if (node->parent->left == node && node->parent->parent->left == node->parent)
+					return RIGHT_ROTATION;
+				else if (node->parent->right == node && node->parent->parent->right == node->parent)
+					return LEFT_ROTATION;
+				else if (node->parent->right == node && node->parent->parent->left == node->parent)
+					return LEFT_RIGHT_ROTATION;
+				return RIGHT_LEFT_ROTATION;
 			}
 
+			// Perform a rotation for root
+			void rotateForRoot( int rotation, base *node )
+			{
+				if (rotation == RIGHT_ROTATION)
+					baseTree = rightRotation(node->parent->parent);
+				else if (rotation == LEFT_ROTATION)
+					baseTree = leftRotation(node->parent->parent);
+				else if (rotation == LEFT_RIGHT_ROTATION)
+				{
+					baseTree->left = leftRotation(baseTree->left);
+					baseTree = rightRotation(baseTree);
+				}
+				else if (rotation == RIGHT_LEFT_ROTATION)
+				{
+					baseTree->right = rightRotation(baseTree->right);
+					baseTree = leftRotation(baseTree);
+				}
+			}
+			
+			// Perform rotations for a left subtree
+			void rotateForLeftSubtree( int rotation, base *toRotate )
+			{
+				base *tmp;
+
+				tmp = toRotate->parent;
+				if (rotation == RIGHT_ROTATION)
+					tmp->left = rightRotation(toRotate);
+				else if (rotation == LEFT_ROTATION)
+					tmp->left = leftRotation(toRotate);
+				else if (rotation == LEFT_RIGHT_ROTATION)
+				{
+					toRotate->left = leftRotation(toRotate->left);
+					tmp->left = rightRotation(toRotate);
+				}
+				else if (rotation == RIGHT_LEFT_ROTATION)
+				{
+					toRotate->right = rightRotation(toRotate->right);
+					tmp->left = leftRotation(toRotate);
+				}
+			}
+
+			// Perform rotations for a right subtree
+			void rotateForRightSubtree( int rotation, base *toRotate )
+			{
+				base *tmp;
+
+				tmp = toRotate->parent;
+				if (rotation == RIGHT_ROTATION)
+					tmp->right = rightRotation(toRotate);
+				else if (rotation == LEFT_ROTATION)
+					tmp->right = leftRotation(toRotate);
+				else if (rotation == LEFT_RIGHT_ROTATION)
+				{
+					toRotate->left = leftRotation(toRotate->left);
+					tmp->right = rightRotation(toRotate);
+				}
+				else if (rotation == RIGHT_LEFT_ROTATION)
+				{
+					toRotate->right = rightRotation(toRotate->right);
+					tmp->right = leftRotation(toRotate);
+				}
+			}
+
+			// Perform a right rotation and return the new root of the subtree
+			base *rightRotation( base *node )
+			{
+				base *leftNode;
+				base *rightOfLeftnode;
+
+				leftNode = node->left;
+				rightOfLeftnode = leftNode->right;
+				node->isBlack = false;
+				leftNode->isBlack = true;
+				leftNode->parent = node->parent;
+				node->parent = leftNode;
+				leftNode->right = node;
+				node->left = rightOfLeftnode;
+				return leftNode;
+			}
+
+			// Perform a left rotation and return the new root of the subtree
+			base *leftRotation( base *node )
+			{
+				base *rightNode;
+				base *leftOfRightnode;
+
+				rightNode = node->right;
+				leftOfRightnode = rightNode->left;
+				node->isBlack = false;
+				rightNode->isBlack = true;
+				rightNode->parent = node->parent;
+				node->parent = rightNode;
+				rightNode->left = node;
+				node->right = leftOfRightnode;
+				return rightNode;
+			}
 	};
 };
