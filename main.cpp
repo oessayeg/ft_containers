@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iterator>
 #include <iostream>
-#include "utils/tree.hpp"
+#include "utils/avlTree.hpp"
 #include <iterator>
 #include <sys/time.h>
 #include <map>
@@ -13,7 +13,7 @@
 #include <utility>
 #include "vector.hpp"
 #include "stack.hpp"
-// #include "containers_test/srcs/map/common.hpp"
+#include "utils/redBlackTree.hpp"
 
 time_t get_time(void)
 {
@@ -26,8 +26,22 @@ time_t get_time(void)
 
 int		main(void)
 {
-    ft::stack< int > a;
-    ft::stack< std::string > b;
-    
+    ft::redBlackTree< int, ft::less< int >, std::allocator< int > > root;
+
+    root.insert(10);
+    root.insert(18);
+    root.insert(7);
+    root.insert(15);
+    root.insert(16);
+    root.insert(30);
+    root.insert(25);
+    root.insert(40);
+    root.insert(60);
+    root.insert(1);
+    root.insert(2);
+    root.insert(70);
+    root.insert(8);
+    root.insert(150);
+    root.printLevels();
 	return (0);
 }
