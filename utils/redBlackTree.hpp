@@ -8,6 +8,13 @@
 #define RIGHT_LEFT_ROTATION 3
 #define LEFT_RIGHT_ROTATION 4
 
+#define CASE_1 1
+#define CASE_2 2
+#define CASE_3 3
+#define CASE_4 4
+#define CASE_5 5
+#define CASE_6 6
+
 namespace ft
 {
 	template < class T, class Alloc >
@@ -342,21 +349,126 @@ namespace ft
 						eraseAndFixTree(&leftMost->parent->right);
 				}
 			}
+			
+			bool isDoubleBlack( base *toCheck )
+			{
+				if ((toCheck->left == NULL && toCheck->right == NULL)
+					|| (toCheck->left != NULL && toCheck->right == NULL && toCheck->left->isBlack)
+					|| (toCheck->right != NULL && toCheck->left == NULL && toCheck->right->isBlack))
+					return true;
+				return false;
+			}
 
+			// For 2 black childs, there are 6 cases
+			// For 1 red node, 1 null node, just replace
+			// For 2 nodes, 1 black, 1 red, bst + erase
 			void deleteBlackNode( base **toDelete )
 			{
-				if ((*toDelete)->left == NULL && (*toDelete)->right != NULL)
+				base *leftMost;
+
+				if (isDoubleBlack(*toDelete))
+					deleteDoubleBlack(toDelete);
+				else if ((*toDelete)->left == NULL && (*toDelete)->right != NULL
+					&& !((*toDelete)->right->isBlack))
 				{
 					m_alloc.destroy((*toDelete)->data);
 					m_alloc.construct((*toDelete)->data, *(*toDelete)->right->data);
 					eraseAndFixTree(&(*toDelete)->right);
 				}
-				else if ((*toDelete)->left != NULL && (*toDelete)->right == NULL)
+				else if ((*toDelete)->left != NULL && (*toDelete)->right == NULL
+					&& (!(*toDelete)->left->isBlack))
 				{
 					m_alloc.destroy((*toDelete)->data);
 					m_alloc.construct((*toDelete)->data, *(*toDelete)->left->data);
 					eraseAndFixTree(&(*toDelete)->left);
 				}
+				else
+				{
+					leftMost = (*toDelete)->right;
+					while (leftMost->left != NULL)
+						leftMost = leftMost->left;
+					m_alloc.destroy((*toDelete)->data);
+					m_alloc.construct((*toDelete)->data, *leftMost->data);
+					if (leftMost->parent->left == leftMost)
+						eraseAndFixTree(&leftMost->parent->left);
+					else
+						eraseAndFixTree(&leftMost->parent->right);
+				}
 			}
+			
+			void deleteDoubleBlack( base **toDelete )
+			{
+				int whichCase;
+
+				if ((*toDelete)->left == NULL && (*toDelete)->right == NULL)
+				{
+					whichCase = giveCase(*toDelete);
+					std::cout << "Case : " << whichCase << std::endl;
+					// handleDoubleBlack(whichCase, (*toDelete)->parent, );
+				}
+				// else if ((*toDelete)->left == NULL && (*toDelete)->right != NULL
+				// 	&& (*toDelete)->right->isBlack)
+				// {
+				// 	whichCase = giveCase(*toDelete);
+				// 	handleDoubleBlack(whichCase, (*toDelete)->parent);
+				// }
+				// else if ((*toDelete)->left != NULL &&(*toDelete)->right == NULL
+				// 	&& (*toDelete)->left->isBlack)
+				// {
+				// 	whichCase = giveCase(*toDelete);
+				// 	handleDoubleBlack(whichCase, (*toDelete)->parent);
+				// }
+			}
+
+			bool hasBlackChildren( base *node )
+			{
+				if ((node->right != NULL && node->left != NULL && node->right->isBlack && node->left->isBlack)
+					|| (node->right == NULL && node->left != NULL && node->left->isBlack)
+					|| (node->right != NULL && node->left == NULL && node->right->isBlack))
+					return true;
+				return false;
+			}
+
+			int giveCase( base *node )
+			{
+				base *sibling;
+
+				if (node == baseTree)
+					return CASE_1;
+				sibling = giveSibling(node);
+				if (node->parent->isBlack && !sibling->isBlack && hasBlackChildren(sibling))
+					return CASE_2;
+				else if (node->parent->isBlack && sibling->isBlack && hasBlackChildren(sibling))
+					return CASE_3;
+				else if (!(node->parent->isBlack) && sibling->isBlack && hasBlackChildren(sibling))
+					return CASE_4;
+				else if (node->parent->isBlack && sibling->isBlack
+					&& !sibling->left->isBlack && sibling->right->isBlack)
+					return CASE_5;
+				else if (sibling->isBlack && !sibling->right->isBlack)
+					return CASE_6;
+				return 0;
+				// protections here please
+			}
+			// 6 cases
+			// void handleDoubleBlack( base **node )
+			// {
+			// 	base *sibling;
+
+			// 	sibling = giveSibling(*node);
+			// 	// Base case : if node is root return 
+			// 	if ((*node) == baseTree)
+			// 		return ;
+			// 	// 2nd base case : parent is red, sibling is black and double black
+			// 	if (!((*node)->parent->isBlack) && sibling->isBlack && isDoubleBlack(sibling))
+			// 	{
+			// 		(*node)->parent->isBlack = true;
+			// 		sibling->isBlack = false;
+			// 	}
+			// 	// 3rd case : sibling is black and right child is red
+			// 	if (sibling->isBlack && sibling->right != NULL && !sibling->right->isBlack)
+			// 		*node = leftRotation(*node);
+				
+			// }
 	};
 };
