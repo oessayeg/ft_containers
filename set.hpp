@@ -30,6 +30,5 @@ namespace ft
             // ------------Constructors, '=' overload, Destructor------------
             explicit set( const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type() )
                 : base(redBlackTree<value_type, value_compare, allocator_type>(alloc, comp)) { }
-
     };
 };

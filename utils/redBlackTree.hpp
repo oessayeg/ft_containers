@@ -62,14 +62,37 @@ namespace ft
 			~redBlackTree( void ) { }
 
 		// --------------Red Black Tree Public Methods--------------
-		// ---------------------------------------
 		public :
-			void insert( T val )
+			void insert( const T &val )
 			{
 				if (baseTree == NULL)
 					baseTree = new base(val, NULL, BLACK, m_alloc);
 				else
 					insertAndBalance(&baseTree, val);
+			}
+
+			void erase( const T &val )
+			{
+				base *toDelete;
+
+				toDelete = baseTree;
+				while (toDelete != NULL)
+				{
+					if (*toDelete->data == val)
+						break;
+					else if (val < *toDelete->data)
+						toDelete = toDelete->left;
+					else if (val > *toDelete->data)
+						toDelete = toDelete->right;
+				}
+				if (toDelete == NULL)
+					return ;
+				if (toDelete == baseTree)
+					eraseAndFixTree(&baseTree);
+				else if (toDelete->parent->left == toDelete)
+					return eraseAndFixTree(&toDelete->parent->left);
+				else if (toDelete->parent->right == toDelete)
+					return eraseAndFixTree(&toDelete->parent->right);
 			}
 
 			//Printing functions
@@ -113,7 +136,6 @@ namespace ft
 					std::cout << std::endl;
 				}
 			}
-			// ---------------------------------------
 
 		// --------------Red Black Tree Private Methods--------------
 		private :
@@ -283,6 +305,52 @@ namespace ft
 				rightNode->left = node;
 				node->right = leftOfRightnode;
 				return rightNode;
+			}
+
+			void eraseAndFixTree( base **toDelete )
+			{
+				if (!(*toDelete)->isBlack)
+					deleteRedNode(toDelete);
+				else
+					deleteBlackNode(toDelete);
+			}
+
+			void deleteRedNode( base **toDelete )
+			{
+				if ((*toDelete)->right == NULL && (*toDelete)->left == NULL)
+				{
+					m_alloc.destroy((*toDelete)->data);
+					m_alloc.deallocate((*toDelete)->data, 1);
+					if ((*toDelete)->parent->left == (*toDelete))
+						(*toDelete)->parent->left = NULL;
+					else
+						(*toDelete)->parent->right = NULL;
+					delete *toDelete;
+				}
+			}
+
+			void deleteBlackNode( base **toDelete )
+			{
+				base *tmp;
+
+				if ((*toDelete)->left == NULL && (*toDelete)->right != NULL)
+				{
+					tmp = (*toDelete)->right;
+					m_alloc.destroy((*toDelete)->data);
+					m_alloc.deallocate((*toDelete)->data, 1);
+					delete *toDelete;
+					*toDelete = tmp;
+					(*toDelete)->isBlack = true;
+				}
+				else if ((*toDelete)->left != NULL && (*toDelete)->right == NULL)
+				{
+					tmp = (*toDelete)->left;
+					m_alloc.destroy((*toDelete)->data);
+					m_alloc.deallocate((*toDelete)->data, 1);
+					delete *toDelete;
+					*toDelete = tmp;
+					(*toDelete)->isBlack = true;
+				}
 			}
 	};
 };
