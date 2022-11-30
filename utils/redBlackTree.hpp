@@ -317,6 +317,8 @@ namespace ft
 
 			void deleteRedNode( base **toDelete )
 			{
+				base *leftMost;
+
 				if ((*toDelete)->right == NULL && (*toDelete)->left == NULL)
 				{
 					m_alloc.destroy((*toDelete)->data);
@@ -326,6 +328,18 @@ namespace ft
 					else
 						(*toDelete)->parent->right = NULL;
 					delete *toDelete;
+				}
+				else
+				{
+					leftMost = (*toDelete)->right;
+					while (leftMost->left != NULL)
+						leftMost = leftMost->left;
+					m_alloc.destroy((*toDelete)->data);
+					m_alloc.construct((*toDelete)->data, *leftMost->data);
+					if (leftMost->parent->left == leftMost)
+						eraseAndFixTree(&leftMost->parent->left);
+					else 
+						eraseAndFixTree(&leftMost->parent->right);
 				}
 			}
 
