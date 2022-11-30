@@ -345,25 +345,17 @@ namespace ft
 
 			void deleteBlackNode( base **toDelete )
 			{
-				base *tmp;
-
 				if ((*toDelete)->left == NULL && (*toDelete)->right != NULL)
 				{
-					tmp = (*toDelete)->right;
 					m_alloc.destroy((*toDelete)->data);
-					m_alloc.deallocate((*toDelete)->data, 1);
-					delete *toDelete;
-					*toDelete = tmp;
-					(*toDelete)->isBlack = true;
+					m_alloc.construct((*toDelete)->data, *(*toDelete)->right->data);
+					eraseAndFixTree(&(*toDelete)->right);
 				}
 				else if ((*toDelete)->left != NULL && (*toDelete)->right == NULL)
 				{
-					tmp = (*toDelete)->left;
 					m_alloc.destroy((*toDelete)->data);
-					m_alloc.deallocate((*toDelete)->data, 1);
-					delete *toDelete;
-					*toDelete = tmp;
-					(*toDelete)->isBlack = true;
+					m_alloc.construct((*toDelete)->data, *(*toDelete)->left->data);
+					eraseAndFixTree(&(*toDelete)->left);
 				}
 			}
 	};
