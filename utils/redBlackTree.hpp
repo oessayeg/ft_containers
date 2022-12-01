@@ -477,7 +477,8 @@ namespace ft
 				else if (parent->isBlack && sibling->isBlack
 					&& !sibling->left->isBlack && sibling->right->isBlack)
 					return CASE_5;
-				else if (sibling->isBlack && !sibling->right->isBlack)
+				else if ((sibling->isBlack && sibling->right && !sibling->right->isBlack)
+					|| (sibling->isBlack && sibling->left && !sibling->left->isBlack))
 					return CASE_6;
 				return 0;
 				// protections here please
@@ -491,8 +492,16 @@ namespace ft
 					fixCase3(position, parent);
 				else if (whichFix == CASE_4)
 				{
-					(*parent)->isBlack = true;
-					(*parent)->right->isBlack = false;
+					if (position == LEFT)
+					{
+						(*parent)->isBlack = true;
+						(*parent)->right->isBlack = false;
+					}
+					else
+					{
+						(*parent)->isBlack = true;
+						(*parent)->left->isBlack = false;
+					}
 				}
 				else if (whichFix == CASE_5)
 					fixCase5(position, parent);
@@ -510,56 +519,78 @@ namespace ft
 					(*parent)->left->isBlack = false;
 					handleDoubleBlack(giveCase((*parent)->left, (*parent)->left->right), &(*parent)->left, position);
 				}
+				else
+				{
+					*parent = rightRotation(*parent);
+					(*parent)->isBlack = true;
+					(*parent)->left->isBlack = true;
+					(*parent)->right->isBlack = false;
+					handleDoubleBlack(giveCase((*parent)->right, (*parent)->right->left), &(*parent)->right, position);
+				}
 			}
 
 			void fixCase3( int position, base **parent )
 			{
-				base *sibling, *newParent;
+				base *sibling;
 
 				if (position == LEFT)
 					sibling = (*parent)->right;
 				else
 					sibling = (*parent)->left;
 				sibling->isBlack = false;
-				newParent = (*parent)->parent;
-				if (newParent == NULL)
+				if ((*parent)->parent == NULL)
 					return ;
 				sibling = giveSibling(*parent);
-				if (newParent->parent == NULL)
-					handleDoubleBlack(giveCase(newParent, sibling), &baseTree, position);
-				else if (newParent->parent->left == newParent)
-					handleDoubleBlack(giveCase(newParent, sibling), &newParent->parent->left, position);
-				else if (newParent->parent->right == newParent)
-					handleDoubleBlack(giveCase(newParent, sibling), &newParent->parent->right, position);
+				handleDoubleBlack(giveCase((*parent)->parent, sibling), parent, position);
+				// if (newParent->parent == NULL)
+				// 	handleDoubleBlack(giveCase(newParent, sibling), &baseTree, position);
+				// else if (newParent->parent->left == newParent)
+				// 	handleDoubleBlack(giveCase(newParent, sibling), &newParent->parent->left, position);
+				// else if (newParent->parent->right == newParent)
+				// 	handleDoubleBlack(giveCase(newParent, sibling), &newParent->parent->right, position);
 			}
 
 			void fixCase5( int position, base **parent )
 			{
-				base **toRotate;
-
 				if (position == LEFT)
 				{
-					toRotate = &(*parent)->right;
-					*toRotate = rightRotation(*toRotate);
-					fixCase6(position, parent);
+					(*parent)->right = rightRotation((*parent)->right);
+					(*parent)->right->isBlack = true;
+					(*parent)->right->right->isBlack = false; 
+					handleDoubleBlack(giveCase(*parent, (*parent)->right), parent, position);
+				}
+				else if (position == RIGHT)
+				{
+					(*parent)->left = leftRotation((*parent)->left);
+					(*parent)->left->isBlack = true;
+					(*parent)->left->left->isBlack = false;
+					handleDoubleBlack(giveCase(*parent, (*parent)->left), parent, position);
 				}
 			}
 
 			void fixCase6( int position, base **parent )
 			{
-				// base *sibling, *oldParent;
+				base *sibling, *oldParent;
 				bool tmpColor;
 
 				tmpColor = (*parent)->isBlack;
 				if (position == LEFT)
 				{
-					// printLevels();
-					// sibling = (*parent)->right;
-					// oldParent = *parent;
-					// *parent = leftRotation(*parent);
-					// oldParent->isBlack = true;
-					// sibling->isBlack = tmpColor;
-					// sibling->right->isBlack = true;
+					sibling = (*parent)->right;
+					oldParent = *parent;
+					*parent = leftRotation(*parent);
+					oldParent->isBlack = true;
+					sibling->isBlack = tmpColor;
+					sibling->right->isBlack = true;
+				}
+				else
+				{
+					sibling = (*parent)->left;
+					oldParent = *parent;
+					*parent = rightRotation(*parent);
+					oldParent->isBlack = true;
+					sibling->isBlack = tmpColor;
+					sibling->left->isBlack = true;
 				}
 			}
 	};
