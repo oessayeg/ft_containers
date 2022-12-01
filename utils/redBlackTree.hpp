@@ -402,10 +402,14 @@ namespace ft
 			
 			void deleteDoubleBlack( base **toDelete )
 			{
-				base *tmp1, *tmp2, *parent;
+				base *tmp1, *tmp2, *parent, *sibling;
 				int whichCase, position;
 
-				whichCase = giveCase(*toDelete);
+				if ((*toDelete)->parent == NULL)
+					sibling = NULL;
+				else
+					sibling = giveSibling(*toDelete);
+				whichCase = giveCase((*toDelete)->parent, sibling);
 				if (whichCase == CASE_1)
 					return ;
 				parent = (*toDelete)->parent;
@@ -420,9 +424,6 @@ namespace ft
 						tmp1->parent->right = NULL;
 					else if (tmp1->parent->left == tmp1)
 						tmp1->parent->left = NULL;
-					m_alloc.destroy(tmp1->data);
-					m_alloc.deallocate(tmp1->data, 1);
-					delete tmp1;
 				}
 				else if ((*toDelete)->left == NULL && (*toDelete)->right != NULL)
 				{
@@ -432,11 +433,8 @@ namespace ft
 						tmp1->parent->right = tmp2;
 					else if (tmp1->parent->left == tmp1)
 						tmp1->parent->left = tmp2;
-					m_alloc.destroy(tmp1->data);
-					m_alloc.deallocate(tmp1->data, 1);
-					delete tmp1;
 				}
-				else if ((*toDelete)->left != NULL &&(*toDelete)->right == NULL)
+				else
 				{
 					tmp1 = (*toDelete);
 					tmp2 = (*toDelete)->left;
@@ -444,17 +442,16 @@ namespace ft
 						tmp1->parent->right = tmp2;
 					else if (tmp1->parent->left == tmp1)
 						tmp1->parent->left = tmp2;
-					m_alloc.destroy(tmp1->data);
-					m_alloc.deallocate(tmp1->data, 1);
-					delete tmp1;
 				}
+				m_alloc.destroy(tmp1->data);
+				m_alloc.deallocate(tmp1->data, 1);
+				delete tmp1;
 				if (parent == baseTree)
 					handleDoubleBlack(whichCase, &baseTree, position);
 				else if (parent->parent->left == parent)
 					handleDoubleBlack(whichCase, &parent->parent->left, position);
 				else if (parent->parent->right == parent)
 					handleDoubleBlack(whichCase, &parent->parent->right, position);
-
 			}
 
 			bool hasBlackChildren( base *node )
@@ -466,20 +463,17 @@ namespace ft
 				return false;
 			}
 
-			int giveCase( base *node )
+			int giveCase( base *parent, base *sibling )
 			{
-				base *sibling;
-
-				if (node == baseTree)
+				if (parent == NULL)
 					return CASE_1;
-				sibling = giveSibling(node);
-				if (node->parent->isBlack && !sibling->isBlack && hasBlackChildren(sibling))
+				if (parent->isBlack && !sibling->isBlack && hasBlackChildren(sibling))
 					return CASE_2;
-				else if (node->parent->isBlack && sibling->isBlack && hasBlackChildren(sibling))
+				else if (parent->isBlack && sibling->isBlack && hasBlackChildren(sibling))
 					return CASE_3;
-				else if (!(node->parent->isBlack) && sibling->isBlack && hasBlackChildren(sibling))
+				else if (!(parent->isBlack) && sibling->isBlack && hasBlackChildren(sibling))
 					return CASE_4;
-				else if (node->parent->isBlack && sibling->isBlack
+				else if (parent->isBlack && sibling->isBlack
 					&& !sibling->left->isBlack && sibling->right->isBlack)
 					return CASE_5;
 				else if (sibling->isBlack && !sibling->right->isBlack)
@@ -490,16 +484,64 @@ namespace ft
 			// 6 cases
 			void handleDoubleBlack( int whichFix, base **parent, int position )
 			{
-				if (whichFix == CASE_4)
+				if (whichFix == CASE_2)
+					fixCase2(position, parent);
+				else if (whichFix == CASE_3)
+					fixCase3(position, parent);
+				else if (whichFix == CASE_4)
 				{
 					(*parent)->isBlack = true;
 					(*parent)->right->isBlack = false;
 				}
+				else if (whichFix == CASE_5)
+					fixCase5(position, parent);
 				else if (whichFix == CASE_6)
 					fixCase6(position, parent);
-				// (void)position;
-				// *parent = NULL;
-				// baseTree = NULL;
+			}
+
+			void fixCase2( int position, base **parent )
+			{
+				if (position == LEFT)
+				{
+					*parent = leftRotation(*parent);
+					(*parent)->isBlack = true;
+					(*parent)->right->isBlack = true;
+					(*parent)->left->isBlack = false;
+					handleDoubleBlack(giveCase((*parent)->left, (*parent)->left->right), &(*parent)->left->left, position);
+				}
+			}
+
+			void fixCase3( int position, base **parent )
+			{
+				base *sibling, *newParent;
+
+				if (position == LEFT)
+					sibling = (*parent)->right;
+				else
+					sibling = (*parent)->left;
+				sibling->isBlack = false;
+				newParent = (*parent)->parent;
+				if (newParent == NULL)
+					return ;
+				sibling = giveSibling(*parent);
+				if (newParent->parent == NULL)
+					handleDoubleBlack(giveCase(newParent, sibling), &baseTree, position);
+				else if (newParent->parent->left == newParent)
+					handleDoubleBlack(giveCase(newParent, sibling), &newParent->parent->left, position);
+				else if (newParent->parent->right == newParent)
+					handleDoubleBlack(giveCase(newParent, sibling), &newParent->parent->right, position);
+			}
+
+			void fixCase5( int position, base **parent )
+			{
+				base **toRotate;
+
+				if (position == LEFT)
+				{
+					toRotate = &(*parent)->right;
+					*toRotate = rightRotation(*toRotate);
+					fixCase6(position, parent);
+				}
 			}
 
 			void fixCase6( int position, base **parent )
