@@ -15,6 +15,9 @@
 #define CASE_5 5
 #define CASE_6 6
 
+#define LEFT 1
+#define RIGHT 2
+
 namespace ft
 {
 	template < class T, class Alloc >
@@ -359,9 +362,10 @@ namespace ft
 				return false;
 			}
 
-			// For 2 black childs, there are 6 cases
+			// 1 : For 2 black childs(2 NULL, 1 NULL 1 BLACK, 1 BLACK 1 NULL), there are 6 cases
 			// For 1 red node, 1 null node, just replace
 			// For 2 nodes, 1 black, 1 red, bst + erase
+			// Handle Double black will handle 3 cases (check 1)
 			void deleteBlackNode( base **toDelete )
 			{
 				base *leftMost;
@@ -398,26 +402,59 @@ namespace ft
 			
 			void deleteDoubleBlack( base **toDelete )
 			{
-				int whichCase;
+				base *tmp1, *tmp2, *parent;
+				int whichCase, position;
 
-				if ((*toDelete)->left == NULL && (*toDelete)->right == NULL)
+				whichCase = giveCase(*toDelete);
+				if (whichCase == CASE_1)
+					return ;
+				parent = (*toDelete)->parent;
+				if ((*toDelete)->parent->right == (*toDelete))
+					position = RIGHT;
+				else
+					position = LEFT;
+				if ((*toDelete)->right == NULL && (*toDelete)->left == NULL)
 				{
-					whichCase = giveCase(*toDelete);
-					std::cout << "Case : " << whichCase << std::endl;
-					// handleDoubleBlack(whichCase, (*toDelete)->parent, );
+					tmp1 = (*toDelete);
+					if (tmp1->parent->right == tmp1)
+						tmp1->parent->right = NULL;
+					else if (tmp1->parent->left == tmp1)
+						tmp1->parent->left = NULL;
+					m_alloc.destroy(tmp1->data);
+					m_alloc.deallocate(tmp1->data, 1);
+					delete tmp1;
 				}
-				// else if ((*toDelete)->left == NULL && (*toDelete)->right != NULL
-				// 	&& (*toDelete)->right->isBlack)
-				// {
-				// 	whichCase = giveCase(*toDelete);
-				// 	handleDoubleBlack(whichCase, (*toDelete)->parent);
-				// }
-				// else if ((*toDelete)->left != NULL &&(*toDelete)->right == NULL
-				// 	&& (*toDelete)->left->isBlack)
-				// {
-				// 	whichCase = giveCase(*toDelete);
-				// 	handleDoubleBlack(whichCase, (*toDelete)->parent);
-				// }
+				else if ((*toDelete)->left == NULL && (*toDelete)->right != NULL)
+				{
+					tmp1 = (*toDelete);
+					tmp2 = (*toDelete)->right;
+					if (tmp1->parent->right == tmp1)
+						tmp1->parent->right = tmp2;
+					else if (tmp1->parent->left == tmp1)
+						tmp1->parent->left = tmp2;
+					m_alloc.destroy(tmp1->data);
+					m_alloc.deallocate(tmp1->data, 1);
+					delete tmp1;
+				}
+				else if ((*toDelete)->left != NULL &&(*toDelete)->right == NULL)
+				{
+					tmp1 = (*toDelete);
+					tmp2 = (*toDelete)->left;
+					if (tmp1->parent->right == tmp1)
+						tmp1->parent->right = tmp2;
+					else if (tmp1->parent->left == tmp1)
+						tmp1->parent->left = tmp2;
+					m_alloc.destroy(tmp1->data);
+					m_alloc.deallocate(tmp1->data, 1);
+					delete tmp1;
+				}
+				if (parent == baseTree)
+					handleDoubleBlack(whichCase, &baseTree, position);
+				else if (parent->parent->left == parent)
+					handleDoubleBlack(whichCase, &parent->parent->left, position);
+				else if (parent->parent->right == parent)
+					handleDoubleBlack(whichCase, &parent->parent->right, position);
+
 			}
 
 			bool hasBlackChildren( base *node )
@@ -451,24 +488,35 @@ namespace ft
 				// protections here please
 			}
 			// 6 cases
-			// void handleDoubleBlack( base **node )
-			// {
-			// 	base *sibling;
+			void handleDoubleBlack( int whichFix, base **parent, int position )
+			{
+				if (whichFix == CASE_4)
+				{
+					(*parent)->isBlack = true;
+					(*parent)->right->isBlack = false;
+				}
+				else if (whichFix == CASE_6)
+					fixCase6(position, parent);
+				// (void)position;
+				// *parent = NULL;
+				// baseTree = NULL;
+			}
 
-			// 	sibling = giveSibling(*node);
-			// 	// Base case : if node is root return 
-			// 	if ((*node) == baseTree)
-			// 		return ;
-			// 	// 2nd base case : parent is red, sibling is black and double black
-			// 	if (!((*node)->parent->isBlack) && sibling->isBlack && isDoubleBlack(sibling))
-			// 	{
-			// 		(*node)->parent->isBlack = true;
-			// 		sibling->isBlack = false;
-			// 	}
-			// 	// 3rd case : sibling is black and right child is red
-			// 	if (sibling->isBlack && sibling->right != NULL && !sibling->right->isBlack)
-			// 		*node = leftRotation(*node);
-				
-			// }
+			void fixCase6( int position, base **parent )
+			{
+				base *sibling, *oldParent;
+				bool tmpColor;
+
+				tmpColor = (*parent)->isBlack;
+				if (position == LEFT)
+				{
+					sibling = (*parent)->right;
+					oldParent = *parent;
+					*parent = leftRotation(*parent);
+					oldParent->isBlack = true;
+					sibling->isBlack = tmpColor;
+					sibling->right->isBlack = true;
+				}
+			}
 	};
 };
