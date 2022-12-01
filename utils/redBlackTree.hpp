@@ -458,7 +458,8 @@ namespace ft
 			{
 				if ((node->right != NULL && node->left != NULL && node->right->isBlack && node->left->isBlack)
 					|| (node->right == NULL && node->left != NULL && node->left->isBlack)
-					|| (node->right != NULL && node->left == NULL && node->right->isBlack))
+					|| (node->right != NULL && node->left == NULL && node->right->isBlack)
+					|| (node->right == NULL && node->left == NULL))
 					return true;
 				return false;
 			}
@@ -507,7 +508,7 @@ namespace ft
 					(*parent)->isBlack = true;
 					(*parent)->right->isBlack = true;
 					(*parent)->left->isBlack = false;
-					handleDoubleBlack(giveCase((*parent)->left, (*parent)->left->right), &(*parent)->left->left, position);
+					handleDoubleBlack(giveCase((*parent)->left, (*parent)->left->right), &(*parent)->left, position);
 				}
 			}
 
@@ -546,18 +547,19 @@ namespace ft
 
 			void fixCase6( int position, base **parent )
 			{
-				base *sibling, *oldParent;
+				// base *sibling, *oldParent;
 				bool tmpColor;
 
 				tmpColor = (*parent)->isBlack;
 				if (position == LEFT)
 				{
-					sibling = (*parent)->right;
-					oldParent = *parent;
-					*parent = leftRotation(*parent);
-					oldParent->isBlack = true;
-					sibling->isBlack = tmpColor;
-					sibling->right->isBlack = true;
+					// printLevels();
+					// sibling = (*parent)->right;
+					// oldParent = *parent;
+					// *parent = leftRotation(*parent);
+					// oldParent->isBlack = true;
+					// sibling->isBlack = tmpColor;
+					// sibling->right->isBlack = true;
 				}
 			}
 	};
