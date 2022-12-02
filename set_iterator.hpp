@@ -75,7 +75,13 @@ namespace ft
 			}
 
             template < class X, class Y >
-            set_iterator( const set_iterator< X, Y > &rhs ) { *this = rhs; }
+            set_iterator( const set_iterator< X, Y > &rhs )
+            {
+                m_current_node = rhs.getCurrent();
+                first_node = rhs.getFirst();
+                last_node = rhs.getLast();
+                firstT = rhs.getFirstT();
+            }
 
             set_iterator &operator=( const set_iterator &rhs )
             {

@@ -23,12 +23,12 @@ namespace ft
             typedef const value_type* const_pointer;
             typedef std::ptrdiff_t difference_type;
             typedef std::size_t size_type;
-            //iterators typedefs here 
+            //reverse_iterators typedefs here 
             typedef ft::set_iterator< value_type *, base< T, Alloc > >  iterator;
             typedef ft::set_iterator< const value_type *, base< T, Alloc > > const_iterator;
             typedef base< T, Alloc > bst;
 
-        public :
+        private :
             redBlackTree< value_type, value_compare, allocator_type > base;
 
         public :
@@ -44,15 +44,19 @@ namespace ft
                     insert(*first);
             }
             
-            set( const set &rhs )
+            set( const set &x ) { *this = x; }
+
+            set &operator=( const set &x )
             {
                 iterator b;
                 iterator e;
 
-                b = rhs.begin();
-                e = rhs.end();
+                base.clear();
+                b = x.begin();
+                e = x.end();
                 for (; b != e; b++)
                     insert(*b);
+                return *this;
             }
 
             // ------------Iterator Category------------
@@ -77,7 +81,7 @@ namespace ft
                 return ft::make_pair(iterator(base.find(val)), false);
             }
             size_type erase( const value_type &val ) { return base.erase(val); }
-
+            void clear( void ) const { base.clear(); }
 
             // ------------Operations Category------------
             iterator find( const value_type &val ) const
@@ -90,4 +94,75 @@ namespace ft
                 return iterator(found);
             }
     };
+
+        // ------------Operations Category------------
+        template < class Key, class Compare, class Alloc >
+        bool operator==( const ft::set< Key, Compare, Alloc > &lhs, const set< Key, Compare, Alloc > &rhs )
+        {
+            typename ft::set< Key, Compare, Alloc >::iterator b1, e1, b2, e2;
+
+            b1 = lhs.begin();
+            e1 = lhs.end();
+            b2 = rhs.begin();
+            e2 = rhs.end();
+            while (b1 != e1 && b2 != e2)
+            {
+                if (*b1 != *b2)
+                    return false;
+                b1++;
+                b2++;
+            }
+            if (b1 == e1 && b2 == e2)
+                return true;
+            return false;
+        }
+
+        template < class Key, class Compare, class Alloc >
+        bool operator!=( const ft::set< Key, Compare, Alloc > &lhs, const set< Key, Compare, Alloc > &rhs )
+        {
+            return !(lhs == rhs);
+        }
+
+        template < class Key, class Compare, class Alloc >
+        bool operator<( const ft::set< Key, Compare, Alloc > &lhs, const set< Key, Compare, Alloc > &rhs )
+        {
+            typename ft::set< Key, Compare, Alloc >::iterator b1, e1, b2, e2;
+
+            b1 = lhs.begin();
+            e1 = lhs.end();
+            b2 = rhs.begin();
+            e2 = rhs.end();
+            while (b1 != e1 && b2 != e2)
+            {
+                if (*b1 < *b2)
+                    return true;
+                else if (*b1 > *b2)
+                    return false;
+                b1++;
+                b2++;
+            }
+            if (b1 == e1 && b2 != e2)
+                return true;
+            return false;
+        }
+
+        template < class Key, class Compare, class Alloc >
+        bool operator<=( const ft::set< Key, Compare, Alloc > &lhs, const set< Key, Compare, Alloc > &rhs )
+        {
+            return !(lhs > rhs);
+        }
+
+        template < class Key, class Compare, class Alloc >
+        bool operator>( const ft::set< Key, Compare, Alloc > &lhs, const set< Key, Compare, Alloc > &rhs )
+        {
+            return rhs < lhs;
+        }
+
+        template < class Key, class Compare, class Alloc >
+        bool operator>=( const ft::set< Key, Compare, Alloc > &lhs, const set< Key, Compare, Alloc > &rhs )
+        {
+            return !(lhs < rhs);
+        }
+
+
 };

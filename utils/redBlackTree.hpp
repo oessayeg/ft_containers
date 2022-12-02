@@ -73,7 +73,7 @@ namespace ft
 			redBlackTree( Alloc alloc, Comp m_comp ) : baseTree(NULL),
 				compare(m_comp), m_alloc(alloc), setSize(0) { }
 
-			~redBlackTree( void ) { clear(baseTree); }
+			~redBlackTree( void ) { clear(); }
 
 		// --------------Red Black Tree Public Methods--------------
 		public :
@@ -115,12 +115,13 @@ namespace ft
 				return 1;
 			}
 
-			void clear( base *rootNode )
+			void clear ( void ) { clearEverything(baseTree); setSize = 0; baseTree = NULL; }
+			void clearEverything( base *rootNode )
 			{
 				if (rootNode == NULL)
 					return ;
-				clear(rootNode->left);
-				clear(rootNode->right);
+				clearEverything(rootNode->left);
+				clearEverything(rootNode->right);
 				m_alloc.destroy(rootNode->data);
 				m_alloc.deallocate(rootNode->data, 1);
 				delete rootNode;
