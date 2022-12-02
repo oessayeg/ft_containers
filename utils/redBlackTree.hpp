@@ -77,6 +77,7 @@ namespace ft
 
 		// --------------Red Black Tree Public Methods--------------
 		public :
+			Alloc getAllocator( void ) const { return m_alloc; }
 			base *getRoot( void ) const { return baseTree; }
 			bool insert( const T &val )
 			{

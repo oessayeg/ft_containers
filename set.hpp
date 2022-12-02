@@ -30,15 +30,17 @@ namespace ft
 
         private :
             redBlackTree< value_type, value_compare, allocator_type > base;
-
+            key_compare comp;
+        
         public :
             // ------------Constructors, '=' overload, Destructor------------
             explicit set( const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type() )
-                : base(redBlackTree<value_type, value_compare, allocator_type>(alloc, comp)) { }
+                : base(redBlackTree<value_type, value_compare, allocator_type>(alloc, comp)), comp(comp) { }
 
             template < class InputIterator >
             explicit set( InputIterator first, InputIterator last, const key_compare &comp = key_compare(),
-                const allocator_type &alloc = allocator_type() ) : base(redBlackTree<value_type, value_compare, allocator_type>(alloc, comp))
+                const allocator_type &alloc = allocator_type() ) : base(redBlackTree<value_type, value_compare, allocator_type>(alloc, comp)),
+                comp(comp)
             {
                 for (; first != last; first++)
                     insert(*first);
@@ -80,8 +82,26 @@ namespace ft
                     return ft::make_pair(iterator(base.find(val)), is_inserted);
                 return ft::make_pair(iterator(base.find(val)), false);
             }
+
+            template < class InputIterator >
+            void insert( InputIterator first, InputIterator last )
+            {
+                for (; first != last; first++)
+                    insert(*first);
+            }
+            
+            iterator insert( iterator position, const value_type &val )
+            {
+                (void)position;
+                return insert(val).first;
+            }
+
             size_type erase( const value_type &val ) { return base.erase(val); }
-            void clear( void ) const { base.clear(); }
+            void clear( void ) { base.clear(); }
+
+            // ------------Observers Category------------
+            key_compare key_comp( void ) const { return comp; }
+            value_compare value_comp( void ) const { return comp; }
 
             // ------------Operations Category------------
             iterator find( const value_type &val ) const
@@ -93,6 +113,40 @@ namespace ft
                     return iterator(base.getRoot(), END);
                 return iterator(found);
             }
+
+            size_type count( const value_type &val ) { return !(base.find(val) == NULL); }
+
+            iterator lower_bound( const value_type &val ) const
+            {
+                iterator b;
+                iterator e;
+
+                b = begin();
+                e = end();
+                for (; b != e; b++)
+                    if (comp(*b, val) == false)
+                        return b;
+                return e;
+            }
+            iterator upper_bound( const value_type &val ) const
+            {
+                iterator b;
+                iterator e;
+
+                b = begin();
+                e = end();
+                for (; b != e; b++)
+                    if (comp(val, *b))
+                        return b;
+                return e;
+            }
+            ft::pair< iterator, iterator > equal_range( const value_type &val ) const
+            {
+                return ft::make_pair(lower_bound(val), upper_bound(val));
+            }
+
+            // ------------Allocator Category------------
+            allocator_type get_allocator( void ) const { return base.getAllocator(); }
     };
 
         // ------------Operations Category------------
