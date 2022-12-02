@@ -37,27 +37,26 @@ time_t get_time(void)
 // CASE 5_PRIME : FIXED NO TEST
 
 #include <set>
+
 int		main(void)
 {
-    ft::redBlackTree< int, ft::less< int >, std::allocator< int > > root;
     ft::set < int > test;
+    ft::set< int >::const_iterator cb;
+    ft::set< int >::iterator b;
+    
+    // cb = test.begin();
 
-    // left
-    root.insert(60);
-    root.insert(50);
-    root.insert(65);
-    root.insert(70);
-    root.insert(62);
-    root.erase(70);
-    root.erase(62);
-    // root.insert(55);
-    // root.insert(40);
-    // root.insert(52);
+    // test.insert(50);
+    // test.insert(40);
+    // test.insert(60);
+    // test.insert(30);
+    // test.insert(45);
 
-    root.erase(65);
-    root.erase(50);
-    root.erase(60);
-    std::cout << "-----------" << std::endl;
-    root.printLevels();
+    // cb = test.begin();
+    // for (b = test.begin(); b != test.end(); b++)
+    //     std::cout << *b << " ";
+    
+    // b = test.find(40);
+    // std::cout << *test.insert(210).first << std::endl;
 	return (0);
 }

@@ -18,6 +18,8 @@
 #define LEFT 1
 #define RIGHT 2
 
+#include <iostream>
+
 namespace ft
 {
 	template < class T, class Alloc >
@@ -71,19 +73,20 @@ namespace ft
 			redBlackTree( Alloc alloc, Comp m_comp ) : baseTree(NULL),
 				compare(m_comp), m_alloc(alloc), setSize(0) { }
 
-			~redBlackTree( void ) { }
+			~redBlackTree( void ) { clear(baseTree); }
 
 		// --------------Red Black Tree Public Methods--------------
 		public :
-			void insert( const T &val )
+			base *getRoot( void ) const { return baseTree; }
+			bool insert( const T &val )
 			{
 				if (baseTree == NULL)
 				{
 					baseTree = new base(val, NULL, BLACK, m_alloc);
 					setSize += 1;
+					return true;
 				}
-				else
-					insertAndBalance(&baseTree, val);
+				return insertAndBalance(&baseTree, val);
 			}
 
 			size_type erase( const T &val )
@@ -112,76 +115,107 @@ namespace ft
 				return 1;
 			}
 
+			void clear( base *rootNode )
+			{
+				if (rootNode == NULL)
+					return ;
+				clear(rootNode->left);
+				clear(rootNode->right);
+				m_alloc.destroy(rootNode->data);
+				m_alloc.deallocate(rootNode->data, 1);
+				delete rootNode;
+
+			}
+
+			base *find( value_type const &val ) const
+			{
+				base *tmp;
+				
+				tmp = baseTree;
+				while (tmp != NULL)
+				{
+					if (compare(val, *tmp->data))
+						tmp = tmp->left;
+					else if (compare(*tmp->data, val))
+						tmp = tmp->right;
+					else
+						break;
+				}
+				return tmp;
+			}
+
 			size_type size( void ) const { return setSize; }
 			size_type max( void ) const { return m_alloc.max_size(); }
 
 			//Printing functions
-			void printLevels( void ) const { levels(baseTree); }
-			void printInorder( void ) const { inorder(baseTree); }
+			// void printLevels( void ) const { levels(baseTree); }
+			// void printInorder( void ) const { inorder(baseTree); }
 
-			void inorder( base *root ) const
-			{
-				if (root == NULL)
-					return ;
-				inorder(root->left);
-				std::cout << *root->data << std::endl;
-				inorder(root->right);
-			}
+			// void inorder( base *root ) const
+			// {
+			// 	if (root == NULL)
+			// 		return ;
+			// 	inorder(root->left);
+			// 	std::cout << *root->data << std::endl;
+			// 	inorder(root->right);
+			// }
 
-			void levels( base *root ) const
-			{
-				int size;
-				std::queue< base * > q;
-				base *tmp;
+			// void levels( base *root ) const
+			// {
+			// 	int size;
+			// 	std::queue< base * > q;
+			// 	base *tmp;
 
-				if (root == NULL)
-					return ;
-				q.push(root);
-				while (q.size() > 0)
-				{
-					size = q.size();
-					while (size > 0)
-					{
-						tmp = q.front();
-						std::cout << *tmp->data << ", color : ";
-						if (tmp->isBlack)
-							std::cout << "black-------";
-						else
-							std::cout << "red------";
-						q.pop();
-						if (tmp->left)
-							q.push(tmp->left);
-						if (tmp->right)
-							q.push(tmp->right);
-						size--;
-					}
-					std::cout << std::endl;
-				}
-			}
+			// 	if (root == NULL)
+			// 		return ;
+			// 	q.push(root);
+			// 	while (q.size() > 0)
+			// 	{
+			// 		size = q.size();
+			// 		while (size > 0)
+			// 		{
+			// 			tmp = q.front();
+			// 			std::cout << *tmp->data << ", color : ";
+			// 			if (tmp->isBlack)
+			// 				std::cout << "black-------";
+			// 			else
+			// 				std::cout << "red------";
+			// 			q.pop();
+			// 			if (tmp->left)
+			// 				q.push(tmp->left);
+			// 			if (tmp->right)
+			// 				q.push(tmp->right);
+			// 			size--;
+			// 		}
+			// 		std::cout << std::endl;
+				// }
+			// }
 
 		// --------------Red Black Tree Private Methods--------------
 		private :
 			// Insert and check the color of the new node
-			void insertAndBalance( base **root, T val )
+			bool insertAndBalance( base **root, T val )
 			{
 				if (compare(val, *(*root)->data) && (*root)->left == NULL)
 				{
 					(*root)->left = new base(val, *root, RED, m_alloc);
 					checkColor((*root)->left);
 					setSize += 1;
+					return true;
 				}
 				else if (compare(*(*root)->data, val) && (*root)->right == NULL)
 				{
 					(*root)->right = new base(val, *root, RED, m_alloc);
 					checkColor((*root)->right);
 					setSize += 1;
+					return true;
 				}
 				else if (compare(val, *(*root)->data) && (*root)->left != NULL)
-					insertAndBalance(&(*root)->left, val);
+					return insertAndBalance(&(*root)->left, val);
 				else if (compare(*(*root)->data, val) && (*root)->right != NULL)
-					insertAndBalance(&(*root)->right, val);
+					return insertAndBalance(&(*root)->right, val);
 				else
-					return ;
+					return false;
 			}
 
 			// Check the color of the inserted node
@@ -380,10 +414,6 @@ namespace ft
 				return false;
 			}
 
-			// 1 : For 2 black childs(2 NULL, 1 NULL 1 BLACK, 1 BLACK 1 NULL), there are 6 cases
-			// For 1 red node, 1 null node, just replace
-			// For 2 nodes, 1 black, 1 red, bst + erase
-			// Handle Double black will handle 3 cases (check 1)
 			void deleteBlackNode( base **toDelete )
 			{
 				base *leftMost;
@@ -530,16 +560,11 @@ namespace ft
 					fixCase3(position, parent);
 				else if (whichFix == CASE_4)
 				{
+					(*parent)->isBlack = true;
 					if (position == LEFT)
-					{
-						(*parent)->isBlack = true;
 						(*parent)->right->isBlack = false;
-					}
 					else
-					{
-						(*parent)->isBlack = true;
 						(*parent)->left->isBlack = false;
-					}
 				}
 				else if (whichFix == CASE_5)
 					fixCase5(position, parent);
