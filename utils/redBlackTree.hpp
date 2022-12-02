@@ -55,19 +55,21 @@ namespace ft
 		public :
 			typedef T value_type;
 			typedef base < T, Alloc > base;
+			typedef size_t size_type;
 
 		// --------------Private attributes--------------
 		private :
 			base *baseTree;
 			Comp compare;
 			Alloc m_alloc;
+			size_type setSize;
 
 		// --------------Constructor, Destructor--------------
 		public :
-			redBlackTree( void ) : baseTree(NULL) { }
+			redBlackTree( void ) : baseTree(NULL), setSize(0) { }
 
 			redBlackTree( Alloc alloc, Comp m_comp ) : baseTree(NULL),
-				compare(m_comp), m_alloc(alloc) { }
+				compare(m_comp), m_alloc(alloc), setSize(0) { }
 
 			~redBlackTree( void ) { }
 
@@ -76,12 +78,15 @@ namespace ft
 			void insert( const T &val )
 			{
 				if (baseTree == NULL)
+				{
 					baseTree = new base(val, NULL, BLACK, m_alloc);
+					setSize += 1;
+				}
 				else
 					insertAndBalance(&baseTree, val);
 			}
 
-			void erase( const T &val )
+			size_type erase( const T &val )
 			{
 				base *toDelete;
 
@@ -96,14 +101,19 @@ namespace ft
 						toDelete = toDelete->right;
 				}
 				if (toDelete == NULL)
-					return ;
+					return 0;
 				if (toDelete == baseTree)
 					eraseAndFixTree(&baseTree);
 				else if (toDelete->parent->left == toDelete)
-					return eraseAndFixTree(&toDelete->parent->left);
+					eraseAndFixTree(&toDelete->parent->left);
 				else if (toDelete->parent->right == toDelete)
-					return eraseAndFixTree(&toDelete->parent->right);
+					eraseAndFixTree(&toDelete->parent->right);
+				setSize -= 1;
+				return 1;
 			}
+
+			size_type size( void ) const { return setSize; }
+			size_type max( void ) const { return m_alloc.max_size(); }
 
 			//Printing functions
 			void printLevels( void ) const { levels(baseTree); }
@@ -124,6 +134,8 @@ namespace ft
 				std::queue< base * > q;
 				base *tmp;
 
+				if (root == NULL)
+					return ;
 				q.push(root);
 				while (q.size() > 0)
 				{
@@ -156,11 +168,13 @@ namespace ft
 				{
 					(*root)->left = new base(val, *root, RED, m_alloc);
 					checkColor((*root)->left);
+					setSize += 1;
 				}
 				else if (compare(*(*root)->data, val) && (*root)->right == NULL)
 				{
 					(*root)->right = new base(val, *root, RED, m_alloc);
 					checkColor((*root)->right);
+					setSize += 1;
 				}
 				else if (compare(val, *(*root)->data) && (*root)->left != NULL)
 					insertAndBalance(&(*root)->left, val);
@@ -297,6 +311,8 @@ namespace ft
 				node->parent = leftNode;
 				leftNode->right = node;
 				node->left = rightOfLeftnode;
+				if (rightOfLeftnode != NULL)
+					rightOfLeftnode->parent = node;
 				return leftNode;
 			}
 
@@ -314,6 +330,8 @@ namespace ft
 				node->parent = rightNode;
 				rightNode->left = node;
 				node->right = leftOfRightnode;
+				if (leftOfRightnode != NULL)
+					leftOfRightnode->parent = node;
 				return rightNode;
 			}
 
@@ -410,13 +428,33 @@ namespace ft
 				else
 					sibling = giveSibling(*toDelete);
 				whichCase = giveCase((*toDelete)->parent, sibling);
-				if (whichCase == CASE_1)
+				if (whichCase == CASE_1 && (*toDelete)->left == NULL && (*toDelete)->right == NULL)
+				{
+					m_alloc.destroy((*toDelete)->data);
+					m_alloc.deallocate((*toDelete)->data, 1);
+					delete *toDelete;
+					baseTree = NULL;
 					return ;
-				parent = (*toDelete)->parent;
+				}
 				if ((*toDelete)->parent->right == (*toDelete))
 					position = RIGHT;
 				else
 					position = LEFT;
+				if (whichCase == CASE_1 && (*toDelete)->left == NULL && (*toDelete)->right != NULL)
+				{
+					tmp1 = (*toDelete);
+					*toDelete = (*toDelete)->right;
+					handleDoubleBlack(giveCase(*toDelete, (*toDelete)->right), &(*toDelete)->right, position);
+					return ;
+				}
+				else if (whichCase == CASE_1 && (*toDelete)->left != NULL && (*toDelete)->right == NULL)
+				{
+					tmp1 = (*toDelete);
+					*toDelete = (*toDelete)->left;
+					handleDoubleBlack(giveCase(*toDelete, (*toDelete)->right), &(*toDelete)->left, position);
+					return ;
+				}
+				parent = (*toDelete)->parent;
 				if ((*toDelete)->right == NULL && (*toDelete)->left == NULL)
 				{
 					tmp1 = (*toDelete);
@@ -542,12 +580,6 @@ namespace ft
 					return ;
 				sibling = giveSibling(*parent);
 				handleDoubleBlack(giveCase((*parent)->parent, sibling), parent, position);
-				// if (newParent->parent == NULL)
-				// 	handleDoubleBlack(giveCase(newParent, sibling), &baseTree, position);
-				// else if (newParent->parent->left == newParent)
-				// 	handleDoubleBlack(giveCase(newParent, sibling), &newParent->parent->left, position);
-				// else if (newParent->parent->right == newParent)
-				// 	handleDoubleBlack(giveCase(newParent, sibling), &newParent->parent->right, position);
 			}
 
 			void fixCase5( int position, base **parent )
@@ -556,7 +588,7 @@ namespace ft
 				{
 					(*parent)->right = rightRotation((*parent)->right);
 					(*parent)->right->isBlack = true;
-					(*parent)->right->right->isBlack = false; 
+					(*parent)->right->right->isBlack = false;
 					handleDoubleBlack(giveCase(*parent, (*parent)->right), parent, position);
 				}
 				else if (position == RIGHT)
@@ -570,27 +602,53 @@ namespace ft
 
 			void fixCase6( int position, base **parent )
 			{
-				base *sibling, *oldParent;
+				base *sibling = NULL, *oldParent = NULL;
 				bool tmpColor;
 
 				tmpColor = (*parent)->isBlack;
 				if (position == LEFT)
 				{
 					sibling = (*parent)->right;
-					oldParent = *parent;
-					*parent = leftRotation(*parent);
-					oldParent->isBlack = true;
-					sibling->isBlack = tmpColor;
-					sibling->right->isBlack = true;
+					if ((sibling->right == NULL || sibling->right->isBlack) && !sibling->left->isBlack)
+					{
+						oldParent = (*parent);
+						(*parent) = leftRotation(*parent);
+						oldParent->isBlack = false;
+						(*parent)->isBlack = true;
+						(*parent)->left = leftRotation((*parent)->left);
+						(*parent) = rightRotation(*parent);
+					}
+					else
+					{
+						oldParent = *parent;
+						*parent = leftRotation(*parent);
+						oldParent->isBlack = true;
+						sibling->isBlack = tmpColor;
+						sibling->right->isBlack = true;
+					}
 				}
 				else
 				{
 					sibling = (*parent)->left;
-					oldParent = *parent;
-					*parent = rightRotation(*parent);
-					oldParent->isBlack = true;
-					sibling->isBlack = tmpColor;
-					sibling->left->isBlack = true;
+					if ((sibling->left == NULL || sibling->left->isBlack) && !sibling->right->isBlack )
+					{
+						oldParent = (*parent);
+						(*parent) = rightRotation(*parent);
+						oldParent->isBlack = false;
+						(*parent)->isBlack = true;
+						(*parent)->right = rightRotation((*parent)->right);
+						(*parent) = leftRotation(*parent);
+					}
+					else
+					{
+						sibling = (*parent)->left;
+						oldParent = *parent;
+						*parent = rightRotation(*parent);
+						oldParent->isBlack = true;
+						sibling->isBlack = tmpColor;
+						if (sibling->left)
+							sibling->left->isBlack = true;
+					}
 				}
 			}
 	};

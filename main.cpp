@@ -25,32 +25,39 @@ time_t get_time(void)
     return (msecs_time);
 }
 
-template < class T >
-class example
-{
-    private :
-        int num;
-    public :
-        example( ) { num = 42; }
-        ~example( ) { }
-        template < class U, class V >
-        friend bool operator<( U const &lhs, V const &rhs )
-        {
-            return lhs.num < rhs.num;
-        }
-};
+// CASE 1 : FIXED WITH TESTS
+// CASE 2 : FIXED WITH TESTS
+// CASE 3 : FIXED WITH TEST
+// CASE 4 : FIXED WITH TESTS
+// CASE 5 : FIXED NO TEST
+// CASE 6 : FIXED WITH TESTS
+
+// CASE 2_PRIME : FIXED NO TEST
+// CASE 3_PRIME : FIXED NO TEST
+// CASE 5_PRIME : FIXED NO TEST
 
 #include <set>
 int		main(void)
 {
     ft::redBlackTree< int, ft::less< int >, std::allocator< int > > root;
+    ft::set < int > test;
 
-    root.insert(50);
-    root.insert(30);
+    // left
     root.insert(60);
+    root.insert(50);
     root.insert(65);
     root.insert(70);
-    root.erase(30);
+    root.insert(62);
+    root.erase(70);
+    root.erase(62);
+    // root.insert(55);
+    // root.insert(40);
+    // root.insert(52);
+
+    root.erase(65);
+    root.erase(50);
+    root.erase(60);
+    std::cout << "-----------" << std::endl;
     root.printLevels();
 	return (0);
 }
