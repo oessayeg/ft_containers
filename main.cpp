@@ -16,6 +16,15 @@
 #include "set.hpp"
 #include "utils/redBlackTree.hpp"
 
+template <typename ForwardIt, typename T>
+void iota(ForwardIt first, ForwardIt last, T value = T())
+{
+    while (first != last) {
+        *first++ = value;
+        ++value;
+    }
+}
+
 time_t get_time(void)
 {
     struct timeval time_now;
@@ -25,6 +34,11 @@ time_t get_time(void)
     return (msecs_time);
 }
 
+template <typename T>
+void init_array(T* arr, std::size_t size)
+{
+    iota(arr, arr + size, (T)rand());
+}
 // CASE 1 : FIXED WITH TESTS
 // CASE 2 : FIXED WITH TESTS
 // CASE 3 : FIXED WITH TEST
@@ -40,23 +54,51 @@ time_t get_time(void)
 
 int		main(void)
 {
-    ft::set < int > test;
-    ft::set< int >::const_iterator cb;
+    int int_arr[64];
+
+    ft::set < int > m;
     ft::set< int >::iterator b;
-    
-    // cb = test.begin();
 
-    // test.insert(50);
-    // test.insert(40);
-    // test.insert(60);
-    // test.insert(30);
-    // test.insert(45);
+    init_array(int_arr, 64);
+    m.insert(int_arr, int_arr + 25);
 
-    // cb = test.begin();
-    // for (b = test.begin(); b != test.end(); b++)
-    //     std::cout << *b << " ";
+    // for (int i = 0; i < 25; i++)
+    //     std::cout << int_arr[i] << " ";
+    // std::cout << std::endl;
+
+    b = m.begin();
+    m.erase(b);
+
+    b = m.begin();
+    std::advance(b, 21);
+    m.erase(b);
+
+    b = m.end();
+    std::advance(b, -10);
+    // std::cout << *b << std::endl;
+    m.erase(b);
+
+    b = m.end();
+    std::advance(b, -3);
+    m.erase(b);
+
+    b = m.end();
+    std::advance(b, -1);
+    m.erase(b);
     
-    // b = test.find(40);
-    // std::cout << *test.insert(210).first << std::endl;
+    // std::cout << *b << std::endl;
+    // 16831
+    // m.erase(16809);
+    // m.erase(16810);
+    // m.erase(16811);
+    // m.erase(16812);
+    // m.erase(16813);
+    // m.erase(16814);
+    // m.erase(16815);
+    // m.erase(16816);
+
+    // m.erase(16813);
+    // m.erase(m.begin(), m.end());
+    m.base.printLevels();
 	return (0);
 }

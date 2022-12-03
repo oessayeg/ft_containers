@@ -4,6 +4,7 @@
 #include "utils/redBlackTree.hpp"
 #include "utils/utility.hpp"
 #include "set_iterator.hpp"
+#include "vector.hpp"
 
 namespace ft
 {
@@ -28,7 +29,7 @@ namespace ft
             typedef ft::set_iterator< const value_type *, base< T, Alloc > > const_iterator;
             typedef base< T, Alloc > bst;
 
-        private :
+        public :
             redBlackTree< value_type, value_compare, allocator_type > base;
             key_compare comp;
         
@@ -96,7 +97,18 @@ namespace ft
                 return insert(val).first;
             }
 
+            void erase( iterator position ) { base.erase(*position); }
             size_type erase( const value_type &val ) { return base.erase(val); }
+            void erase ( iterator first, iterator last )
+            {
+                ft::vector< value_type > keys;
+
+                for (; first != last; first++)
+                    keys.push_back(*first);
+                for (size_type i = 0; i < keys.size(); i++)
+                    base.erase(keys[i]);
+            }
+
             void clear( void ) { base.clear(); }
 
             // ------------Observers Category------------
