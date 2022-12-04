@@ -80,6 +80,7 @@ namespace ft
             size_type max_size( void ) const { return base.max(); }
 
             // ------------Modifiers Category------------
+            // Insert member function (key, hint, range)
             ft::pair< iterator, bool > insert( const value_type &val )
             {
                 bool is_inserted;
@@ -90,6 +91,12 @@ namespace ft
                 return ft::make_pair(iterator(base.find(val)), false);
             }
 
+            iterator insert( iterator position, const value_type &val )
+            {
+                (void)position;
+                return insert(val).first;
+            }
+
             template < class InputIterator >
             void insert( InputIterator first, InputIterator last )
             {
@@ -97,14 +104,11 @@ namespace ft
                     insert(*first);
             }
             
-            iterator insert( iterator position, const value_type &val )
-            {
-                (void)position;
-                return insert(val).first;
-            }
-
+            // Erase member function (hint, key, range)
             void erase( iterator position ) { base.erase(*position); }
+
             size_type erase( const value_type &val ) { return base.erase(val); }
+
             void erase ( iterator first, iterator last )
             {
                 ft::vector< value_type > keys;
@@ -115,8 +119,10 @@ namespace ft
                     base.erase(keys[i]);
             }
 
+            //Swap member function
             void swap( set &x ) { base.swap(x.base); }
 
+            // Clear member function
             void clear( void ) { base.clear(); }
 
             // ------------Observers Category------------
@@ -124,6 +130,7 @@ namespace ft
             value_compare value_comp( void ) const { return comp; }
 
             // ------------Operations Category------------
+            // Find member function (get the iterator to the element)
             iterator find( const value_type &val ) const
             {
                 bst *found;
@@ -134,6 +141,7 @@ namespace ft
                 return iterator(found);
             }
 
+            // Count member function
             size_type count( const value_type &val ) const { return !(base.find(val) == NULL); }
 
             iterator lower_bound( const value_type &val ) const
@@ -148,6 +156,7 @@ namespace ft
                         return b;
                 return e;
             }
+
             iterator upper_bound( const value_type &val ) const
             {
                 iterator b;
@@ -160,6 +169,7 @@ namespace ft
                         return b;
                 return e;
             }
+
             ft::pair< iterator, iterator > equal_range( const value_type &val ) const
             {
                 return ft::make_pair(lower_bound(val), upper_bound(val));
@@ -169,7 +179,7 @@ namespace ft
             allocator_type get_allocator( void ) const { return base.getAllocator(); }
     };
 
-        // ------------Operations Category------------
+        // ------------Comparison Operators------------
         template < class Key, class Compare, class Alloc >
         bool operator==( const ft::set< Key, Compare, Alloc > &lhs, const set< Key, Compare, Alloc > &rhs )
         {
@@ -238,6 +248,7 @@ namespace ft
             return !(lhs < rhs);
         }
 
+        // Non-member swap function
         template < class T, class Compare, class Alloc >
         void swap( set< T, Compare, Alloc > &x, set < T, Compare, Alloc > &y )
         {

@@ -20,6 +20,7 @@ namespace ft
             typedef std::bidirectional_iterator_tag iterator_category;
             typedef size_t size_type;
 
+        // -------------------Member attributes-------------------
         private :
             Tree *m_current_node;
             Tree *first_node;
@@ -147,6 +148,7 @@ namespace ft
             int getFirstT( void ) const { return firstT; }
 
         private :
+            // Get the succesor of the 'node' given in the parameter
             Tree *getNextNode( Tree *node )
             {
                 Tree *leftMost;
@@ -170,6 +172,7 @@ namespace ft
                 return parent;
             }
 
+            // Get the predecessor of the 'node' given in the parameter
             Tree *getPreviousNode( Tree *node )
             {
                 Tree *rightMost;

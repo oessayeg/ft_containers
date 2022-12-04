@@ -30,6 +30,7 @@ namespace ft
             }
             ~stack() {}
 
+            //-----------------Stack Member Functions-----------------
             bool empty ( void ) const { return ctr.empty(); }
             size_type size( void ) const{ return ctr.size(); }
             reference top( void ) { return ctr.back(); }
@@ -56,6 +57,8 @@ namespace ft
             template < class D, class C >
             friend bool operator>=( stack< D, C > const &lhs, stack< D, C > const &rhs );
     };
+
+        // Implementation of the comparison operators
         template < class D, class C >
         bool operator==( stack< D, C > const &lhs, stack< D, C > const &rhs )
         {

@@ -22,6 +22,7 @@
 
 namespace ft
 {
+	// Base tree used in the redBlackTree class
 	template < class T, class Alloc >
 	class base
 	{
@@ -65,13 +66,14 @@ namespace ft
 			Comp compare;
 			Alloc m_alloc;
 			size_type setSize;
+			std::allocator< base > nodeAlloc;
 
 		// --------------Constructor, Destructor--------------
 		public :
-			redBlackTree( void ) : baseTree(NULL), setSize(0) { }
+			redBlackTree( void ) : baseTree(NULL), setSize(0), nodeAlloc(std::allocator< base >()) { }
 
 			redBlackTree( Alloc alloc, Comp m_comp ) : baseTree(NULL),
-				compare(m_comp), m_alloc(alloc), setSize(0) { }
+				compare(m_comp), m_alloc(alloc), setSize(0), nodeAlloc(std::allocator< base >()) { }
 
 			~redBlackTree( void ) { clear(); }
 
@@ -83,7 +85,8 @@ namespace ft
 			{
 				if (baseTree == NULL)
 				{
-					baseTree = new base(val, NULL, BLACK, m_alloc);
+					baseTree = nodeAlloc.allocate(1);
+					nodeAlloc.construct(baseTree, base(val, NULL, BLACK, m_alloc));
 					setSize += 1;
 					return true;
 				}
@@ -162,8 +165,8 @@ namespace ft
 				clearEverything(rootNode->right);
 				m_alloc.destroy(rootNode->data);
 				m_alloc.deallocate(rootNode->data, 1);
-				delete rootNode;
-
+				nodeAlloc.deallocate(rootNode, 1);
+				nodeAlloc.destroy(rootNode);
 			}
 
 			base *find( value_type const &val ) const
@@ -193,14 +196,16 @@ namespace ft
 			{
 				if (compare(val, *(*root)->data) && (*root)->left == NULL)
 				{
-					(*root)->left = new base(val, *root, RED, m_alloc);
+					(*root)->left = nodeAlloc.allocate(1);
+					nodeAlloc.construct((*root)->left, base(val, *root, RED, m_alloc));
 					checkColor((*root)->left);
 					setSize += 1;
 					return true;
 				}
 				else if (compare(*(*root)->data, val) && (*root)->right == NULL)
 				{
-					(*root)->right = new base(val, *root, RED, m_alloc);
+					(*root)->right = nodeAlloc.allocate(1);
+					nodeAlloc.construct((*root)->right, base(val, *root, RED, m_alloc));
 					checkColor((*root)->right);
 					setSize += 1;
 					return true;
@@ -557,7 +562,7 @@ namespace ft
 					return CASE_6;
 				return 0;
 			}
-			// 6 cases
+
 			void handleDoubleBlack( int whichFix, base **parent, int position )
 			{
 				if (whichFix == CASE_2)
@@ -580,10 +585,10 @@ namespace ft
 
 			void fixCase2( int position, base **parent )
 			{
+				(*parent)->isBlack = true;
 				if (position == LEFT)
 				{
 					*parent = leftRotation(*parent);
-					(*parent)->isBlack = true;
 					(*parent)->right->isBlack = true;
 					(*parent)->left->isBlack = false;
 					handleDoubleBlack(giveCase((*parent)->left, (*parent)->left->right, position), &(*parent)->left, position);
@@ -591,7 +596,6 @@ namespace ft
 				else
 				{
 					*parent = rightRotation(*parent);
-					(*parent)->isBlack = true;
 					(*parent)->left->isBlack = true;
 					(*parent)->right->isBlack = false;
 					handleDoubleBlack(giveCase((*parent)->right, (*parent)->right->left, position), &(*parent)->right, position);

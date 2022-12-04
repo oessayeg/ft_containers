@@ -106,7 +106,8 @@ namespace ft
             // Dereference operators
             reference operator*( void ) { return m_current_node->data; }
 			const value_type &operator*( void ) const { return m_current_node->data; }
-            pointer operator->( void ) const { return &m_current_node->data; }
+            pointer operator->( void ) { return &m_current_node->data; }
+            const value_type *operator->( void ) const { return &m_current_node->data; }
 
             // Pre and post increment operators
             map_iterator &operator++( void )
@@ -163,6 +164,7 @@ namespace ft
 
 		// -----------------------Private Member Functions-----------------------
         private :
+			// Get the succesor of the node given in the parameter
             avlTree *nextNode( avlTree *node )
 			{
 				avlTree *parent;
@@ -187,6 +189,7 @@ namespace ft
 				return parent;
             }
 
+			// Get the predecessor of the node given in the parameter
 			avlTree *previousNode( avlTree *node )
 			{
 				avlTree *parent;

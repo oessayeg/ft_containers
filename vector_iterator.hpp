@@ -106,11 +106,13 @@ namespace ft
 
             // Subscript operator (offset dereference)
             reference operator[]( difference_type idx ) { return *(m_ptr + idx); }
+            const reference operator[]( difference_type idx ) const { return *(m_ptr + idx); }
 
             // Base pointer getter
             value_type* getPtr( void ) const { return m_ptr; }
             
     };
+        // Distance addition/substraction for vector_iterator
         template < class I >
         vectorIterator< I > operator+( typename vectorIterator< I >::difference_type n, vectorIterator< I > &rhs )
         {
