@@ -1,10 +1,10 @@
 #pragma once
 
-#include "utils/functional.hpp"
-#include "utils/redBlackTree.hpp"
-#include "utils/utility.hpp"
+#include "../utils/functional.hpp"
+#include "../utils/redBlackTree.hpp"
+#include "../utils/utility.hpp"
 #include "set_iterator.hpp"
-#include "vector.hpp"
+#include "../vector/vector.hpp"
 
 namespace ft
 {

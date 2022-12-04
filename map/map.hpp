@@ -4,12 +4,12 @@
 #include <iostream>
 
 #include <memory>
-#include "utils/utility.hpp"
-#include "utils/avlTree.hpp"
-#include "utils/functional.hpp"
+#include "../utils/utility.hpp"
+#include "../utils/avlTree.hpp"
+#include "../utils/functional.hpp"
 #include "map_iterator.hpp"
-#include "reverse_iterator.hpp"
-#include "vector.hpp"
+#include "../utils/reverse_iterator.hpp"
+#include "../vector/vector.hpp"
 
 namespace ft
 {
