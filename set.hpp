@@ -109,6 +109,8 @@ namespace ft
                     base.erase(keys[i]);
             }
 
+            void swap( set &x ) { base.swap(x.base); }
+
             void clear( void ) { base.clear(); }
 
             // ------------Observers Category------------
@@ -230,5 +232,10 @@ namespace ft
             return !(lhs < rhs);
         }
 
+        template < class T, class Compare, class Alloc >
+        void swap( set< T, Compare, Alloc > &x, set < T, Compare, Alloc > &y )
+        {
+            x.swap(y);
+        }
 
 };
