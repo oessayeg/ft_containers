@@ -79,8 +79,6 @@ namespace ft
 
 		// --------------Red Black Tree Public Methods--------------
 		public :
-			Alloc getAllocator( void ) const { return m_alloc; }
-			base *getRoot( void ) const { return baseTree; }
 			bool insert( const T &val )
 			{
 				if (baseTree == NULL)
@@ -91,43 +89,6 @@ namespace ft
 					return true;
 				}
 				return insertAndBalance(&baseTree, val);
-			}
-
-			void swap( redBlackTree &x )
-			{
-				base *tmp1 = x.baseTree;
-				Comp tmp2 = x.compare;
-				Alloc tmp3 = x.m_alloc;
-				size_type tmp4 = x.setSize;
-
-				x.baseTree = baseTree;
-				x.compare = compare;
-				x.m_alloc = m_alloc;
-				x.setSize = setSize;
-
-				baseTree = tmp1;
-				compare = tmp2;
-				m_alloc = tmp3;
-				setSize = tmp4;
-			}
-
-			base *bound( const T &val, int whichBound ) const
-			{
-				base *tmp;
-
-				tmp = baseTree;
-				while (tmp != NULL)
-				{
-					if (compare(*tmp->data, val))
-						tmp = tmp->right;
-					else
-						break;
-				}
-				(void)whichBound;
-				if (tmp)
-					return tmp;
-				std::cout << *tmp->data << std::endl;
-				return NULL;
 			}
 
 			size_type erase( const T &val )
@@ -156,7 +117,14 @@ namespace ft
 				return 1;
 			}
 
-			void clear ( void ) { clearEverything(baseTree); setSize = 0; baseTree = NULL; }
+			// Free space allocated for the tree
+			void clear ( void )
+			{
+				clearEverything(baseTree);
+				setSize = 0;
+				baseTree = NULL;
+			}
+
 			void clearEverything( base *rootNode )
 			{
 				if (rootNode == NULL)
@@ -165,8 +133,33 @@ namespace ft
 				clearEverything(rootNode->right);
 				m_alloc.destroy(rootNode->data);
 				m_alloc.deallocate(rootNode->data, 1);
-				nodeAlloc.deallocate(rootNode, 1);
 				nodeAlloc.destroy(rootNode);
+				nodeAlloc.deallocate(rootNode, 1);
+			}
+
+			// Get the allocator used for value_type
+			Alloc getAllocator( void ) const { return m_alloc; }
+
+			// Get the base tree used in this class
+			base *getRoot( void ) const { return baseTree; }
+
+			// Swap content
+			void swap( redBlackTree &x )
+			{
+				base *tmp1 = x.baseTree;
+				Comp tmp2 = x.compare;
+				Alloc tmp3 = x.m_alloc;
+				size_type tmp4 = x.setSize;
+
+				x.baseTree = baseTree;
+				x.compare = compare;
+				x.m_alloc = m_alloc;
+				x.setSize = setSize;
+
+				baseTree = tmp1;
+				compare = tmp2;
+				m_alloc = tmp3;
+				setSize = tmp4;
 			}
 
 			base *find( value_type const &val ) const
@@ -187,8 +180,8 @@ namespace ft
 			}
 
 			size_type size( void ) const { return setSize; }
-			size_type max( void ) const { return m_alloc.max_size(); }
 
+			size_type max( void ) const { return m_alloc.max_size(); }
 		// --------------Red Black Tree Private Methods--------------
 		private :
 			// Insert and check the color of the new node
@@ -214,8 +207,7 @@ namespace ft
 					return insertAndBalance(&(*root)->left, val);
 				else if (compare(*(*root)->data, val) && (*root)->right != NULL)
 					return insertAndBalance(&(*root)->right, val);
-				else
-					return false;
+				return false;
 			}
 
 			// Check the color of the inserted node
@@ -391,7 +383,8 @@ namespace ft
 						(*toDelete)->parent->right = NULL;
 					if (*toDelete == baseTree)
 						baseTree = NULL;
-					delete *toDelete;
+					nodeAlloc.destroy(*toDelete);
+					nodeAlloc.deallocate(*toDelete, 1);
 				}
 				else
 				{
@@ -407,6 +400,7 @@ namespace ft
 				}
 			}
 			
+			// Check if a node is double black
 			bool isDoubleBlack( base *toCheck )
 			{
 				if ((toCheck->left == NULL && toCheck->right == NULL)
@@ -416,6 +410,7 @@ namespace ft
 				return false;
 			}
 
+			// Perform a deletion for a black node
 			void deleteBlackNode( base **toDelete )
 			{
 				base *leftMost;
@@ -450,6 +445,7 @@ namespace ft
 				}
 			}
 			
+			// Fix double black problem
 			void deleteDoubleBlack( base **toDelete )
 			{
 				base *tmp1, *tmp2, *parent, *sibling;
@@ -463,7 +459,8 @@ namespace ft
 				{
 					m_alloc.destroy((*toDelete)->data);
 					m_alloc.deallocate((*toDelete)->data, 1);
-					delete *toDelete;
+					nodeAlloc.destroy(*toDelete);
+					nodeAlloc.deallocate(*toDelete, 1);
 					baseTree = NULL;
 					return ;
 				}
@@ -515,7 +512,8 @@ namespace ft
 				}
 				m_alloc.destroy(tmp1->data);
 				m_alloc.deallocate(tmp1->data, 1);
-				delete tmp1;
+				nodeAlloc.destroy(tmp1);
+				nodeAlloc.deallocate(tmp1, 1);
 				if (parent == baseTree)
 					handleDoubleBlack(whichCase, &baseTree, position);
 				else if (parent->parent->left == parent)
@@ -530,17 +528,6 @@ namespace ft
 					|| (node->right == NULL && node->left != NULL && node->left->isBlack)
 					|| (node->right != NULL && node->left == NULL && node->right->isBlack)
 					|| (node->right == NULL && node->left == NULL))
-					return true;
-				return false;
-			}
-
-			bool isCase5( base *parent, base *sibling, int position )
-			{
-				if (position == LEFT && parent->isBlack && sibling->isBlack && sibling->left && !sibling->left->isBlack
-					&& (sibling->right == NULL || sibling->right->isBlack))
-					return true;
-				else if (position == RIGHT && parent->isBlack && sibling->isBlack && sibling->right && !sibling->right->isBlack
-					&& (sibling->left == NULL || sibling->left->isBlack))
 					return true;
 				return false;
 			}
@@ -561,6 +548,17 @@ namespace ft
 					|| (sibling->isBlack && sibling->left && !sibling->left->isBlack))
 					return CASE_6;
 				return 0;
+			}
+
+			bool isCase5( base *parent, base *sibling, int position )
+			{
+				if (position == LEFT && parent->isBlack && sibling->isBlack && sibling->left && !sibling->left->isBlack
+					&& (sibling->right == NULL || sibling->right->isBlack))
+					return true;
+				else if (position == RIGHT && parent->isBlack && sibling->isBlack && sibling->right && !sibling->right->isBlack
+					&& (sibling->left == NULL || sibling->left->isBlack))
+					return true;
+				return false;
 			}
 
 			void handleDoubleBlack( int whichFix, base **parent, int position )
@@ -695,5 +693,6 @@ namespace ft
 					}
 				}
 			}
+
 	};
 };
