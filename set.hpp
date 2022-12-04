@@ -22,11 +22,12 @@ namespace ft
             typedef const value_type& const_reference;
             typedef value_type* pointer;
             typedef const value_type* const_pointer;
+            typedef ft::set_iterator< const value_type *, base< T, Alloc > >  iterator;
+            typedef ft::set_iterator< const value_type *, base< T, Alloc > > const_iterator;
+            typedef ft::reverse_iterator< iterator > reverse_iterator;
+            typedef ft::reverse_iterator< const_iterator > const_reverse_iterator;
             typedef std::ptrdiff_t difference_type;
             typedef std::size_t size_type;
-            //reverse_iterators typedefs here 
-            typedef ft::set_iterator< value_type *, base< T, Alloc > >  iterator;
-            typedef ft::set_iterator< const value_type *, base< T, Alloc > > const_iterator;
             typedef base< T, Alloc > bst;
 
         public :
@@ -68,8 +69,13 @@ namespace ft
             iterator end( void ) { return iterator(base.getRoot(), END); }
             const_iterator end( void ) const { return const_iterator(base.getRoot(), END); }
 
+            reverse_iterator rbegin( void ) { return reverse_iterator(end()); }
+            const_reverse_iterator rbegin( void ) const { return const_reverse_iterator(end()); }
+            reverse_iterator rend( void ) { return reverse_iterator(begin()); }
+            const_reverse_iterator rend( void ) const { return const_reverse_iterator(begin()); }
+
             // ------------Capacity Category------------
-            bool empty( void ) { return base.size() == 0; }
+            bool empty( void ) const { return base.size() == 0; }
             size_type size( void ) const { return base.size(); }
             size_type max_size( void ) const { return base.max(); }
 
@@ -128,7 +134,7 @@ namespace ft
                 return iterator(found);
             }
 
-            size_type count( const value_type &val ) { return !(base.find(val) == NULL); }
+            size_type count( const value_type &val ) const { return !(base.find(val) == NULL); }
 
             iterator lower_bound( const value_type &val ) const
             {

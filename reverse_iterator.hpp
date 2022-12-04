@@ -52,6 +52,15 @@ namespace ft
 				tmp = baseIterator;
 				return *--tmp;
 			}
+
+            const value_type& operator*( void ) const
+            {
+                iterator_type tmp;
+
+                tmp = baseIterator;
+                return *--tmp ;
+            }
+
             pointer operator->( void )
             {
                 iterator_type tmp;

@@ -176,4 +176,30 @@ namespace ft
         static const bool value =
         is_integral_t< typename ft::remove_const_volatile < T >::type >::value;
     };
+
+    //------------Struct to check if type entered is char------------
+    template < class T >
+    struct is_char
+    {
+        static const bool value = false;
+    };
+
+    template <>
+    struct is_char < char >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_char < const char >
+    {
+        static const bool value = true;
+    };
+
+    template <>
+    struct is_char < unsigned char >
+    {
+        static const bool value = true;
+    };
+
 }

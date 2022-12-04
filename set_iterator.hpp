@@ -101,6 +101,8 @@ namespace ft
             set_iterator &operator++( void )
             {
                 m_current_node = getNextNode(m_current_node);
+                if (m_current_node == NULL)
+                    firstT = 1;
                 return *this;
             }
             set_iterator operator++( int )
@@ -108,6 +110,8 @@ namespace ft
                 set_iterator tmp = *this;
 
                 m_current_node = getNextNode(m_current_node);
+                if (m_current_node == NULL)
+                    firstT = 1;
                 return tmp;
             }
 
@@ -126,8 +130,8 @@ namespace ft
             }
 
             // Dereference operators
-            const value_type &operator*( void ) { return *m_current_node->data; }
-            const value_type *operator->( void ) { return m_current_node->data; }
+            const value_type &operator*( void ) const { return *m_current_node->data; }
+            const value_type *operator->( void ) const { return m_current_node->data; }
 
             // Comparison operators
             template < class U, class A >
@@ -148,7 +152,7 @@ namespace ft
                 Tree *leftMost;
                 Tree *parent;
 
-                if (node == last_node)
+                if (node == last_node || node == NULL)
                     return NULL;
                 if (node->right)
                 {

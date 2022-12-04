@@ -108,6 +108,25 @@ namespace ft
 				setSize = tmp4;
 			}
 
+			base *bound( const T &val, int whichBound ) const
+			{
+				base *tmp;
+
+				tmp = baseTree;
+				while (tmp != NULL)
+				{
+					if (compare(*tmp->data, val))
+						tmp = tmp->right;
+					else
+						break;
+				}
+				(void)whichBound;
+				if (tmp)
+					return tmp;
+				std::cout << *tmp->data << std::endl;
+				return NULL;
+			}
+
 			size_type erase( const T &val )
 			{
 				base *toDelete;
@@ -166,55 +185,6 @@ namespace ft
 
 			size_type size( void ) const { return setSize; }
 			size_type max( void ) const { return m_alloc.max_size(); }
-
-			// void swap( redBlackTree )
-			// {
-
-			// }
-
-			//Printing functions
-			void printLevels( void ) const { levels(baseTree); }
-			// void printInorder( void ) const { inorder(baseTree); }
-
-			// void inorder( base *root ) const
-			// {
-			// 	if (root == NULL)
-			// 		return ;
-			// 	inorder(root->left);
-			// 	std::cout << *root->data << std::endl;
-			// 	inorder(root->right);
-			// }
-
-			// void levels( base *root ) const
-			// {
-			// 	int size;
-			// 	std::queue< base * > q;
-			// 	base *tmp;
-
-			// 	if (root == NULL)
-			// 		return ;
-			// 	q.push(root);
-			// 	while (q.size() > 0)
-			// 	{
-			// 		size = q.size();
-			// 		while (size > 0)
-			// 		{
-			// 			tmp = q.front();
-			// 			std::cout << *tmp->data << ", color : ";
-			// 			if (tmp->isBlack)
-			// 				std::cout << "black-------";
-			// 			else
-			// 				std::cout << "red------";
-			// 			q.pop();
-			// 			if (tmp->left)
-			// 				q.push(tmp->left);
-			// 			if (tmp->right)
-			// 				q.push(tmp->right);
-			// 			size--;
-			// 		}
-			// 		std::cout << std::endl;
-			// 	}
-			// }
 
 		// --------------Red Black Tree Private Methods--------------
 		private :

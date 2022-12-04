@@ -138,7 +138,12 @@ namespace ft
             size_type size( void ) const { return vecSize; }
 
             // Max_size member function (max size to allocate)
-            size_type max_size( void ) const { return m_allocator.max_size(); }
+            size_type max_size( void ) const
+			{
+				if (is_char< value_type >::value)
+					return m_allocator.max_size() / 2;
+				return m_allocator.max_size();
+			}
 
             // Resize member function
             void resize( size_type n, value_type val = value_type() )

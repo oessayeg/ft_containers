@@ -58,7 +58,9 @@ namespace ft
 
             // Dereferencing operators
             reference operator*( void ) { return *m_ptr; }
+            const reference operator*( void ) const { return *m_ptr; }
             pointer operator->( void ) { return m_ptr; }
+            const pointer operator->( void ) const { return m_ptr; }
 
             // Incrementation/Decrementation operators
             vectorIterator &operator++( void )
