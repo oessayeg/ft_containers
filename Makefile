@@ -11,4 +11,8 @@ $(NAME) : $(SRCS)
 clean :
 	rm -f $(NAME)
 
+fclean : clean
+
 re : clean all
+
+.PHONY : all clean fclean re

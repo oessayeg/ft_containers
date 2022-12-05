@@ -11,6 +11,8 @@
 #include "utils/utility.hpp"
 #include "sys/time.h"
 
+#define NAMESPACE std
+
 time_t get_time(void)
 {
     struct timeval time_now;
@@ -54,9 +56,9 @@ void printContentRev( C m_container )
 
 int main ( void )
 {
-    ft::vector< int > m_vec1(10, 12);
-    ft::vector< int > m_vec2(m_vec1);
-    ft::vector< int >::const_iterator c_it1, c_it2;
+    NAMESPACE::vector< int > m_vec1(10, 12);
+    NAMESPACE::vector< int > m_vec2(m_vec1);
+    NAMESPACE::vector< int >::const_iterator c_it1, c_it2;
 
     m_vec2 = m_vec1;
     for (int i = 0; i < 10; i++)
@@ -83,7 +85,7 @@ int main ( void )
     
     // Range constructor
     std::cout << "------Range constructor on m_vec3------" << std::endl;
-    ft::vector< int > m_vec3(m_vec2.begin(), m_vec2.end() - 4);
+    NAMESPACE::vector< int > m_vec3(m_vec2.begin(), m_vec2.end() - 4);
     printContentRev(m_vec3);
 
     std::cout << "\nMax_size : " << m_vec1.max_size() << std::endl << std::endl;
@@ -103,7 +105,7 @@ int main ( void )
 
     std::cout << "-----Resize + Reserve-------\n" << std::endl;
 
-    ft::vector< int > testV;
+    NAMESPACE::vector< int > testV;
 
     testV.reserve(20);
     printContent(testV);
@@ -116,7 +118,7 @@ int main ( void )
     printContentRev(testV);
 
     std::cout << "----[], front, back, data----\n" << std::endl;
-    ft::vector< int > vec;
+    NAMESPACE::vector< int > vec;
 
     vec.push_back(10);
     vec.push_back(20);
@@ -135,8 +137,8 @@ int main ( void )
 
     std::cout << "\n\n-------STACK-------\n" << std::endl;
 
-    ft::stack < int > m_stack1;
-    ft::stack < int > m_stack2;
+    NAMESPACE::stack < int > m_stack1;
+    NAMESPACE::stack < int > m_stack2;
 
     m_stack1.push(1);
     m_stack1.push(2);
@@ -179,15 +181,15 @@ int main ( void )
 
     std::cout << "\n\n-------MAP-------\n" << std::endl;
 
-    ft::map< std::string, int > m_map1;
-    ft::map< std::string, int >::iterator map_it1, map_it2;
-    ft::map< std::string, int >::reverse_iterator rmap_it1, rmap_it2;
+    NAMESPACE::map< std::string, int > m_map1;
+    NAMESPACE::map< std::string, int >::iterator map_it1, map_it2;
+    NAMESPACE::map< std::string, int >::reverse_iterator rmap_it1, rmap_it2;
 
-    m_map1.insert(ft::make_pair("Bob", 21));
-    m_map1.insert(ft::make_pair("Ali", 12));
-    m_map1.insert(ft::make_pair("Xo", 71));
-    m_map1.insert(ft::make_pair("Mall", 4));
-    m_map1.insert(ft::make_pair("Relax", 15));
+    m_map1.insert(NAMESPACE::make_pair("Bob", 21));
+    m_map1.insert(NAMESPACE::make_pair("Ali", 12));
+    m_map1.insert(NAMESPACE::make_pair("Xo", 71));
+    m_map1.insert(NAMESPACE::make_pair("Mall", 4));
+    m_map1.insert(NAMESPACE::make_pair("Relax", 15));
 
     map_it1 = m_map1.begin();
     map_it2 = m_map1.end();
@@ -196,14 +198,12 @@ int main ( void )
         std::cout << "key : " << map_it1->first << " -- value : " << map_it1->second << std::endl;
     std::cout << std::endl;
 
-
     std::cout << "Printing with reverse_iterator" << std::endl;
     rmap_it1 = m_map1.rbegin();
     rmap_it2 = m_map1.rend();
     for (; rmap_it1 != rmap_it2; rmap_it1++)
         std::cout << "key : " << rmap_it1->first << " -- value : " << rmap_it1->second << std::endl;
     std::cout << std::endl;
-
 
     std::cout << m_map1.lower_bound("Ali")->first << std::endl;
     std::cout << m_map1.upper_bound("Ali")->first << std::endl;
@@ -231,118 +231,154 @@ int main ( void )
     else
         std::cout << "Found" << std::endl;
 
+    std::cout << "\n\n-------SET-------\n" << std::endl;
+    NAMESPACE::set< int > m_set;
+    NAMESPACE::set< int >::iterator set_it1, set_it2;
+    NAMESPACE::set< int >::reverse_iterator rset_it1, rset_it2;
 
-    //Time here
-    // -----------------Vector-------------------
-    // Constructor 
-    time_t start, end;
-    start = get_time();
-    ft::vector< int > v_t1(100000000);
-    end = get_time();
-    std::cout << "Vector Constructor : " << end - start << std::endl;
-
-    // Copy Constructor
-    start = get_time();
-    ft::vector< int > v_t3(v_t1);
-    end = get_time();
-    std::cout << "Vector Copy Constructor : " << end - start << std::endl;
-
-    // Assign Range
-    ft::vector< int > v_t2;
-    start = get_time();
-    v_t2.assign(v_t1.begin(), v_t1.end());
-    end = get_time();
-    std::cout << "Vector Assign_range : " << end - start << std::endl;
-
-    // Erase
-    start = get_time();
-    v_t1.erase(v_t1.begin(), v_t1.end());
-    end = get_time();
-    std::cout << "Vector Erase_range : " << end - start << std::endl;
-
-    // Resize
-    start = get_time();
-    v_t2.resize(1000);
-    end = get_time();
-    std::cout << "Vector Resize : " << end - start << std::endl;
+    m_set.insert(10);
+    m_set.insert(120);
+    m_set.insert(23);
+    m_set.insert(-110);
+    m_set.insert(120);
+    m_set.insert(170);
+    m_set.insert(45);
+    m_set.insert(2);
 
 
-    // -----------------Map-------------------
-    ft::map< int, int > t_map1;
+    set_it1 = m_set.begin();
+    set_it2 = m_set.end();
 
-    // Insert
-    start = get_time();
-    for (unsigned long long i = 0; i < 10000000; i++)
-        t_map1.insert(ft::make_pair(i, i));
-    end = get_time();
-    std::cout << "Map Insert : " << end - start << std::endl;
+    for (; set_it1 != set_it2; set_it1++)
+        std::cout << *set_it1 << " ";
+    std::cout << std::endl;
 
-    // Copy Constructor
-    start = get_time();
-    ft::map < int, int > t_map2(t_map1);
-    end = get_time();
-    std::cout << "Map Copy constructor : " << end - start << std::endl;
+    m_set.erase(170);
+    m_set.erase(45);
+    m_set.erase(45);
 
-    // Erase
-    start = get_time();
-    t_map1.erase(t_map1.begin(), t_map1.end());
-    end = get_time();
-    std::cout << "Map Erase Insert : " << end - start << std::endl;
+    rset_it1 = m_set.rbegin();
+    rset_it2 = m_set.rend();
+    std::cout << std::endl;
+    for (; rset_it1 != rset_it2; rset_it1++)
+        std::cout << *rset_it1 << " ";
+    std::cout << std::endl;
 
-    // [], at
-    start = get_time();
-    t_map2[10000] = 12;
-    end = get_time();
-    std::cout << "Map [ 1000 ] : " << end - start << std::endl;
+    m_set.erase(m_set.begin(), m_set.end());
 
-    start = get_time();
-    t_map2.at(10000) = 10;
-    end = get_time();
-    std::cout << "Map at( 1000 ) : " << end - start << std::endl;
+    std::cout << std::endl << m_set.empty() << std::endl;
 
-    // Find
-    start = get_time();
-    t_map2.find(100000);
-    std::cout << "Map Find : " << end - start << std::endl;
-    end = get_time();
+    // //Time here
+    // // -----------------Vector-------------------
+    // // Constructor 
+    // time_t start, end;
+    // start = get_time();
+    // NAMESPACE::vector< int > v_t1(100000000);
+    // end = get_time();
+    // std::cout << "Vector Constructor : " << end - start << std::endl;
+
+    // // Copy Constructor
+    // start = get_time();
+    // NAMESPACE::vector< int > v_t3(v_t1);
+    // end = get_time();
+    // std::cout << "Vector Copy Constructor : " << end - start << std::endl;
+
+    // // Assign Range
+    // NAMESPACE::vector< int > v_t2;
+    // start = get_time();
+    // v_t2.assign(v_t1.begin(), v_t1.end());
+    // end = get_time();
+    // std::cout << "Vector Assign_range : " << end - start << std::endl;
+
+    // // Erase
+    // start = get_time();
+    // v_t1.erase(v_t1.begin(), v_t1.end());
+    // end = get_time();
+    // std::cout << "Vector Erase_range : " << end - start << std::endl;
+
+    // // Resize
+    // start = get_time();
+    // v_t2.resize(1000);
+    // end = get_time();
+    // std::cout << "Vector Resize : " << end - start << std::endl;
 
 
-    // -----------------Set-------------------
-    std::set < int > t_set;
+    // // -----------------Map-------------------
+    // NAMESPACE::map< int, int > t_map1;
+
+    // // Insert
+    // start = get_time();
+    // for (unsigned long long i = 0; i < 10000000; i++)
+    //     t_map1.insert(NAMESPACE::make_pair(i, i));
+    // end = get_time();
+    // std::cout << "Map Insert : " << end - start << std::endl;
+
+    // // Copy Constructor
+    // start = get_time();
+    // NAMESPACE::map < int, int > t_map2(t_map1);
+    // end = get_time();
+    // std::cout << "Map Copy constructor : " << end - start << std::endl;
+
+    // // Erase
+    // start = get_time();
+    // t_map1.erase(t_map1.begin(), t_map1.end());
+    // end = get_time();
+    // std::cout << "Map Erase Insert : " << end - start << std::endl;
+
+    // // [], at
+    // start = get_time();
+    // t_map2[10000] = 12;
+    // end = get_time();
+    // std::cout << "Map [ 1000 ] : " << end - start << std::endl;
+
+    // start = get_time();
+    // t_map2.at(10000) = 10;
+    // end = get_time();
+    // std::cout << "Map at( 1000 ) : " << end - start << std::endl;
+
+    // // Find
+    // start = get_time();
+    // t_map2.find(100000);
+    // std::cout << "Map Find : " << end - start << std::endl;
+    // end = get_time();
+
+
+    // // -----------------Set-------------------
+    // std::set < int > t_set;
     
-    // Insert
-    start = get_time();
-    for (int i = 0; i < 10000000; i++)
-        t_set.insert(i);
-    end = get_time();
-    std::cout << "Set Insert " << end - start << std::endl;
+    // // Insert
+    // start = get_time();
+    // for (int i = 0; i < 10000000; i++)
+    //     t_set.insert(i);
+    // end = get_time();
+    // std::cout << "Set Insert " << end - start << std::endl;
 
-    // Erase key
-    start = get_time();
-    t_set.erase(534);
-    t_set.erase(23);
-    t_set.erase(1331214);
-    t_set.erase(53214);
-    end = get_time();
-    std::cout << "Set Erase_key " << end - start << std::endl;
+    // // Erase key
+    // start = get_time();
+    // t_set.erase(534);
+    // t_set.erase(23);
+    // t_set.erase(1331214);
+    // t_set.erase(53214);
+    // end = get_time();
+    // std::cout << "Set Erase_key " << end - start << std::endl;
 
-    // Contructor range
-    start = get_time();
-    ft::set < int > t_set2(t_set.begin(), t_set.end());
-    end = get_time();
-    std::cout << "Contructor_range " << end - start << std::endl;
+    // // Contructor range
+    // start = get_time();
+    // NAMESPACE::set < int > t_set2(t_set.begin(), t_set.end());
+    // end = get_time();
+    // std::cout << "Contructor_range " << end - start << std::endl;
 
-    // Find
-    start = get_time();
-    t_set.find(100000);
-    std::cout << "Set Find : " << end - start << std::endl;
-    end = get_time();
+    // // Find
+    // start = get_time();
+    // t_set.find(100000);
+    // std::cout << "Set Find : " << end - start << std::endl;
+    // end = get_time();
 
-    // Erase range
-    start = get_time();
-    t_set.erase(t_set.begin(), t_set.end());
-    end = get_time();
-    std::cout << "Erase_range " << end - start << std::endl;
+    // // Erase range
+    // start = get_time();
+    // t_set.erase(t_set.begin(), t_set.end());
+    // end = get_time();
+    // std::cout << "Erase_range " << end - start << std::endl;
 
     return 0;
 }
