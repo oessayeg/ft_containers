@@ -30,7 +30,7 @@ namespace ft
             typedef std::size_t size_type;
             typedef base< T, Alloc > bst;
 
-        public :
+        private :
             redBlackTree< value_type, value_compare, allocator_type > base;
             key_compare comp;
         
