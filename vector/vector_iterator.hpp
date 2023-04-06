@@ -56,7 +56,7 @@ namespace ft
             template < class iter >
             bool operator>=( const vectorIterator< iter > &rhs ) const { return m_ptr >= rhs.getPtr(); }
 
-            // Dereferencing operators
+            // Dereferencing operators (for const and non const iterators)
             reference operator*( void ) { return *m_ptr; }
             const reference operator*( void ) const { return *m_ptr; }
             pointer operator->( void ) { return m_ptr; }

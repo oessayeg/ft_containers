@@ -28,7 +28,7 @@ namespace ft
 
 		// -----------------------Public Member Functions-----------------------
         public :
-			// ------------------Contstructors, Assignment operator overload, Destructor------------------
+			// ------------------Constructors, Assignment operator overload, Destructor------------------
             map_iterator( void ) : m_current_node(NULL), first_node(NULL), last_node(NULL), check(0) { }
 
             map_iterator( avlTree *root, int pos )

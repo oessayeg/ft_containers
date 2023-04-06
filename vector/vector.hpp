@@ -261,8 +261,8 @@ namespace ft
                 }
             }
 
-			template <class InputIterator>
-			void assign(InputIterator first, InputIterator last,
+			template < class InputIterator >
+			void assign( InputIterator first, InputIterator last,
 			typename ft::enable_if< !ft::is_integral<InputIterator>::value >::type* = 0 )
 			{
 				vector<value_type> tmp;
@@ -351,7 +351,7 @@ namespace ft
 				}
 			}
 
-			template <class InputIterator>
+			template < class InputIterator >
 			void insert( iterator position, InputIterator first, InputIterator last,
 			typename ft::enable_if< !ft::is_integral<InputIterator>::value >::type* = 0 )
 			{
@@ -466,7 +466,7 @@ namespace ft
 		}
 
 		template< class T, class allocator >
-		bool operator<( vector< T, allocator > const &lhs, vector< T, allocator > const &rhs)
+		bool operator<( vector< T, allocator > const &lhs, vector< T, allocator > const &rhs )
 		{
 			size_t i = 0;
 

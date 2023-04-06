@@ -2,7 +2,7 @@
 
 namespace ft
 {
-    //--------Function Object To Compare 2 Objects (Map Use)--------
+    //--------Function Object To Compare 2 Objects (Map/Set Usage)--------
     template < class T >
     struct less
     {
