@@ -68,7 +68,7 @@ namespace ft
 			size_type setSize;
 			std::allocator< base > nodeAlloc;
 
-		// --------------Constructor, Destructor--------------
+		// --------------Constructors, Destructor--------------
 		public :
 			redBlackTree( void ) : baseTree(NULL), setSize(0), nodeAlloc(std::allocator< base >()) { }
 
@@ -118,7 +118,7 @@ namespace ft
 			}
 
 			// Free space allocated for the tree
-			void clear ( void )
+			void clear( void )
 			{
 				clearEverything(baseTree);
 				setSize = 0;
@@ -693,6 +693,5 @@ namespace ft
 					}
 				}
 			}
-
 	};
 };
