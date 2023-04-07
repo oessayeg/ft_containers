@@ -6,34 +6,34 @@
 
 namespace ft
 {
-    template < class T >
-    class map_iterator
-    {
+	template < class T >
+	class map_iterator
+	{
 		// -----------------------Member Types-----------------------
-        public :
-            typedef typename ft::iterator_traits< T >::value_type value_type;
-            typedef typename ft::iterator_traits< T >::difference_type difference_type;
-            typedef typename ft::iterator_traits< T >::pointer pointer;
-            typedef typename ft::iterator_traits< T >::reference reference;
-            typedef std::bidirectional_iterator_tag iterator_category;
-            typedef size_t size_type;
-            typedef avlTree< value_type > avlTree;
+		public :
+			typedef typename ft::iterator_traits< T >::value_type value_type;
+			typedef typename ft::iterator_traits< T >::difference_type difference_type;
+			typedef typename ft::iterator_traits< T >::pointer pointer;
+			typedef typename ft::iterator_traits< T >::reference reference;
+			typedef std::bidirectional_iterator_tag iterator_category;
+			typedef size_t size_type;
+			typedef avlTree< value_type > avlTree;
 
 		// -----------------------Member Attributes-----------------------
-        private :
-            avlTree *m_current_node;
-            avlTree *first_node;
-            avlTree *last_node;
+		private :
+			avlTree *m_current_node;
+			avlTree *first_node;
+			avlTree *last_node;
 			int		check;
 
 		// -----------------------Public Member Functions-----------------------
-        public :
+		public :
 			// ------------------Constructors, Assignment operator overload, Destructor------------------
-            map_iterator( void ) : m_current_node(NULL), first_node(NULL), last_node(NULL), check(0) { }
+			map_iterator( void ) : m_current_node(NULL), first_node(NULL), last_node(NULL), check(0) { }
 
-            map_iterator( avlTree *root, int pos )
-            {
-                avlTree *tmp;
+			map_iterator( avlTree *root, int pos )
+			{
+				avlTree *tmp;
 
 				tmp = root;
 				if (tmp == NULL)
@@ -50,9 +50,9 @@ namespace ft
 				while (root->right != NULL)
 					root = root->right;
 				last_node = root;
-                if (pos == BEGIN)
+				if (pos == BEGIN)
 				{
-                    m_current_node = first_node;
+					m_current_node = first_node;
 					check = 0;
 				}
 				else if (pos == END)
@@ -60,7 +60,7 @@ namespace ft
 					m_current_node = NULL;
 					check = 1;
 				}
-            }
+			}
 
 			map_iterator( avlTree *current )
 			{
@@ -80,7 +80,7 @@ namespace ft
 			}
 
 			template < class U >
-            map_iterator( const map_iterator< U > &rhs, typename ft::enable_if< ft::is_convertible< T, U >::value >::type * = 0 )
+			map_iterator( const map_iterator< U > &rhs, typename ft::enable_if< ft::is_convertible< T, U >::value >::type * = 0 )
 			{
 				m_current_node = rhs.getCurrent();
 				first_node = rhs.getFirst();
@@ -88,47 +88,47 @@ namespace ft
 				check = rhs.getCheck();
 			}
 
-            map_iterator &operator=( const map_iterator &rhs )
-            {
-                if (this != &rhs)
-                {
-                    m_current_node = rhs.m_current_node;
-                    first_node = rhs.first_node;
-                    last_node = rhs.last_node;
+			map_iterator &operator=( const map_iterator &rhs )
+			{
+				if (this != &rhs)
+				{
+					m_current_node = rhs.m_current_node;
+					first_node = rhs.first_node;
+					last_node = rhs.last_node;
 					check = rhs.check;
-                    return *this;
-                }
-                return *this;
-            }
+					return *this;
+				}
+				return *this;
+			}
 
-            ~map_iterator( ) { }
+			~map_iterator( ) { }
 
-            // Dereference operators
-            reference operator*( void ) { return m_current_node->data; }
+			// Dereference operators
+			reference operator*( void ) { return m_current_node->data; }
 			const value_type &operator*( void ) const { return m_current_node->data; }
-            pointer operator->( void ) { return &m_current_node->data; }
-            const value_type *operator->( void ) const { return &m_current_node->data; }
+			pointer operator->( void ) { return &m_current_node->data; }
+			const value_type *operator->( void ) const { return &m_current_node->data; }
 
-            // Pre and post increment operators
-            map_iterator &operator++( void )
-            {
-                m_current_node = nextNode(m_current_node);
+			// Pre and post increment operators
+			map_iterator &operator++( void )
+			{
+				m_current_node = nextNode(m_current_node);
 				if (m_current_node == NULL)
 					check = 1;
-                return *this;
-            }
+				return *this;
+			}
 
-            map_iterator operator++( int )
-            {
-                map_iterator tmp(*this);
+			map_iterator operator++( int )
+			{
+				map_iterator tmp(*this);
 
-                m_current_node = nextNode(m_current_node);
+				m_current_node = nextNode(m_current_node);
 				if (m_current_node == NULL)
 					check = 1;
-                return tmp;
-            }
-            
-            // Pre and post decrement operators
+				return tmp;
+			}
+			
+			// Pre and post decrement operators
 			map_iterator &operator--( void )
 			{
 				m_current_node = previousNode(m_current_node);
@@ -163,9 +163,9 @@ namespace ft
 			}
 
 		// -----------------------Private Member Functions-----------------------
-        private :
+		private :
 			// Get the succesor of the node given in the parameter
-            avlTree *nextNode( avlTree *node )
+			avlTree *nextNode( avlTree *node )
 			{
 				avlTree *parent;
 
@@ -187,7 +187,7 @@ namespace ft
 					parent = node->parent;
 				}
 				return parent;
-            }
+			}
 
 			// Get the predecessor of the node given in the parameter
 			avlTree *previousNode( avlTree *node )
@@ -218,5 +218,5 @@ namespace ft
 				}
 				return parent;
 			}
-    };
+	};
 }

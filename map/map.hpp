@@ -13,37 +13,37 @@
 
 namespace ft
 {
-    template < class Key, class T, class Compare = ft::less< Key >, class Allocator = std::allocator<ft::pair< const Key, T > > >
-    class map
-    {
-        //---------------------Map Member Types---------------------
-        public :
-            typedef Key key_type;
-            typedef T mapped_type;
-            typedef ft::pair< const key_type, mapped_type > value_type;
-            typedef Compare key_compare;
-            typedef Allocator allocator_type;
-            typedef value_type& reference;
-            typedef const value_type& const_reference;
-            typedef value_type* pointer;
-            typedef const value_type* const_pointer;
-            typedef avlTree< value_type > avlTree;
-            typedef map_iterator< value_type* > iterator;
-            typedef map_iterator< const value_type* > const_iterator;
-            typedef ft::reverse_iterator< iterator > reverse_iterator;
-            typedef ft::reverse_iterator< const_iterator > const_reverse_iterator;
-            typedef std::ptrdiff_t difference_type;
-            typedef size_t size_type;
+	template < class Key, class T, class Compare = ft::less< Key >, class Allocator = std::allocator<ft::pair< const Key, T > > >
+	class map
+	{
+		//---------------------Map Member Types---------------------
+		public :
+			typedef Key key_type;
+			typedef T mapped_type;
+			typedef ft::pair< const key_type, mapped_type > value_type;
+			typedef Compare key_compare;
+			typedef Allocator allocator_type;
+			typedef value_type& reference;
+			typedef const value_type& const_reference;
+			typedef value_type* pointer;
+			typedef const value_type* const_pointer;
+			typedef avlTree< value_type > avlTree;
+			typedef map_iterator< value_type* > iterator;
+			typedef map_iterator< const value_type* > const_iterator;
+			typedef ft::reverse_iterator< iterator > reverse_iterator;
+			typedef ft::reverse_iterator< const_iterator > const_reverse_iterator;
+			typedef std::ptrdiff_t difference_type;
+			typedef size_t size_type;
 
-        //---------------------Private Member Attributes---------------------
-        private :
-            avlTree *baseTree;
-            size_type mapSize;
-            allocator_type m_allocator;
+		//---------------------Private Member Attributes---------------------
+		private :
+			avlTree *baseTree;
+			size_type mapSize;
+			allocator_type m_allocator;
 			std::allocator< avlTree > avlAlloc;
 			key_compare comp;
 
-        //---------------------Public Member Attribute--------------------
+		//---------------------Public Member Attribute--------------------
 		// Function Object that compares two given values with the same type
 		public :
 			class value_compare
@@ -59,9 +59,9 @@ namespace ft
 					}
 			};
 
-        //---------------------Public Member Functions---------------------
-        public :
-        	//---------------Constructors, Assignment operator overload, Destructor---------------
+		//---------------------Public Member Functions---------------------
+		public :
+			//---------------Constructors, Assignment operator overload, Destructor---------------
 			explicit map( const key_compare &comp = key_compare(), const allocator_type& alloc = allocator_type() ) :
 				baseTree(NULL), mapSize(0), m_allocator(alloc), comp(comp) { }
 
@@ -97,25 +97,26 @@ namespace ft
 				return *this;
 			}
 
-            ~map( ) { freeAll(baseTree); }
+			~map( ) { freeAll(baseTree); }
 
-			//---------------------ITERATORS---------------------
+			//---------------------Iterators---------------------
 			iterator begin( void ) { return iterator(baseTree, BEGIN); }
 			const_iterator begin( void ) const { return const_iterator(baseTree, BEGIN); }
 			iterator end( void ) { return iterator(baseTree, END); }
 			const_iterator end( void ) const { return const_iterator(baseTree, END); }
 
+			//---------------------Reverse iterators---------------------
 			reverse_iterator rbegin( void ) { return reverse_iterator(end()); }
 			const_reverse_iterator rbegin( void ) const { return const_reverse_iterator(end()); }
 			reverse_iterator rend( void ) { return reverse_iterator(begin()); }
 			const_reverse_iterator rend( void ) const { return const_reverse_iterator(begin()); }
 
-        	//---------------------Capacity Category---------------------
+			//---------------------Capacity Category---------------------
 			bool empty ( void ) const { return baseTree == NULL; }
 			size_type size ( void ) const { return mapSize; }
 			size_type max_size( void ) const { return m_allocator.max_size(); }
 
-        	//-----------------Element Access Category-----------------
+			//-----------------Element Access Category-----------------
 			// Subscript Operator
 			mapped_type &operator[]( const key_type &k )
 			{
@@ -146,9 +147,9 @@ namespace ft
 				return found->data.second;
 			}
 
-        	//-----------------Modifiers Category-----------------
+			//-----------------Modifiers Category-----------------
 			// Insert member function
-            ft::pair< iterator, bool > insert( const value_type &val )
+			ft::pair< iterator, bool > insert( const value_type &val )
 			{
 				avlTree *found;
 
@@ -240,11 +241,11 @@ namespace ft
 				baseTree = NULL;
 			}
 
-        	//---------------------Observers Category---------------------
+			//---------------------Observers Category---------------------
 			key_compare key_comp() const { return key_compare(); }
 			value_compare value_comp() const { return value_compare(key_compare()); }
 
-        	//---------------------Operations Category---------------------
+			//---------------------Operations Category---------------------
 			// Find member function (non-const and const)
 			iterator find( const key_type &k )
 			{
@@ -335,14 +336,14 @@ namespace ft
 			}
 
 
-        //---------------------Allocator Category---------------------
+		//---------------------Allocator Category---------------------
 		allocator_type get_allocator( void ) const { return m_allocator; }
 		
-        //---------------------Private Member Functions---------------------
-        //---------------------Functions To Manipulate AvlTree---------------------
-        private :
+		//---------------------Private Member Functions---------------------
+		//---------------------Functions To Manipulate AvlTree---------------------
+		private :
 			// Create a new node with the pair 'val'
-            avlTree *createNode( const value_type &val, avlTree *parent )
+			avlTree *createNode( const value_type &val, avlTree *parent )
 			{
 				avlTree *node;
 
@@ -356,6 +357,7 @@ namespace ft
 			{
 				int bf = 0;
 
+				// Insertion part
 				if (*root == NULL)
 					return ;
 				if (comp(val.first, (*root)->data.first) && (*root)->left == NULL)
@@ -367,6 +369,8 @@ namespace ft
 				else if (comp((*root)->data.first, val.first) && (*root)->right != NULL)
 					insertAndBalance(&(*root)->right, val);
 				(*root)->height = std::max(giveHeight((*root)->left), giveHeight((*root)->right)) + 1;
+				
+				// Balancing part
 				bf = giveHeight((*root)->left) - giveHeight((*root)->right);
 				if (bf == 2 && (*root)->left->left != NULL)
 					*root = rightRotation(*root);
@@ -540,7 +544,8 @@ namespace ft
 			}
    };
 
-    //---------------------Non Member Functions---------------------
+	//---------------------Non Member Functions---------------------
+	// Comparison operators + swap (non member)
 	template < class Key, class T, class Comp, class Alloc >
 	bool operator==( const ft::map< Key, T, Comp, Alloc > &lhs, const ft::map< Key, T, Comp, Alloc > &rhs )
 	{

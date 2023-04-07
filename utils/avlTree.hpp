@@ -16,7 +16,7 @@ namespace ft
 			avlTree *parent;
 			size_t height;
 
-        public :
+		public :
  			avlTree( void ) : data(P()), right(NULL), left(NULL), parent(NULL), height(1) { }
 
 			avlTree( P toInit, avlTree *parent ) : data(toInit), right(NULL),
@@ -27,5 +27,5 @@ namespace ft
 
 			~avlTree( ) { }
 
-        };
+		};
 }
