@@ -12,6 +12,6 @@ This project aims to create some of the STL containers in C++.
  
 # Usage
   * Include the container of your choice to your main file or header file.
-  * Use containers with the namespace ft instead of std.
+  * Use containers with the namespace 'ft' instead of 'std'.
 
 # Example
