@@ -11,7 +11,7 @@ This project aims to create some of the STL containers in C++.
   * clang
  
 # Usage
-  * Include the container of your choice to your main file or header file.
+  * Include the container of your choice to your main file or header file. (#include "container/container.hpp")
   * Use containers with the namespace 'ft' instead of 'std'.
 
 # Example
