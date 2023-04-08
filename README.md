@@ -7,7 +7,7 @@ This project aims to create some of the STL containers in C++.
   * Map : AVL tree
   * Set : Red Black Tree
   
-# Depency
+# Dependency
   * clang
  
 # Usage
